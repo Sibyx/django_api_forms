@@ -1,5 +1,5 @@
 import os
-from distutils.core import setup
+from setuptools import setup
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -21,9 +21,9 @@ with open('./django_request_formatter/__version__.py') as f:
     exec(f.read(), meta)
 
 setup(
-    name='django_request_fromatter',
+    name='django_request_formatter',
     version=meta['__version__'],
-    packages=['django_request_fromatter'],
+    packages=['django_request_formatter'],
     install_requires=REQUIRED,
     url='https://github.com/Sibyx/django_request_formatter',
     license='MIT',
@@ -44,7 +44,7 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
         'Framework :: Django :: 2.0',
         'Framework :: Django :: 2.1',
-        'Framework :: Django :: 2.2'
+        'Framework :: Django :: 2.2',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',

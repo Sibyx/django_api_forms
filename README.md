@@ -72,8 +72,8 @@ python setup.py install
 **DjangoRequestFormatter equivalent + validation**
 
 ```python
-from django_request_fromatter.forms import Form
-from django_request_fromatter import fields
+from django_request_formatter.forms import Form
+from django_request_formatter import fields
 from django.core.exceptions import ValidationError
 
 
