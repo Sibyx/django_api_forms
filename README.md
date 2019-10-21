@@ -14,8 +14,8 @@ the whole HTML thing was pretty useless in my RESTful APIs.
 I wanted something to: 
 
 - define my requests as object (`RequestForm`)
-- pass the request to my defined object (`form = RequestForm(request)`)
-- validate my request `form.is_valid()`
+- pass the request to my defined object (`form = RequestForm.create_from_request(request)`)
+- validate my request `form.validate()`
 - extract data `form.payload`
 
 I wanted to keep:
@@ -97,7 +97,7 @@ class AlbumForm(Form):
 
 
 """
-Example Django view
+Django view example
 """
 def create_album(request):
     form = AlbumForm.create_from_request(request)
