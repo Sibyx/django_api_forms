@@ -69,31 +69,47 @@ python setup.py install
 }
 ```
 
-**DjangoRequestFormatter equivalent**
+**DjangoRequestFormatter equivalent + validation**
 
 ```python
 from django_request_fromatter.forms import Form
-from django_request_fromatter.fields import CharField
+from django_request_fromatter import fields
+from django.core.exceptions import ValidationError
 
 
 class ArtistForm(Form):
-    name = CharField(required=True, max_length=100)
+    name = fields.CharField(required=True, max_length=100)
+    genres = fields.FieldList(field=fields.CharField(max_length=30))
+    members = fields.IntegerField()
 
 
 class SongForm(Form):
-    title = CharField(required=True, max_length=100)
-    duration = CharField(required=False, max_length=10, empty_value=None)
+    title = fields.CharField(required=True, max_length=100)
+    duration = fields.DurationField(required=False, max_length=10, empty_value=None)
 
 
 class AlbumForm(Form):
-    pass
+    title = fields.CharField(max_length=100)
+    year = fields.IntegerField()
+    artist = fields.FormField(form=ArtistForm)
+    songs = fields.FormFieldList(form=SongForm)
+    created_at = fields.DateField()
+
+
+"""
+Example Django view
+"""
+def create_album(request):
+    form = AlbumForm.create_from_request(request)
+    try:
+        form.validate()
+    except ValidationError as e:
+        # Process exception
+        print(e)
+    # Sweat valid pythonic payload
+    payload = form.payload
+    print(payload)
 ```
-
-**Parsing and validation**
-
-```python
-```
-
 
 
 ---

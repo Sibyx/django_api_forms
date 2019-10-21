@@ -1,11 +1,17 @@
 import copy
+import datetime
+import math
 import re
 import typing
 from abc import ABC
+from decimal import Decimal, DecimalException
 from typing import List
 
 from django.core import validators
 from django.core.exceptions import ValidationError
+from django.forms.utils import from_current_timezone
+from django.utils import formats
+from django.utils.dateparse import parse_duration
 
 from django.utils.translation import gettext_lazy as _
 
@@ -105,6 +111,205 @@ class IntegerField(Field):
         except (ValueError, TypeError):
             raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
+
+
+class FloatField(IntegerField):
+    default_error_messages = {
+        'invalid': _('Enter a number.'),
+    }
+
+    def to_python(self, value):
+        """
+        Validate that float() can be called on the input. Return the result
+        of float() or None for empty values.
+        """
+        value = super(IntegerField, self).to_python(value)
+        if value in self.empty_values:
+            return None
+        try:
+            value = float(value)
+        except (ValueError, TypeError):
+            raise ValidationError(self.error_messages['invalid'], code='invalid')
+        return value
+
+    def validate(self, value):
+        super().validate(value)
+        if value in self.empty_values:
+            return
+        if not math.isfinite(value):
+            raise ValidationError(self.error_messages['invalid'], code='invalid')
+
+
+class DecimalField(IntegerField):
+    default_error_messages = {
+        'invalid': _('Enter a number.'),
+    }
+
+    def __init__(self, *, max_value=None, min_value=None, max_digits=None, decimal_places=None, **kwargs):
+        self.max_digits, self.decimal_places = max_digits, decimal_places
+        super().__init__(max_value=max_value, min_value=min_value, **kwargs)
+        self.validators.append(validators.DecimalValidator(max_digits, decimal_places))
+
+    def to_python(self, value):
+        if value in self.empty_values:
+            return None
+        value = str(value).strip()
+        try:
+            value = Decimal(value)
+        except DecimalException:
+            raise ValidationError(self.error_messages['invalid'], code='invalid')
+        return value
+
+    def validate(self, value):
+        super().validate(value)
+        if value in self.empty_values:
+            return
+        if not value.is_finite():
+            raise ValidationError(self.error_messages['invalid'], code='invalid')
+
+
+class BaseTemporalField(Field):
+
+    def __init__(self, *, input_formats=None, **kwargs):
+        super().__init__(**kwargs)
+        if input_formats is not None:
+            self.input_formats = input_formats
+
+    def to_python(self, value):
+        value = value.strip()
+        for format in self.input_formats:
+            try:
+                return self.strptime(value, format)
+            except (ValueError, TypeError):
+                continue
+        raise ValidationError(self.error_messages['invalid'], code='invalid')
+
+    def strptime(self, value, format):
+        raise NotImplementedError('Subclasses must define this method.')
+
+
+class DateField(BaseTemporalField):
+    input_formats = formats.get_format_lazy('DATE_INPUT_FORMATS')
+    default_error_messages = {
+        'invalid': _('Enter a valid date.'),
+    }
+
+    def to_python(self, value):
+        if value in self.empty_values:
+            return None
+        if isinstance(value, datetime.datetime):
+            return value.date()
+        if isinstance(value, datetime.date):
+            return value
+        return super().to_python(value)
+
+    def strptime(self, value, format):
+        return datetime.datetime.strptime(value, format).date()
+
+
+class TimeField(BaseTemporalField):
+    input_formats = formats.get_format_lazy('TIME_INPUT_FORMATS')
+    default_error_messages = {
+        'invalid': _('Enter a valid time.')
+    }
+
+    def to_python(self, value):
+        if value in self.empty_values:
+            return None
+        if isinstance(value, datetime.time):
+            return value
+        return super().to_python(value)
+
+    def strptime(self, value, format):
+        return datetime.datetime.strptime(value, format).time()
+
+
+class DateTimeField(BaseTemporalField):
+    input_formats = formats.get_format_lazy('DATETIME_INPUT_FORMATS')
+    default_error_messages = {
+        'invalid': _('Enter a valid date/time.'),
+    }
+
+    def to_python(self, value):
+        if value in self.empty_values:
+            return None
+        if isinstance(value, datetime.datetime):
+            return from_current_timezone(value)
+        if isinstance(value, datetime.date):
+            result = datetime.datetime(value.year, value.month, value.day)
+            return from_current_timezone(result)
+        result = super().to_python(value)
+        return from_current_timezone(result)
+
+    def strptime(self, value, format):
+        return datetime.datetime.strptime(value, format)
+
+
+class DurationField(Field):
+    default_error_messages = {
+        'invalid': _('Enter a valid duration.'),
+        'overflow': _('The number of days must be between {min_days} and {max_days}.')
+    }
+
+    def to_python(self, value):
+        if value in self.empty_values:
+            return None
+        if isinstance(value, datetime.timedelta):
+            return value
+        try:
+            value = parse_duration(str(value))
+        except OverflowError:
+            raise ValidationError(self.error_messages['overflow'].format(
+                min_days=datetime.timedelta.min.days,
+                max_days=datetime.timedelta.max.days,
+            ), code='overflow')
+        if value is None:
+            raise ValidationError(self.error_messages['invalid'], code='invalid')
+        return value
+
+
+class RegexField(CharField):
+    def __init__(self, regex, **kwargs):
+        """
+        regex can be either a string or a compiled regular expression object.
+        """
+        kwargs.setdefault('strip', False)
+        super().__init__(**kwargs)
+        self._set_regex(regex)
+
+    def _get_regex(self):
+        return self._regex
+
+    def _set_regex(self, regex):
+        if isinstance(regex, str):
+            regex = re.compile(regex)
+        self._regex = regex
+        if hasattr(self, '_regex_validator') and self._regex_validator in self.validators:
+            self.validators.remove(self._regex_validator)
+        self._regex_validator = validators.RegexValidator(regex=regex)
+        self.validators.append(self._regex_validator)
+
+    regex = property(_get_regex, _set_regex)
+
+
+class EmailField(CharField):
+    default_validators = [validators.validate_email]
+
+    def __init__(self, **kwargs):
+        super().__init__(strip=True, **kwargs)
+
+
+class BooleanField(Field):
+    def to_python(self, value):
+        if isinstance(value, str) and value.lower() in ('false', '0'):
+            value = False
+        else:
+            value = bool(value)
+        return super().to_python(value)
+
+    def validate(self, value):
+        if not value and self.required:
+            raise ValidationError(self.error_messages['required'], code='required')
 
 
 class FieldList(Field):
