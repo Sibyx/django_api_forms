@@ -94,7 +94,10 @@ class AlbumForm(Form):
     artist = fields.FormField(form=ArtistForm)
     songs = fields.FormFieldList(form=SongForm)
     created_at = fields.DateField()
-
+    
+    def validate_year(self, value):
+        if value == "1992":
+            raise ValidationError("Year 1992 is forbidden!")
 
 """
 Django view example

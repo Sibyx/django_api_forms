@@ -1,3 +1,7 @@
+## 0.1.2 : 22:10.2019
+
+- **Feature**: Support for `validation_{field}` methods in `Form` (initial support)
+
 ## 0.1.1 : 22.10.2019
 
 - **Feature**: `EnumField`

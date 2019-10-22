@@ -57,10 +57,19 @@ class BaseForm(object):
         errors = {}
 
         for key, field in self.fields.items():
+            field_errors = []
             try:
                 field.validate(self._data.get(key, None))
             except ValidationError as e:
-                errors[key] = e
+                field_errors.append(e)
+
+            if hasattr(self, f"validate_{key}"):
+                try:
+                    getattr(self, f"validate_{key}")(self._data.get(key, None))
+                except ValidationError as e:
+                    field_errors.append(e)
+
+            errors[key] = field_errors
 
         if errors:
             raise ValidationError(errors)

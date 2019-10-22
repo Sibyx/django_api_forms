@@ -405,4 +405,3 @@ class EnumField(Field):
             self.enum(value)
         except ValueError:
             raise ValidationError(f"Invalid enum value {value} passed to {type(self.enum)}")
-
