@@ -5,6 +5,7 @@ import re
 import typing
 from abc import ABC
 from decimal import Decimal, DecimalException
+from enum import Enum
 from typing import List
 
 from django.core import validators
@@ -379,3 +380,29 @@ class FormFieldList(FormField):
         for item in value:
             form = self.form(item)
             form.validate()
+
+
+class EnumField(Field):
+    default_error_messages = {
+        'not_enum': _('This field have to be a subclass of enum.Enum')
+    }
+
+    def __init__(self, enum: typing.Type, **kwargs):
+        if not issubclass(enum, Enum):
+            raise RuntimeError("Invalid Field type passed into FieldList!")
+
+        self.enum = enum
+
+        super().__init__(**kwargs)
+
+    def to_python(self, value):
+        return self.enum(value)
+
+    def validate(self, value):
+        super().validate(value)
+
+        try:
+            self.enum(value)
+        except ValueError:
+            raise ValidationError(f"Invalid enum value {value} passed to {type(self.enum)}")
+

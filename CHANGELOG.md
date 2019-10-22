@@ -1,3 +1,7 @@
+## 0.1.1 : 22.10.2019
+
+- **Feature**: `EnumField`
+
 ## 0.1.0 : 22.10.2019
 
 - **Feature**: First version of `Form` class
