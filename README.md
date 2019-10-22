@@ -4,6 +4,8 @@
 (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/)) 
 without HTML front-end.
 
+**WIP: Library API is pretty unstable!**
+
 ## Motivation
 
 Main idea was to create a simple and declarative way to specify format of expecting request with ability to validate them.
