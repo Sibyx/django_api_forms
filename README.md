@@ -1,5 +1,7 @@
 # DjangoRequestFormatter
 
+[![PyPI version](https://badge.fury.io/py/django-request-formatter.svg)](https://badge.fury.io/py/django-request-formatter)
+
 [Django Forms](https://docs.djangoproject.com/en/2.2/topics/forms/) approach in validation of request payload 
 (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/)) 
 without HTML front-end.
