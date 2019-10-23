@@ -118,6 +118,7 @@ class BaseForm(object):
                 errors[key] = field_errors
 
         if errors:
+            self._errors = errors
             raise ValidationError(errors)
 
 

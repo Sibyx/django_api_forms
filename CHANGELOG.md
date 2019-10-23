@@ -1,3 +1,7 @@
+## 0.1.5: 23.10.2019
+
+- **Fix**: Assign errors to form before raising `ValidationError`
+
 ## 0.1.4 : 23.10.2019
 
 - **Fix**: Do not return empty error records in `Form:errors`

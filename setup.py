@@ -27,7 +27,7 @@ setup(
     install_requires=REQUIRED,
     url='https://github.com/Sibyx/django_request_formatter',
     license='MIT',
-    author='Jakub Dubbec',
+    author='Jakub Dubec',
     author_email='jakub.dubec@gmail.com',
     description='Declarative Django request validation ',
     long_description=read_files(['README.md', 'CHANGELOG.md']),
