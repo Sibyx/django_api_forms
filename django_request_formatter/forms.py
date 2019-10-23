@@ -1,9 +1,48 @@
 import copy
 import json
+from collections import OrderedDict
 from typing import Dict
 
 from django.core.exceptions import ValidationError
-from django.forms.forms import DeclarativeFieldsMetaclass
+from django.forms import MediaDefiningClass
+
+from django_request_formatter.fields import Field
+
+
+class DeclarativeFieldsMetaclass(MediaDefiningClass):
+    """Collect Fields declared on the base classes."""
+    def __new__(mcs, name, bases, attrs):
+        # Collect fields from current class.
+        current_fields = []
+        for key, value in list(attrs.items()):
+            if isinstance(value, Field):
+                current_fields.append((key, value))
+                attrs.pop(key)
+        attrs['declared_fields'] = OrderedDict(current_fields)
+
+        new_class = super(DeclarativeFieldsMetaclass, mcs).__new__(mcs, name, bases, attrs)
+
+        # Walk through the MRO.
+        declared_fields = OrderedDict()
+        for base in reversed(new_class.__mro__):
+            # Collect fields from base class.
+            if hasattr(base, 'declared_fields'):
+                declared_fields.update(base.declared_fields)
+
+            # Field shadowing.
+            for attr, value in base.__dict__.items():
+                if value is None and attr in declared_fields:
+                    declared_fields.pop(attr)
+
+        new_class.base_fields = declared_fields
+        new_class.declared_fields = declared_fields
+
+        return new_class
+
+    @classmethod
+    def __prepare__(metacls, name, bases, **kwds):
+        # Remember the order in which form fields are defined.
+        return OrderedDict()
 
 
 class BaseForm(object):
@@ -11,6 +50,11 @@ class BaseForm(object):
         self._data = data
         self.fields = copy.deepcopy(getattr(self, 'base_fields'))
         self._errors = None
+        self._dirty = []
+
+        if isinstance(data, dict):
+            for key in data.keys():
+                self._dirty.append(key)
 
     def __getitem__(self, name):
         try:
@@ -49,7 +93,8 @@ class BaseForm(object):
         result = {}
 
         for key, field in self.fields.items():
-            result[key] = field.to_python(self._data.get(key, None))
+            if key in self._dirty:
+                result[key] = field.to_python(self._data.get(key, None))
 
         return result
 

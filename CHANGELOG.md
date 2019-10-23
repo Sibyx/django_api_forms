@@ -1,3 +1,9 @@
+## 0.1.3 : 23.10.2019
+
+- **Fix**: Use custom `DeclarativeFieldsMetaclass` because of custom `Field` class
+- **Fix**: Do not return untouched fields in `Form::payload`
+- **Fix**: Fix for None `default_validators` in `Field`
+
 ## 0.1.2 : 22:10.2019
 
 - **Feature**: Support for `validation_{field}` methods in `Form` (initial support)

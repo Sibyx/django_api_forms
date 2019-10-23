@@ -3,7 +3,6 @@ import datetime
 import math
 import re
 import typing
-from abc import ABC
 from decimal import Decimal, DecimalException
 from enum import Enum
 from typing import List
@@ -17,7 +16,7 @@ from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext_lazy as _
 
 
-class Field(ABC):
+class Field:
     default_error_messages = {
         'required': _('This field is required.')
     }
@@ -25,13 +24,15 @@ class Field(ABC):
 
     def __init__(self, required: bool = True, default_validators: List = None, error_messages: List[str] = None):
         self.required = required
-        self.validators = default_validators
+        self.validators = default_validators or []
 
         messages = {}
         for c in reversed(self.__class__.__mro__):
             messages.update(getattr(c, 'default_error_messages', {}))
         messages.update(error_messages or {})
         self.error_messages = messages
+
+        super().__init__()
 
     def to_python(self, value):
         return value
