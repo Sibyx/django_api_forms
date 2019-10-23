@@ -114,7 +114,8 @@ class BaseForm(object):
                 except ValidationError as e:
                     field_errors.append(e)
 
-            errors[key] = field_errors
+            if field_errors:
+                errors[key] = field_errors
 
         if errors:
             raise ValidationError(errors)

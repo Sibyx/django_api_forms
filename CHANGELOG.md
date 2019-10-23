@@ -1,3 +1,7 @@
+## 0.1.4 : 23.10.2019
+
+- **Fix**: Do not return empty error records in `Form:errors`
+
 ## 0.1.3 : 23.10.2019
 
 - **Fix**: Use custom `DeclarativeFieldsMetaclass` because of custom `Field` class
