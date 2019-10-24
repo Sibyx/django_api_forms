@@ -1,4 +1,9 @@
-## 0.1.5: 23.10.2019
+## 0.1.6 : 24.10.2019
+
+- **Fix**: Non-required EnumField is now working
+- **Feature**: WIP: Initial method for filling objects `Form::fill()` 
+
+## 0.1.5 : 23.10.2019
 
 - **Fix**: Assign errors to form before raising `ValidationError`
 

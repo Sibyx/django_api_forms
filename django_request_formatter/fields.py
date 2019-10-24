@@ -402,7 +402,8 @@ class EnumField(Field):
     def validate(self, value):
         super().validate(value)
 
-        try:
-            self.enum(value)
-        except ValueError:
-            raise ValidationError(f"Invalid enum value {value} passed to {type(self.enum)}")
+        if self.required and value is not None:
+            try:
+                self.enum(value)
+            except ValueError:
+                raise ValidationError(f"Invalid enum value {value} passed to {type(self.enum)}")

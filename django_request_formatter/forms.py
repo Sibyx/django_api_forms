@@ -98,6 +98,16 @@ class BaseForm(object):
 
         return result
 
+    def fill(self, obj):
+        """
+        WIP
+        TODO: Resolve embedded forms
+        :param obj:
+        :return:
+        """
+        for key, item in self._data.items():
+            setattr(obj, key, item)
+
     def validate(self):
         errors = {}
 
