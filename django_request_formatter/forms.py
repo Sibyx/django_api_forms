@@ -76,7 +76,7 @@ class BaseForm(object):
     @classmethod
     def create_from_request(cls, request):
         if request.META.get('CONTENT_TYPE') and 'application/json' in request.META.get('CONTENT_TYPE'):
-            data = (None if request.body is None or request.body is b'' or request.body is b'{}' else json.loads(request.body))
+            data = json.loads(request.body) if request.body else None
         elif request.META.get('CONTENT_TYPE') and 'application/x-msgpack' in request.META.get('CONTENT_TYPE'):
             raise RuntimeError("Not implemented!")
         else:

@@ -7,6 +7,8 @@ verify_ssl = true
 setuptools = "*"
 wheel = "*"
 twine = "*"
+flake8 = "*"
+pytest = "==5.*"
 
 [packages]
 django = "==2.2.*"
