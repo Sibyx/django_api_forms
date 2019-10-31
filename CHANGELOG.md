@@ -1,3 +1,10 @@
+## 0.2.0 : 31.10.2019
+
+- **Change**: `Form.validate()` replaced by `Form.is_valid()`
+- **Feature**: `Form.validate()` is now used as a last step of form validation and it's aimed to be overwritten if 
+needed 
+- **Note**: Unit tests initialization
+
 ## 0.1.6 : 24.10.2019
 
 - **Fix**: Non-required EnumField is now working

@@ -3,6 +3,7 @@ import json
 from collections import OrderedDict
 from typing import Dict
 
+import msgpack
 from django.core.exceptions import ValidationError
 from django.forms import MediaDefiningClass
 
@@ -11,6 +12,7 @@ from django_request_formatter.fields import Field
 
 class DeclarativeFieldsMetaclass(MediaDefiningClass):
     """Collect Fields declared on the base classes."""
+
     def __new__(mcs, name, bases, attrs):
         # Collect fields from current class.
         current_fields = []
@@ -75,10 +77,13 @@ class BaseForm(object):
 
     @classmethod
     def create_from_request(cls, request):
+        if not request.body:
+            return cls(None)
+
         if request.META.get('CONTENT_TYPE') and 'application/json' in request.META.get('CONTENT_TYPE'):
-            data = json.loads(request.body) if request.body else None
+            data = json.loads(request.body)
         elif request.META.get('CONTENT_TYPE') and 'application/x-msgpack' in request.META.get('CONTENT_TYPE'):
-            raise RuntimeError("Not implemented!")
+            data = msgpack.loads(request.body)
         else:
             raise RuntimeError("Unable to parse request!")
 
@@ -108,7 +113,7 @@ class BaseForm(object):
         for key, item in self._data.items():
             setattr(obj, key, item)
 
-    def validate(self):
+    def is_valid(self, raise_exception: bool = True):
         errors = {}
 
         for key, field in self.fields.items():
@@ -127,9 +132,21 @@ class BaseForm(object):
             if field_errors:
                 errors[key] = field_errors
 
+        try:
+            self.validate()
+        except ValidationError as e:
+            errors = {**errors, **e.error_dict}
+
         if errors:
             self._errors = errors
-            raise ValidationError(errors)
+            if raise_exception:
+                raise ValidationError(errors)
+            return False
+
+        return True
+
+    def validate(self):
+        pass
 
 
 class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):

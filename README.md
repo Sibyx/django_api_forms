@@ -17,9 +17,9 @@ the whole HTML thing was pretty useless in my RESTful APIs.
 
 I wanted something to: 
 
-- define my requests as object (`RequestForm`)
-- pass the request to my defined object (`form = RequestForm.create_from_request(request)`)
-- validate my request `form.validate()`
+- define my requests as object (`Form`)
+- pass the request to my defined object (`form = Form.create_from_request(request)`)
+- validate my request `form.is_valid()`
 - extract data `form.payload`
 
 I wanted to keep:
@@ -89,7 +89,7 @@ class ArtistForm(Form):
 
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
-    duration = fields.DurationField(required=False, max_length=10, empty_value=None)
+    duration = fields.DurationField(required=False)
 
 
 class AlbumForm(Form):
@@ -102,6 +102,10 @@ class AlbumForm(Form):
     def validate_year(self, value):
         if value == "1992":
             raise ValidationError("Year 1992 is forbidden!")
+    
+    def validate(self):
+        if (self._data['year'] == "1998") and (self._data['artis'] == "Nirvana"):
+            raise ValidationError("Sounds like a bullshit")
 
 """
 Django view example
@@ -109,7 +113,7 @@ Django view example
 def create_album(request):
     form = AlbumForm.create_from_request(request)
     try:
-        form.validate()
+        form.is_valid()
     except ValidationError as e:
         # Process exception
         print(e)
@@ -117,7 +121,6 @@ def create_album(request):
     payload = form.payload
     print(payload)
 ```
-
 
 ---
 Made with ❤️ by Jakub Dubec & [BACKBONE s.r.o.](https://www.backbone.sk/en/)

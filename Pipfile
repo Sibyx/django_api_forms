@@ -9,9 +9,11 @@ wheel = "*"
 twine = "*"
 flake8 = "*"
 pytest = "==5.*"
+pytest-django = "==3.*"
 
 [packages]
 django = "==2.2.*"
+msgpack = "*"
 
 [requires]
 python_version = "3.7"

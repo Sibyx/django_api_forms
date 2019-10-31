@@ -360,7 +360,7 @@ class FormField(Field):
 
     def validate(self, value):
         form = self.form(value)
-        form.validate()
+        form.is_valid(True)
 
 
 class FormFieldList(FormField):
@@ -380,7 +380,7 @@ class FormFieldList(FormField):
 
         for item in value:
             form = self.form(item)
-            form.validate()
+            form.is_valid(True)
 
 
 class EnumField(Field):
