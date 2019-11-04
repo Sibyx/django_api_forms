@@ -1,3 +1,7 @@
+## 0.2.1 : 4.11.2019
+
+- **Fix**: Fixed `to_python()` in FormFieldList
+
 ## 0.2.0 : 31.10.2019
 
 - **Change**: `Form.validate()` replaced by `Form.is_valid()`
