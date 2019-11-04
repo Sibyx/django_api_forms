@@ -369,10 +369,11 @@ class FormFieldList(FormField):
     }
 
     def to_python(self, value):
-        result = ()
+        result = []
         for item in value:
             form = self.form(item)
-            result += form.payload
+            result.append(form.payload)
+        return result
 
     def validate(self, value):
         if not isinstance(value, list):
