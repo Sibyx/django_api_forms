@@ -113,7 +113,7 @@ class BaseForm(object):
         for key, item in self._data.items():
             setattr(obj, key, item)
 
-    def is_valid(self, raise_exception: bool = True):
+    def is_valid(self, raise_exception: bool = True, **kwargs):
         errors = {}
 
         for key, field in self.fields.items():
@@ -125,7 +125,7 @@ class BaseForm(object):
 
             if hasattr(self, f"validate_{key}"):
                 try:
-                    getattr(self, f"validate_{key}")(self._data.get(key, None))
+                    getattr(self, f"validate_{key}")(self._data.get(key, None), **kwargs)
                 except ValidationError as e:
                     field_errors.append(e)
 
@@ -133,7 +133,7 @@ class BaseForm(object):
                 errors[key] = field_errors
 
         try:
-            self.validate()
+            self.validate(**kwargs)
         except ValidationError as e:
             errors = {**errors, **e.error_dict}
 
@@ -145,7 +145,7 @@ class BaseForm(object):
 
         return True
 
-    def validate(self):
+    def validate(self, **kwargs):
         pass
 
 

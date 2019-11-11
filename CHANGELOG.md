@@ -1,3 +1,7 @@
+## 0.3.0 : 11.11.2019
+
+- **Feature**: Propagate `kwargs` from `Form.is_valid()` to `Form.validate()` and `Form.validate_{key}()` methods.
+
 ## 0.2.1 : 4.11.2019
 
 - **Fix**: Fixed `to_python()` in FormFieldList
