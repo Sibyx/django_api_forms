@@ -1,3 +1,7 @@
+## 0.4.0 : 13.11.2019
+
+- **Feature**: Introduced `DictionaryField`
+
 ## 0.3.0 : 11.11.2019
 
 - **Feature**: Propagate `kwargs` from `Form.is_valid()` to `Form.validate()` and `Form.validate_{key}()` methods.

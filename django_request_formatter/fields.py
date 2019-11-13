@@ -340,6 +340,7 @@ class FieldList(Field):
             if isinstance(self.field, Field):
                 self.field.validate(item)
             else:
+                # TODO: toto nemoze byt RuntimeError
                 raise RuntimeError(f"Invalid field_type {type(self.field)} in FieldList")
 
 
@@ -408,3 +409,34 @@ class EnumField(Field):
                 self.enum(value)
             except ValueError:
                 raise ValidationError(f"Invalid enum value {value} passed to {type(self.enum)}")
+
+
+class DictionaryField(Field):
+    def __init__(self, value, **kwargs):
+        if not isinstance(value, Field):
+            raise RuntimeError("Invalid Field type passed into DictionaryField!")
+        self._value = value
+        super().__init__(**kwargs)
+
+    def to_python(self, value) -> dict:
+        result = {}
+
+        for key, item in value.items():
+            result[key] = self._value.to_python(item)
+
+        return result
+
+    def validate(self, value):
+        if not isinstance(value, dict):
+            raise ValidationError(f"Invalid value passed to DictionaryField (got {type(value)}, expected dict)")
+
+        errors = {}
+
+        for key, item in value.items():
+            try:
+                self._value.validate(value)
+            except ValidationError as e:
+                errors[key] = e
+
+        if errors:
+            raise ValidationError(errors)

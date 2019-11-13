@@ -69,7 +69,10 @@ python setup.py install
       "duration": "4:48"
     }
   ],
-  "created_at": "2019-10-21T18:57:03+00:00"
+  "metadata": {
+    "created_at": "2019-10-21T18:57:03+00:00",
+    "updated_at": "2019-10-21T18:57:03+00:00"
+  }
 }
 ```
 
@@ -97,7 +100,7 @@ class AlbumForm(Form):
     year = fields.IntegerField()
     artist = fields.FormField(form=ArtistForm)
     songs = fields.FormFieldList(form=SongForm)
-    created_at = fields.DateField()
+    metadata = fields.DictionaryField(fields.DateTimeField())
     
     def validate_year(self, value):
         if value == "1992":
