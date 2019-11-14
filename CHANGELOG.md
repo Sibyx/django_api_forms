@@ -1,3 +1,7 @@
+## 0.4.1 : 14.11.2019
+
+- **Feature**: Introduced `UUIDField`
+
 ## 0.4.0 : 13.11.2019
 
 - **Feature**: Introduced `DictionaryField`

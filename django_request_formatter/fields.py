@@ -1,8 +1,10 @@
 import copy
 import datetime
+import enum
 import math
 import re
 import typing
+import uuid
 from decimal import Decimal, DecimalException
 from enum import Enum
 from typing import List
@@ -292,6 +294,32 @@ class RegexField(CharField):
         self.validators.append(self._regex_validator)
 
     regex = property(_get_regex, _set_regex)
+
+
+class UUIDField(CharField):
+    default_error_messages = {
+        'invalid': _('Enter a valid UUID.'),
+    }
+
+    def __init__(self, **kwargs):
+        kwargs['max_length'] = 36
+        kwargs['min_length'] = 36
+        super().__init__(**kwargs)
+
+    def to_python(self, value):
+        value = super().to_python(value)
+        if value in self.empty_values:
+            return None
+        if not isinstance(value, uuid.UUID):
+            value = uuid.UUID(value)
+        return value
+
+    def validate(self, value):
+        if value not in self.empty_values and not isinstance(value, uuid.UUID):
+            try:
+                uuid.UUID(value)
+            except ValueError:
+                raise ValidationError(self.error_messages['invalid'], code='invalid')
 
 
 class EmailField(CharField):
