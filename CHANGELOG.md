@@ -1,10 +1,19 @@
+## 0.5.0 : 14.11.2019
+
+- **Fix**: Fixed validation in `DictionaryField`
+- **Change**: If there is a `ValueError` or `TypeError` in `IntegerField`, `ValidationError` is thrown
+- **Change**: `FieldList` raises `ValidationError` instead of `RuntimeException` if there is a type  in validation
+- **Fixed**: `FieldList` returns values instead of `None`
+- **Change**: Use private properties for internal data in field objects
+- **Maintenance**: Basic unit tests 
+
 ## 0.4.0 : 13.11.2019
 
 - **Feature**: Introduced `DictionaryField`
 
 ## 0.3.0 : 11.11.2019
 
-- **Feature**: Propagate `kwargs` from `Form.is_valid()` to `Form.validate()` and `Form.validate_{key}()` methods.
+- **Feature**: Propagate `kwargs` from `Form.is_valid()` to `Form.validate()` and `Form.validate_{key}()` methods
 
 ## 0.2.1 : 4.11.2019
 

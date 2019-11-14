@@ -114,6 +114,14 @@ class IntegerField(Field):
             raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
 
+    def validate(self, value):
+        super().validate(value)
+
+        try:
+            int(self.re_decimal.sub('', str(value)))
+        except (ValueError, TypeError):
+            raise ValidationError(self.error_messages['invalid'], code='invalid')
+
 
 class FloatField(IntegerField):
     default_error_messages = {
@@ -323,44 +331,39 @@ class FieldList(Field):
         if not isinstance(field, Field):
             raise RuntimeError("Invalid Field type passed into FieldList!")
 
-        self.field = field
+        self._field = field
 
         super().__init__(**kwargs)
 
     def to_python(self, value):
-        result = ()
+        result = []
         for item in value:
-            result += self.field.to_python(item)
+            result.append(self._field.to_python(item))
+        return result
 
     def validate(self, value):
         if not isinstance(value, list):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
 
         for item in value:
-            if isinstance(self.field, Field):
-                self.field.validate(item)
+            if isinstance(self._field, Field):
+                self._field.validate(item)
             else:
-                # TODO: toto nemoze byt RuntimeError
-                raise RuntimeError(f"Invalid field_type {type(self.field)} in FieldList")
+                raise ValidationError(f"Invalid field_type {type(self._field)} in FieldList", code='type_mismatch')
 
 
 class FormField(Field):
     def __init__(self, form: typing.Type, **kwargs):
-        """
-        TODO: what if there is invalid type?
-        :param form:
-        :param kwargs:
-        """
-        self.form = form
+        self._form = form
 
         super().__init__(**kwargs)
 
     def to_python(self, value):
-        form = self.form(value)
+        form = self._form(value)
         return form.payload
 
     def validate(self, value):
-        form = self.form(value)
+        form = self._form(value)
         form.is_valid(True)
 
 
@@ -372,7 +375,7 @@ class FormFieldList(FormField):
     def to_python(self, value):
         result = []
         for item in value:
-            form = self.form(item)
+            form = self._form(item)
             result.append(form.payload)
         return result
 
@@ -380,9 +383,18 @@ class FormFieldList(FormField):
         if not isinstance(value, list):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
 
+        errors = []
+
         for item in value:
-            form = self.form(item)
-            form.is_valid(True)
+            form = self._form(item)
+            try:
+                form.is_valid()
+            except ValidationError as e:
+                errors.append(e)
+
+        if errors:
+            e = ValidationError(errors)
+            raise e
 
 
 class EnumField(Field):
@@ -434,7 +446,7 @@ class DictionaryField(Field):
 
         for key, item in value.items():
             try:
-                self._value.validate(value)
+                self._value.validate(item)
             except ValidationError as e:
                 errors[key] = e
 

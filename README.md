@@ -107,7 +107,7 @@ class AlbumForm(Form):
             raise ValidationError("Year 1992 is forbidden!")
     
     def validate(self):
-        if (self._data['year'] == "1998") and (self._data['artis'] == "Nirvana"):
+        if (self._data['year'] == "1998") and (self._data['artist'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit")
 
 """

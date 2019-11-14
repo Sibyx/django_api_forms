@@ -1,0 +1,25 @@
+{
+  "title": "Unknown Pleasures",
+  "artist": {
+    "name": "Joy Division",
+    "genres": [
+      "rock",
+      "punk"
+    ],
+    "members": 4
+  },
+  "year": 1979,
+  "songs": [
+    {
+      "duration": "3:29"
+    },
+    {
+      "title": "Day of the Lords",
+      "duration": "4:48"
+    }
+  ],
+  "metadata": {
+    "created_at": "2019-10-21T18:57:03+01:00",
+    "updated_at": "2019-10-21T18:57:03+01:00"
+  }
+}
