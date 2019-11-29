@@ -50,7 +50,7 @@ class DeclarativeFieldsMetaclass(MediaDefiningClass):
 class BaseForm(object):
     def __init__(self, data=None):
         if data is None:
-            data = {}
+            self._data = {}
         else:
             self._data = data
         self.fields = copy.deepcopy(getattr(self, 'base_fields'))
