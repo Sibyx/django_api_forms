@@ -15,6 +15,8 @@ from django.utils.dateparse import parse_duration
 
 from django.utils.translation import gettext_lazy as _
 
+from django_request_formatter.exceptions import RequestValidationError
+
 
 class Field:
     default_error_messages = {
@@ -34,10 +36,7 @@ class Field:
 
         super().__init__()
 
-    def to_python(self, value):
-        return value
-
-    def validate(self, value):
+    def _validate(self, value):
         errors = []
 
         if value in self.empty_values and self.required:
@@ -50,6 +49,16 @@ class Field:
                 if hasattr(e, 'code') and e.code in self.default_error_messages:
                     e.message = self.default_error_messages[e.code]
                 errors.extend(e.error_list)
+
+        if errors:
+            raise ValidationError(errors)
+
+    def _to_python(self, value):
+        return value
+
+    def value(self, value, **kwargs):
+        self._validate(value)
+        return self._to_python(value)
 
     def __deepcopy__(self, memo):
         result = copy.copy(self)
@@ -77,7 +86,7 @@ class CharField(Field):
 
         self.validators.append(validators.ProhibitNullCharactersValidator())
 
-    def to_python(self, value):
+    def _to_python(self, value):
         if value not in self.empty_values:
             value = str(value)
             if self._strip:
@@ -103,8 +112,8 @@ class IntegerField(Field):
         if min_value is not None:
             self.validators.append(validators.MinValueValidator(min_value))
 
-    def to_python(self, value):
-        value = super().to_python(value)
+    def _to_python(self, value):
+        value = super()._to_python(value)
         if value in self.empty_values:
             return None
 
@@ -114,9 +123,8 @@ class IntegerField(Field):
             raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
 
-    def validate(self, value):
-        super().validate(value)
-
+    def _validate(self, value):
+        super()._validate(value)
         try:
             int(self.re_decimal.sub('', str(value)))
         except (ValueError, TypeError):
@@ -128,12 +136,12 @@ class FloatField(IntegerField):
         'invalid': _('Enter a number.'),
     }
 
-    def to_python(self, value):
+    def _to_python(self, value):
         """
         Validate that float() can be called on the input. Return the result
         of float() or None for empty values.
         """
-        value = super(IntegerField, self).to_python(value)
+        value = super(IntegerField, self)._to_python(value)
         if value in self.empty_values:
             return None
         try:
@@ -142,8 +150,8 @@ class FloatField(IntegerField):
             raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
 
-    def validate(self, value):
-        super().validate(value)
+    def _validate(self, value):
+        super()._validate(value)
         if value in self.empty_values:
             return
         if not math.isfinite(value):
@@ -160,7 +168,7 @@ class DecimalField(IntegerField):
         super().__init__(max_value=max_value, min_value=min_value, **kwargs)
         self.validators.append(validators.DecimalValidator(max_digits, decimal_places))
 
-    def to_python(self, value):
+    def _to_python(self, value):
         if value in self.empty_values:
             return None
         value = str(value).strip()
@@ -170,8 +178,8 @@ class DecimalField(IntegerField):
             raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
 
-    def validate(self, value):
-        super().validate(value)
+    def _validate(self, value):
+        super()._validate(value)
         if value in self.empty_values:
             return
         if not value.is_finite():
@@ -179,22 +187,21 @@ class DecimalField(IntegerField):
 
 
 class BaseTemporalField(Field):
-
     def __init__(self, *, input_formats=None, **kwargs):
         super().__init__(**kwargs)
         if input_formats is not None:
             self.input_formats = input_formats
 
-    def to_python(self, value):
+    def _to_python(self, value):
         value = value.strip()
         for format in self.input_formats:
             try:
-                return self.strptime(value, format)
+                return self._strptime(value, format)
             except (ValueError, TypeError):
                 continue
         raise ValidationError(self.error_messages['invalid'], code='invalid')
 
-    def strptime(self, value, format):
+    def _strptime(self, value, format):
         raise NotImplementedError('Subclasses must define this method.')
 
 
@@ -204,16 +211,16 @@ class DateField(BaseTemporalField):
         'invalid': _('Enter a valid date.'),
     }
 
-    def to_python(self, value):
+    def _to_python(self, value):
         if value in self.empty_values:
             return None
         if isinstance(value, datetime.datetime):
             return value.date()
         if isinstance(value, datetime.date):
             return value
-        return super().to_python(value)
+        return super()._to_python(value)
 
-    def strptime(self, value, format):
+    def _strptime(self, value, format):
         return datetime.datetime.strptime(value, format).date()
 
 
@@ -223,14 +230,14 @@ class TimeField(BaseTemporalField):
         'invalid': _('Enter a valid time.')
     }
 
-    def to_python(self, value):
+    def _to_python(self, value):
         if value in self.empty_values:
             return None
         if isinstance(value, datetime.time):
             return value
-        return super().to_python(value)
+        return super()._to_python(value)
 
-    def strptime(self, value, format):
+    def _strptime(self, value, format):
         return datetime.datetime.strptime(value, format).time()
 
 
@@ -240,7 +247,7 @@ class DateTimeField(BaseTemporalField):
         'invalid': _('Enter a valid date/time.'),
     }
 
-    def to_python(self, value):
+    def _to_python(self, value):
         if value in self.empty_values:
             return None
         if isinstance(value, datetime.datetime):
@@ -248,10 +255,10 @@ class DateTimeField(BaseTemporalField):
         if isinstance(value, datetime.date):
             result = datetime.datetime(value.year, value.month, value.day)
             return from_current_timezone(result)
-        result = super().to_python(value)
+        result = super()._to_python(value)
         return from_current_timezone(result)
 
-    def strptime(self, value, format):
+    def _strptime(self, value, format):
         return datetime.datetime.strptime(value, format)
 
 
@@ -261,7 +268,7 @@ class DurationField(Field):
         'overflow': _('The number of days must be between {min_days} and {max_days}.')
     }
 
-    def to_python(self, value):
+    def _to_python(self, value):
         if value in self.empty_values:
             return None
         if isinstance(value, datetime.timedelta):
@@ -310,14 +317,14 @@ class EmailField(CharField):
 
 
 class BooleanField(Field):
-    def to_python(self, value):
+    def _to_python(self, value):
         if isinstance(value, str) and value.lower() in ('false', '0'):
             value = False
         else:
             value = bool(value)
-        return super().to_python(value)
+        return super()._to_python(value)
 
-    def validate(self, value):
+    def _validate(self, value):
         if not value and self.required:
             raise ValidationError(self.error_messages['required'], code='required')
 
@@ -335,21 +342,24 @@ class FieldList(Field):
 
         super().__init__(**kwargs)
 
-    def to_python(self, value):
+    def _to_python(self, value):
         result = []
-        for item in value:
-            result.append(self._field.to_python(item))
-        return result
-
-    def validate(self, value):
-        if not isinstance(value, list):
-            raise ValidationError(self.error_messages['not_list'], code='not_list')
+        errors = []
 
         for item in value:
             if isinstance(self._field, Field):
-                self._field.validate(item)
+                try:
+                    result.append(self._field.value(item))
+                except ValidationError as e:
+                    errors.append(e)
             else:
-                raise ValidationError(f"Invalid field_type {type(self._field)} in FieldList", code='type_mismatch')
+                errors.append(ValidationError(f"Invalid field_type {type(self._field)} in FieldList", code='type_mismatch'))
+
+        return result
+
+    def _validate(self, value):
+        if not isinstance(value, list):
+            raise ValidationError(self.error_messages['not_list'], code='not_list')
 
 
 class FormField(Field):
@@ -358,13 +368,13 @@ class FormField(Field):
 
         super().__init__(**kwargs)
 
-    def to_python(self, value):
-        form = self._form(value)
-        return form.payload
+    def value(self, value, **kwargs):
+        self._validate(value)
+        return self._to_python(value, **kwargs)
 
-    def validate(self, value):
+    def _to_python(self, value, **kwargs):
         form = self._form(value)
-        form.is_valid(True)
+        return form.payload(**kwargs)
 
 
 class FormFieldList(FormField):
@@ -372,29 +382,30 @@ class FormFieldList(FormField):
         'not_list': _('This field have to be a list of objects!')
     }
 
-    def to_python(self, value):
+    def value(self, value, **kwargs):
+        self._validate(value)
+        return self._to_python(value, **kwargs)
+
+    def _to_python(self, value, **kwargs):
         result = []
-        for item in value:
-            form = self._form(item)
-            result.append(form.payload)
-        return result
-
-    def validate(self, value):
-        if not isinstance(value, list):
-            raise ValidationError(self.error_messages['not_list'], code='not_list')
-
         errors = []
 
         for item in value:
             form = self._form(item)
             try:
-                form.is_valid()
-            except ValidationError as e:
+                result.append(form.payload(**kwargs))
+            except RequestValidationError as e:
                 errors.append(e)
 
         if errors:
             e = ValidationError(errors)
             raise e
+
+        return result
+
+    def _validate(self, value):
+        if not isinstance(value, list):
+            raise ValidationError(self.error_messages['not_list'], code='not_list')
 
 
 class EnumField(Field):
@@ -410,10 +421,10 @@ class EnumField(Field):
 
         super().__init__(**kwargs)
 
-    def to_python(self, value):
+    def _to_python(self, value):
         return self.enum(value)
 
-    def validate(self, value):
+    def _validate(self, value):
         super().validate(value)
 
         if self.required and value is not None:
@@ -430,25 +441,23 @@ class DictionaryField(Field):
         self._value = value
         super().__init__(**kwargs)
 
-    def to_python(self, value) -> dict:
+    def _to_python(self, value) -> dict:
         result = {}
-
-        for key, item in value.items():
-            result[key] = self._value.to_python(item)
-
-        return result
-
-    def validate(self, value):
-        if not isinstance(value, dict):
-            raise ValidationError(f"Invalid value passed to DictionaryField (got {type(value)}, expected dict)")
-
         errors = {}
 
         for key, item in value.items():
             try:
-                self._value.validate(item)
+                result[key] = self._value.value(item)
             except ValidationError as e:
                 errors[key] = e
 
         if errors:
             raise ValidationError(errors)
+
+        return result
+
+    def _validate(self, value):
+        if not isinstance(value, dict):
+            raise ValidationError(f"Invalid value passed to DictionaryField (got {type(value)}, expected dict)")
+
+

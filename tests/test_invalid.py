@@ -4,6 +4,7 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.test import RequestFactory
 
+from django_request_formatter.exceptions import RequestValidationError
 from tests.testapp.forms import AlbumForm
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,13 +16,11 @@ def test_invalid(rf: RequestFactory):
 
     form = AlbumForm.create_from_request(request)
 
-    assert form.is_valid(False) is False
-
     try:
-        form.is_valid()
-    except ValidationError as e:
+        print(form.payload())
+    except RequestValidationError as e:
         print(e)
 
-    # with pytest.raises(ValidationError):
-    #     form.is_valid()
+    with pytest.raises(RequestValidationError):
+        form.payload()
 

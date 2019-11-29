@@ -7,6 +7,7 @@ import msgpack
 from django.core.exceptions import ValidationError
 from django.forms import MediaDefiningClass
 
+from django_request_formatter.exceptions import RequestValidationError
 from django_request_formatter.fields import Field
 
 
@@ -90,16 +91,38 @@ class BaseForm(object):
         return cls(data)
 
     @property
-    def errors(self) -> ValidationError:
+    def errors(self) -> Dict:
         return self._errors
 
-    @property
-    def payload(self) -> Dict:
+    def payload(self, **kwargs) -> Dict:
         result = {}
+        errors = {}
 
         for key, field in self.fields.items():
+            field_errors = []
             if key in self._dirty:
-                result[key] = field.to_python(self._data.get(key, None))
+                try:
+                    result[key] = field.value(self._data.get(key, None))
+                except (ValidationError, RequestValidationError) as e:
+                    field_errors.append(e)
+
+                if hasattr(self, f"validate_{key}"):
+                    try:
+                        getattr(self, f"validate_{key}")(result[key], **kwargs)
+                    except (ValidationError, RequestValidationError) as e:
+                        field_errors.append(e)
+
+                if field_errors:
+                    errors[key] = field_errors
+
+        try:
+            self.validate(**kwargs)
+        except RequestValidationError as e:
+            errors = {**errors, **e.errors}
+
+        if errors:
+            self._errors = errors
+            raise RequestValidationError(errors)
 
         return result
 
@@ -112,38 +135,6 @@ class BaseForm(object):
         """
         for key, item in self._data.items():
             setattr(obj, key, item)
-
-    def is_valid(self, raise_exception: bool = True, **kwargs):
-        errors = {}
-
-        for key, field in self.fields.items():
-            field_errors = []
-            try:
-                field.validate(self._data.get(key, None))
-            except ValidationError as e:
-                field_errors.append(e)
-
-            if hasattr(self, f"validate_{key}"):
-                try:
-                    getattr(self, f"validate_{key}")(self._data.get(key, None), **kwargs)
-                except ValidationError as e:
-                    field_errors.append(e)
-
-            if field_errors:
-                errors[key] = field_errors
-
-        try:
-            self.validate(**kwargs)
-        except ValidationError as e:
-            errors = {**errors, **e.error_dict}
-
-        if errors:
-            self._errors = errors
-            if raise_exception:
-                raise ValidationError(errors)
-            return False
-
-        return True
 
     def validate(self, **kwargs):
         pass
