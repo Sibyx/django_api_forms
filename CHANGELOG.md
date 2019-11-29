@@ -1,3 +1,7 @@
+## 0.4.2 : 29.11.2019
+
+- **Fix**: If payload is empty, create empty dictionary to avoid `NoneType` error
+
 ## 0.4.1 : 14.11.2019
 
 - **Feature**: Introduced `UUIDField`
