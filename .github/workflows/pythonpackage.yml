@@ -32,4 +32,4 @@ jobs:
       run: |
         pip install pytest==5.*
         pip install pytest-django
-        pytest
+        DJANGO_SETTINGS_MODULE=settings PYTHONPATH=./tests/ pytest
