@@ -28,8 +28,8 @@ def test_valid(rf: RequestFactory):
             }
         ],
         'metadata': {
-            'created_at': datetime.datetime.strptime('2019-10-21T18:57:03+01:00', "%Y-%m-%dT%H:%M:%S%z"),
-            'updated_at': datetime.datetime.strptime('2019-10-21T18:57:03+01:00', "%Y-%m-%dT%H:%M:%S%z"),
+            'created_at': datetime.datetime.strptime('2019-10-21T18:57:03+0100', "%Y-%m-%dT%H:%M:%S%z"),
+            'updated_at': datetime.datetime.strptime('2019-10-21T18:57:03+0100', "%Y-%m-%dT%H:%M:%S%z"),
         }
     }
 
