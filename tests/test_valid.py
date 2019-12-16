@@ -38,4 +38,5 @@ def test_valid(rf: RequestFactory):
 
     form = AlbumForm.create_from_request(request)
 
-    assert form.payload() == expected
+    assert form.is_valid() is True
+    assert form.cleaned_data == expected

@@ -2,25 +2,25 @@
 
 [![PyPI version](https://badge.fury.io/py/django-request-formatter.svg)](https://badge.fury.io/py/django-request-formatter)
 
-[Django Forms](https://docs.djangoproject.com/en/2.2/topics/forms/) approach in validation of request payload 
-(especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/)) 
+[Django Forms](https://docs.djangoproject.com/en/2.2/topics/forms/) approach in validation of request payload
+(especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
 without HTML front-end.
 
 **WIP: Library API is pretty unstable!**
 
 ## Motivation
 
-Main idea was to create a simple and declarative way to specify format of expecting request with ability to validate them.
-Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/2.2/topics/forms/) to validate my API request
-(I use pure Django in my APIs). I have encountered a problem with nesting my requests without huge boilerplate. Also, 
-the whole HTML thing was pretty useless in my RESTful APIs. 
+Main idea was to create a simple and declarative way to specify format of expecting request with ability to validate
+them. Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/2.2/topics/forms/) to validate my API
+request (I use pure Django in my APIs). I have encountered a problem with nesting my requests without huge boilerplate.
+Also, the whole HTML thing was pretty useless in my RESTful APIs.
 
-I wanted something to: 
+I wanted something to:
 
 - define my requests as object (`Form`)
 - pass the request to my defined object (`form = Form.create_from_request(request)`)
 - validate my request `form.is_valid()`
-- extract data `form.payload`
+- extract data `form.clean_data` property
 
 I wanted to keep:
 
@@ -79,14 +79,15 @@ python setup.py install
 **DjangoRequestFormatter equivalent + validation**
 
 ```python
+from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField
 from django_request_formatter.forms import Form
-from django_request_formatter import fields
 from django.core.exceptions import ValidationError
+from django.forms import fields
 
 
 class ArtistForm(Form):
     name = fields.CharField(required=True, max_length=100)
-    genres = fields.FieldList(field=fields.CharField(max_length=30))
+    genres = FieldList(field=fields.CharField(max_length=30))
     members = fields.IntegerField()
 
 
@@ -98,16 +99,17 @@ class SongForm(Form):
 class AlbumForm(Form):
     title = fields.CharField(max_length=100)
     year = fields.IntegerField()
-    artist = fields.FormField(form=ArtistForm)
-    songs = fields.FormFieldList(form=SongForm)
-    metadata = fields.DictionaryField(fields.DateTimeField())
-    
-    def validate_year(self, value):
-        if value == "1992":
+    artist = FormField(form=ArtistForm)
+    songs = FormFieldList(form=SongForm)
+    metadata = DictionaryField(fields.DateTimeField())
+
+    def clean_year(self):
+        if self.cleaned_data['year'] == 1992:
             raise ValidationError("Year 1992 is forbidden!")
-    
-    def validate(self):
-        if (self._data['year'] == "1998") and (self._data['artist'] == "Nirvana"):
+        return self.cleaned_data['year']
+
+    def clean(self):
+        if (self.cleaned_data['year'] == "1998") and (self.cleaned_data['artist'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit")
 
 """
@@ -115,13 +117,12 @@ Django view example
 """
 def create_album(request):
     form = AlbumForm.create_from_request(request)
-    try:
-        form.is_valid()
-    except ValidationError as e:
-        # Process exception
-        print(e)
-    # Sweat valid pythonic payload
-    payload = form.payload
+    if not form.is_valid():
+        # Process your validation error
+        print(form.errors)
+
+    # Cleaned valid payload
+    payload = form.cleaned_data
     print(payload)
 ```
 

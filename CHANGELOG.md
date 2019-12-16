@@ -1,11 +1,13 @@
-## 0.5.0 : 14.11.2019
+## 0.5.0 : 16.12.2019
 
-- **Fix**: Fixed validation in `DictionaryField`
-- **Change**: If there is a `ValueError` or `TypeError` in `IntegerField`, `ValidationError` is thrown
+- **Change**: Use native `django.form.fields` if possible
+- **Change**: Removed `kwargs` propagation from release `0.3.0`
+- **Change**: Changed syntax back to `django.forms` compatible (e.g. `form.validate_{key}()` -> `form.clean_{key}()`)
 - **Change**: `FieldList` raises `ValidationError` instead of `RuntimeException` if there is a type  in validation
-- **Fixed**: `FieldList` returns values instead of `None`
 - **Change**: Use private properties for internal data in field objects
-- **Maintenance**: Basic unit tests 
+- **Fixed**: `FieldList` returns values instead of `None`
+- **Fix**: Fixed validation in `DictionaryField`
+- **Maintenance**: Basic unit tests
 
 ## 0.4.0 : 13.11.2019
 
@@ -22,14 +24,14 @@
 ## 0.2.0 : 31.10.2019
 
 - **Change**: `Form.validate()` replaced by `Form.is_valid()`
-- **Feature**: `Form.validate()` is now used as a last step of form validation and it's aimed to be overwritten if 
-needed 
+- **Feature**: `Form.validate()` is now used as a last step of form validation and it's aimed to be overwritten if
+needed
 - **Note**: Unit tests initialization
 
 ## 0.1.6 : 24.10.2019
 
 - **Fix**: Non-required EnumField is now working
-- **Feature**: WIP: Initial method for filling objects `Form::fill()` 
+- **Feature**: WIP: Initial method for filling objects `Form::fill()`
 
 ## 0.1.5 : 23.10.2019
 

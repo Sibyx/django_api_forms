@@ -1,14 +1,14 @@
 {
   "title": "Unknown Pleasures",
   "artist": {
-    "name": "Joy Division",
+    "name": "Nirvana",
     "genres": [
       "rock",
       "punk"
     ],
     "members": 4
   },
-  "year": 1979,
+  "year": 1998,
   "songs": [
     {
       "duration": "3:29"
