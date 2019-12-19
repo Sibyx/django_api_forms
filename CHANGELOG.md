@@ -1,3 +1,7 @@
+## 0.5.2 : 19.12.2019
+
+- **Fix**: Skip processing of the `FormField` if value is not required and empty
+
 ## 0.5.1 : 19.12.2019
 
 - **Fix**: Process `EnumField` even if it's not marked as required

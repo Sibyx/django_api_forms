@@ -57,7 +57,10 @@ class FormField(Field):
     def form(self):
         return self._form
 
-    def to_python(self, value) -> dict:
+    def to_python(self, value) -> typing.Union[typing.Dict, None]:
+        if not value:
+            return None
+
         form = self._form(value)
         if form.is_valid():
             return form.cleaned_data
