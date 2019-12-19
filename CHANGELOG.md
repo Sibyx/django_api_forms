@@ -1,3 +1,7 @@
+## 0.5.1 : 19.12.2019
+
+- **Fix**: Process `EnumField` even if it's not marked as required
+
 ## 0.5.0 : 16.12.2019
 
 - **Change**: Use native `django.form.fields` if possible

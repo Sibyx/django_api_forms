@@ -23,7 +23,7 @@ class FieldList(Field):
 
         super().__init__(**kwargs)
 
-    def to_python(self, value):
+    def to_python(self, value) -> typing.List:
         if not isinstance(value, list):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
 
@@ -52,6 +52,10 @@ class FormField(Field):
         self._form = form
 
         super().__init__(**kwargs)
+
+    @property
+    def form(self):
+        return self._form
 
     def to_python(self, value) -> dict:
         form = self._form(value)
@@ -99,12 +103,13 @@ class EnumField(Field):
 
         super().__init__(**kwargs)
 
-    def to_python(self, value):
-        if self.required and value is not None:
+    def to_python(self, value) -> typing.Union[typing.Type[Enum], None]:
+        if value is not None:
             try:
                 return self.enum(value)
             except ValueError:
                 raise ValidationError(f"Invalid enum value {value} passed to {type(self.enum)}")
+        return None
 
 
 class DictionaryField(Field):

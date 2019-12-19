@@ -3,7 +3,7 @@ import os
 
 from django.test import RequestFactory
 
-from tests.testapp.forms import AlbumForm
+from tests.testapp.forms import AlbumForm, AlbumType
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -12,6 +12,7 @@ def test_valid(rf: RequestFactory):
     expected = {
         'title': "Unknown Pleasures",
         'year': 1979,
+        'type': AlbumType.VINYL,
         'artist': {
             'name': "Joy Division",
             'genres': ['rock', 'punk'],

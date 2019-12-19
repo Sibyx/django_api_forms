@@ -50,6 +50,7 @@ python setup.py install
 ```json
 {
   "title": "Unknown Pleasures",
+  "type": "vinyl",
   "artist": {
     "name": "Joy division",
     "genres": [
@@ -79,10 +80,18 @@ python setup.py install
 **DjangoRequestFormatter equivalent + validation**
 
 ```python
-from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField
-from django_request_formatter.forms import Form
+from enum import Enum
+
 from django.core.exceptions import ValidationError
 from django.forms import fields
+
+from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField, EnumField
+from django_request_formatter.forms import Form
+
+
+class AlbumType(Enum):
+    CD = 'cd'
+    VINYL = 'vinyl'
 
 
 class ArtistForm(Form):
@@ -101,16 +110,19 @@ class AlbumForm(Form):
     year = fields.IntegerField()
     artist = FormField(form=ArtistForm)
     songs = FormFieldList(form=SongForm)
+    type = EnumField(enum=AlbumType, required=True)
     metadata = DictionaryField(fields.DateTimeField())
 
     def clean_year(self):
         if self.cleaned_data['year'] == 1992:
-            raise ValidationError("Year 1992 is forbidden!")
+            raise ValidationError("Year 1992 is forbidden!", 'forbidden-value')
         return self.cleaned_data['year']
 
     def clean(self):
-        if (self.cleaned_data['year'] == "1998") and (self.cleaned_data['artist'] == "Nirvana"):
-            raise ValidationError("Sounds like a bullshit")
+        if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
+            raise ValidationError("Sounds like a bullshit", code='time-traveling')
+        return self.cleaned_data
+
 
 """
 Django view example
