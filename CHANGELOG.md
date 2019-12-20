@@ -1,4 +1,4 @@
-## 0.5.3 : 19.12.2019
+## 0.5.3 : 20.12.2019
 
 - **Feature**: Introduced generic `AnyField`
 
