@@ -16,7 +16,23 @@
     },
     {
       "title": "Day of the Lords",
-      "duration": "4:48"
+      "duration": "4:48",
+      "metadata": {
+        "_section": {
+          "type": "ID3v2",
+          "offset": 0,
+          "byteLength": 2048
+        },
+        "header": {
+          "majorVersion": 3,
+          "minorRevision": 0,
+          "flagsOctet": 0,
+          "unsynchronisationFlag": false,
+          "extendedHeaderFlag": false,
+          "experimentalIndicatorFlag": false,
+          "size": 2038
+        }
+      }
     }
   ],
   "metadata": {

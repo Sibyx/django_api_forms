@@ -3,7 +3,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField, EnumField
+from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField
 from django_request_formatter.forms import Form
 
 
@@ -21,6 +21,7 @@ class ArtistForm(Form):
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
     duration = fields.DurationField(required=False)
+    metadata = AnyField(required=False)
 
 
 class AlbumForm(Form):

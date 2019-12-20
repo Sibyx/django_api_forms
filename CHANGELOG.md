@@ -1,3 +1,7 @@
+## 0.5.3 : 19.12.2019
+
+- **Feature**: Introduced generic `AnyField`
+
 ## 0.5.2 : 19.12.2019
 
 - **Fix**: Skip processing of the `FormField` if value is not required and empty

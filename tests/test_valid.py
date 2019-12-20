@@ -21,11 +21,28 @@ def test_valid(rf: RequestFactory):
         'songs': [
             {
                 'title': "Disorder",
-                'duration': datetime.timedelta(seconds=209)
+                'duration': datetime.timedelta(seconds=209),
+                'metadata': None  # FIXME: this not suppose to be he
             },
             {
                 'title': "Day of the Lords",
-                'duration': datetime.timedelta(seconds=288)
+                'duration': datetime.timedelta(seconds=288),
+                'metadata': {
+                    '_section': {
+                        "type": "ID3v2",
+                        "offset": 0,
+                        "byteLength": 2048
+                    },
+                    'header': {
+                        "majorVersion": 3,
+                        "minorRevision": 0,
+                        "flagsOctet": 0,
+                        "unsynchronisationFlag": False,
+                        "extendedHeaderFlag": False,
+                        "experimentalIndicatorFlag": False,
+                        "size": 2038
+                    }
+                }
             }
         ],
         'metadata': {

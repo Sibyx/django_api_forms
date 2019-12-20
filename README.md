@@ -52,7 +52,7 @@ python setup.py install
   "title": "Unknown Pleasures",
   "type": "vinyl",
   "artist": {
-    "name": "Joy division",
+    "name": "Joy Division",
     "genres": [
       "rock",
       "punk"
@@ -67,14 +67,31 @@ python setup.py install
     },
     {
       "title": "Day of the Lords",
-      "duration": "4:48"
+      "duration": "4:48",
+      "metadata": {
+        "_section": {
+          "type": "ID3v2",
+          "offset": 0,
+          "byteLength": 2048
+        },
+        "header": {
+          "majorVersion": 3,
+          "minorRevision": 0,
+          "flagsOctet": 0,
+          "unsynchronisationFlag": false,
+          "extendedHeaderFlag": false,
+          "experimentalIndicatorFlag": false,
+          "size": 2038
+        }
+      }
     }
   ],
   "metadata": {
-    "created_at": "2019-10-21T18:57:03+00:00",
-    "updated_at": "2019-10-21T18:57:03+00:00"
+    "created_at": "2019-10-21T18:57:03+0100",
+    "updated_at": "2019-10-21T18:57:03+0100"
   }
 }
+
 ```
 
 **DjangoRequestFormatter equivalent + validation**
@@ -85,7 +102,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField, EnumField
+from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField
 from django_request_formatter.forms import Form
 
 
@@ -103,6 +120,7 @@ class ArtistForm(Form):
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
     duration = fields.DurationField(required=False)
+    metadata = AnyField(required=False)
 
 
 class AlbumForm(Form):
@@ -122,6 +140,7 @@ class AlbumForm(Form):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         return self.cleaned_data
+
 
 
 """

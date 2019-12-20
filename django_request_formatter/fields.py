@@ -139,3 +139,8 @@ class DictionaryField(Field):
             raise ValidationError(errors)
 
         return result
+
+
+class AnyField(Field):
+    def to_python(self, value) -> typing.Union[typing.Dict, typing.List]:
+        return value
