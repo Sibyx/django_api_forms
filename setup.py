@@ -4,7 +4,8 @@ from setuptools import setup
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 REQUIRED = [
-    'Django>=2.0'
+    'Django>=2.0',
+    'msgpack'
 ]
 
 

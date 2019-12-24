@@ -1,3 +1,7 @@
+## 0.5.4 : 24.12.2019
+
+- **Fix**: Added missing `msgpack`` dependency to `setup.py`
+
 ## 0.5.3 : 20.12.2019
 
 - **Feature**: Introduced generic `AnyField`
