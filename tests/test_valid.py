@@ -22,7 +22,7 @@ def test_valid(rf: RequestFactory):
             {
                 'title': "Disorder",
                 'duration': datetime.timedelta(seconds=209),
-                'metadata': None  # FIXME: this not suppose to be he
+                'metadata': None  # FIXME: this not suppose to be here
             },
             {
                 'title': "Day of the Lords",

@@ -1,3 +1,9 @@
+# Changelog
+
+## 0.5.5 : 01.01.2020
+
+- **Fix**: Check instance only if there is a value in `FieldList` and `FormFieldList`
+
 ## 0.5.4 : 24.12.2019
 
 - **Fix**: Added missing `msgpack`` dependency to `setup.py`
