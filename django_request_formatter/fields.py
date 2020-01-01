@@ -24,7 +24,10 @@ class FieldList(Field):
         super().__init__(**kwargs)
 
     def to_python(self, value) -> typing.List:
-        if value and not isinstance(value, list):
+        if not value:
+            return []
+
+        if not isinstance(value, list):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
 
         result = []
@@ -74,7 +77,10 @@ class FormFieldList(FormField):
     }
 
     def to_python(self, value):
-        if value and not isinstance(value, list):
+        if not value:
+            return []
+
+        if not isinstance(value, list):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
 
         result = []

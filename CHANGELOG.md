@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.6 : 01.01.2020
+
+- **Fix**: Fixing issue from version `0.5.5` but this time for real
+- **Change**: Renamed version file from `__version__.py` to `version.py`
+
 ## 0.5.5 : 01.01.2020
 
 - **Fix**: Check instance only if there is a value in `FieldList` and `FormFieldList`

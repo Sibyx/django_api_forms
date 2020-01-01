@@ -18,7 +18,7 @@ def read_files(files):
 
 
 meta = {}
-with open('./django_request_formatter/__version__.py') as f:
+with open('./django_request_formatter/version.py') as f:
     exec(f.read(), meta)
 
 setup(
