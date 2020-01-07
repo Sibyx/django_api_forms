@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.8 : 07.01.2020
+
+- **Fix**: Pass `Invalid value` as `ValidationError` not as a `string`
+
 ## 0.5.7 : 07.01.2020
 
 - **Fix**: Introduced generic `Invalid value` error message, if there is `AttributeError`, `TypeError`, `ValueError`
