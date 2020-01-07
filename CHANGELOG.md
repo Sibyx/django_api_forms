@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.7 : 07.01.2020
+
+- **Fix**: Introduced generic `Invalid value` error message, if there is `AttributeError`, `TypeError`, `ValueError`
+
 ## 0.5.6 : 01.01.2020
 
 - **Fix**: Fixing issue from version `0.5.5` but this time for real

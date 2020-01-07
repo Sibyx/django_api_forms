@@ -6,6 +6,7 @@ from typing import Union
 import msgpack
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.forms import MediaDefiningClass, Field
+from django.utils.translation import gettext
 
 from django_request_formatter.exceptions import RequestValidationError
 
@@ -147,6 +148,8 @@ class BaseForm(object):
                     self.cleaned_data[key] = getattr(self, f"clean_{key}")()
             except (ValidationError, RequestValidationError) as e:
                 self.add_error(key, e)
+            except (AttributeError, TypeError, ValueError):
+                self.add_error(key, gettext("Invalid value"))
 
         try:
             cleaned_data = self.clean()
