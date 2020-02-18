@@ -10,6 +10,26 @@ from django.utils.translation import gettext_lazy as _
 from django_request_formatter.exceptions import RequestValidationError
 
 
+class BooleanField(Field):
+    def to_python(self, value):
+        if value in (True, 'True', 'true', '1'):
+            return True
+        elif value in (False, 'False', 'false', '0'):
+            return False
+        else:
+            return None
+
+    def validate(self, value):
+        if value is None and self.required:
+            raise ValidationError(self.error_messages['required'], code='required')
+
+    def has_changed(self, initial, data):
+        if self.disabled:
+            return False
+
+        return self.to_python(initial) != self.to_python(data)
+
+
 class FieldList(Field):
     default_error_messages = {
         'not-list': _('This field have to be a list of objects!'),

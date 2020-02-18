@@ -24,11 +24,12 @@ I wanted something to:
 
 I wanted to keep:
 
-- friendly Django syntax ([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful)
+- friendly declarative Django syntax
+([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful)
 - [Django Validators](https://docs.djangoproject.com/en/2.2/ref/validators/)
 - [ValidationError](https://docs.djangoproject.com/en/2.2/ref/exceptions/#validationerror)
 
-So I decided to create simple python package to cover all my expectations.
+So I decided to create simple Python package to cover all my expectations.
 
 ## Installation
 

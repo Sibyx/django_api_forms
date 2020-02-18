@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0 : 18.02.2020
+
+- **Feature**: `BooleanField` introduced
+
 ## 0.5.8 : 07.01.2020
 
 - **Fix**: Pass `Invalid value` as `ValidationError` not as a `string`
