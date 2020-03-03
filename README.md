@@ -1,6 +1,6 @@
 # Django API Forms
 
-[![PyPI version](https://badge.fury.io/py/django-request-formatter.svg)](https://badge.fury.io/py/django-request-formatter)
+[![PyPI version](https://badge.fury.io/py/django-api-forms.svg)](https://badge.fury.io/py/django-api-forms)
 
 [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) approach in validation of request payload
 (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
