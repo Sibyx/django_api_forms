@@ -1,8 +1,8 @@
-# DjangoRequestFormatter
+# Django API Forms
 
 [![PyPI version](https://badge.fury.io/py/django-request-formatter.svg)](https://badge.fury.io/py/django-request-formatter)
 
-[Django Forms](https://docs.djangoproject.com/en/2.2/topics/forms/) approach in validation of request payload
+[Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) approach in validation of request payload
 (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
 without HTML front-end.
 
@@ -11,7 +11,7 @@ without HTML front-end.
 ## Motivation
 
 Main idea was to create a simple and declarative way to specify format of expecting request with ability to validate
-them. Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/2.2/topics/forms/) to validate my API
+them. Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to validate my API
 request (I use pure Django in my APIs). I have encountered a problem with nesting my requests without huge boilerplate.
 Also, the whole HTML thing was pretty useless in my RESTful APIs.
 
@@ -26,8 +26,8 @@ I wanted to keep:
 
 - friendly declarative Django syntax
 ([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful)
-- [Django Validators](https://docs.djangoproject.com/en/2.2/ref/validators/)
-- [ValidationError](https://docs.djangoproject.com/en/2.2/ref/exceptions/#validationerror)
+- [Django Validators](https://docs.djangoproject.com/en/3.0/ref/validators/)
+- [ValidationError](https://docs.djangoproject.com/en/3.0/ref/exceptions/#validationerror)
 
 So I decided to create simple Python package to cover all my expectations.
 
@@ -35,10 +35,10 @@ So I decided to create simple Python package to cover all my expectations.
 
 ```shell script
 # Using pip
-pip install django_request_formatter
+pip install django_api_forms
 
 # Using pipenv
-pipenv install django_request_formatter
+pipenv install django_api_forms
 
 # Using setup.py
 python setup.py install
@@ -95,7 +95,7 @@ python setup.py install
 
 ```
 
-**DjangoRequestFormatter equivalent + validation**
+**Django API Forms equivalent + validation**
 
 ```python
 from enum import Enum
@@ -103,8 +103,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField
-from django_request_formatter.forms import Form
+from django_api_forms import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField, Form
 
 
 class AlbumType(Enum):
@@ -159,4 +158,4 @@ def create_album(request):
 ```
 
 ---
-Made with ❤️ by Jakub Dubec & [BACKBONE s.r.o.](https://www.backbone.sk/en/)
+Made with ❤️ and ☕️ by Jakub Dubec & [BACKBONE s.r.o.](https://www.backbone.sk/en/)

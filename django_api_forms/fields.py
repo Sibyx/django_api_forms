@@ -7,7 +7,7 @@ from django.forms import Field
 
 from django.utils.translation import gettext_lazy as _
 
-from django_request_formatter.exceptions import RequestValidationError
+from .exceptions import RequestValidationError
 
 
 class BooleanField(Field):

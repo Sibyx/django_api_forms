@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class TestAppConfig(AppConfig):
-    name = 'django_request_formatter.tests.testapp'
+    name = 'django_api_forms.tests.testapp'
     verbose_name = 'TestApp'

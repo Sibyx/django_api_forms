@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.forms import MediaDefiningClass, Field
 from django.utils.translation import gettext as _
 
-from django_request_formatter.exceptions import RequestValidationError
+from .exceptions import RequestValidationError
 
 
 class DeclarativeFieldsMetaclass(MediaDefiningClass):

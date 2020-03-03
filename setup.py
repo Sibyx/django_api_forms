@@ -18,15 +18,15 @@ def read_files(files):
 
 
 meta = {}
-with open('./django_request_formatter/version.py') as f:
+with open('django_api_forms/version.py') as f:
     exec(f.read(), meta)
 
 setup(
-    name='django_request_formatter',
+    name='django_api_forms',
     version=meta['__version__'],
-    packages=['django_request_formatter'],
+    packages=['django_api_forms'],
     install_requires=REQUIRED,
-    url='https://github.com/Sibyx/django_request_formatter',
+    url='https://github.com/Sibyx/django_api_forms',
     license='MIT',
     author='Jakub Dubec',
     author_email='jakub.dubec@gmail.com',

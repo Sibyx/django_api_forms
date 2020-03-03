@@ -3,8 +3,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_request_formatter.fields import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField
-from django_request_formatter.forms import Form
+from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField
 
 
 class AlbumType(Enum):

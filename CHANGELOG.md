@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 : 03.02.2020
+
+- **Change**: Library renamed from `django_request_formatter` to `django_api_forms`
+- **Change**: Imports in main module `django_api_forms`
+
 ## 0.6.0 : 18.02.2020
 
 - **Feature**: `BooleanField` introduced
