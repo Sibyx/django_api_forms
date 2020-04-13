@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.7.0 : 03.02.2020
+## 0.7.1 : 13.04.2020
+
+- **Change** Use [poetry](https://python-poetry.org/) instead of [pipenv](https://github.com/pypa/pipenv)
+- **Change**: Library renamed from `django_api_forms` to `django-api-forms` (cosmetic change without effect)
+
+## 0.7.0 : 03.03.2020
 
 - **Change**: Library renamed from `django_request_formatter` to `django_api_forms`
 - **Change**: Imports in main module `django_api_forms`

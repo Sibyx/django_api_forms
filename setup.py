@@ -22,7 +22,7 @@ with open('django_api_forms/version.py') as f:
     exec(f.read(), meta)
 
 setup(
-    name='django_api_forms',
+    name='django-api-forms',
     version=meta['__version__'],
     packages=['django_api_forms'],
     install_requires=REQUIRED,
@@ -30,16 +30,14 @@ setup(
     license='MIT',
     author='Jakub Dubec',
     author_email='jakub.dubec@gmail.com',
-    description='Declarative Django request validation ',
+    description='Declarative Django request validation',
     long_description=read_files(['README.md', 'CHANGELOG.md']),
     long_description_content_type='text/markdown',
     keywords=['django', 'forms', 'request', 'validation', 'python'],
     classifiers=[
         # As from https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',

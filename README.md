@@ -1,6 +1,7 @@
 # Django API Forms
 
 [![PyPI version](https://badge.fury.io/py/django-api-forms.svg)](https://badge.fury.io/py/django-api-forms)
+[![codecov](https://codecov.io/gh/Sibyx/django_api_forms/branch/master/graph/badge.svg)](https://codecov.io/gh/Sibyx/django_api_forms)
 
 [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) approach in validation of request payload
 (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
@@ -35,10 +36,10 @@ So I decided to create simple Python package to cover all my expectations.
 
 ```shell script
 # Using pip
-pip install django_api_forms
+pip install django-api-forms
 
 # Using pipenv
-pipenv install django_api_forms
+pipenv install django-api-forms
 
 # Using setup.py
 python setup.py install
