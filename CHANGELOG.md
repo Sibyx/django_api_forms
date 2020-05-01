@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0 : TBD
+
+- **Change**: Msgpack dependency is no longer required.
+
 ## 0.7.1 : 13.04.2020
 
 - **Change** Use [poetry](https://python-poetry.org/) instead of [pipenv](https://github.com/pypa/pipenv)
