@@ -1,12 +1,10 @@
 import os
+
 from setuptools import setup
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-REQUIRED = [
-    'Django>=2.0',
-    'msgpack'
-]
+REQUIRED = ['Django>=2.0']
 
 
 def read_files(files):

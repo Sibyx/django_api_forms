@@ -3,12 +3,22 @@ import json
 from collections import OrderedDict
 from typing import Union
 
-import msgpack
-from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-from django.forms import MediaDefiningClass, Field
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.forms import Field, MediaDefiningClass
 from django.utils.translation import gettext as _
 
-from .exceptions import RequestValidationError
+from .exceptions import RequestValidationError, UnsupportedMediaType
+
+try:
+    import msgpack
+    is_msgpack_installed = True
+except ImportError:
+    is_msgpack_installed = False
+
+
+parsers_by_content_type = {'application/json': json.loads}
+if is_msgpack_installed:
+    parsers_by_content_type['application/x-msgpack'] = msgpack.loads
 
 
 class DeclarativeFieldsMetaclass(MediaDefiningClass):
@@ -88,12 +98,12 @@ class BaseForm(object):
         if not request.body:
             return cls(None)
 
-        if request.META.get('CONTENT_TYPE') and 'application/json' in request.META.get('CONTENT_TYPE'):
-            data = json.loads(request.body)
-        elif request.META.get('CONTENT_TYPE') and 'application/x-msgpack' in request.META.get('CONTENT_TYPE'):
-            data = msgpack.loads(request.body)
+        content_type = request.META.get('CONTENT_TYPE', '')
+        parser = parsers_by_content_type.get(content_type)
+        if parser:
+            data = parser(request.body)
         else:
-            raise RuntimeError("Unable to parse request!")
+            raise UnsupportedMediaType
 
         return cls(data)
 
