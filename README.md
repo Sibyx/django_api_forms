@@ -43,6 +43,12 @@ pipenv install django-api-forms
 python setup.py install
 ```
 
+Optional:
+```shell script
+# msgpack support
+pipenv install msgpack
+```
+
 ## Example
 
 **Simple nested JSON request**
@@ -160,6 +166,17 @@ If you want example with whole Django project, check out repository created by @
 [django_api_forms_modelchoicefield_example](https://github.com/pawl/django_api_forms_modelchoicefield_example), where
 he uses library with
 [ModelChoiceField](https://docs.djangoproject.com/en/3.0/ref/forms/fields/#django.forms.ModelChoiceField).
+
+
+## Running Tests
+
+```shell script
+# install all dependencies
+poetry install
+
+# run the tests
+poetry run pytest
+```
 
 ---
 Made with ❤️ and ☕️ by Jakub Dubec & [BACKBONE s.r.o.](https://www.backbone.sk/en/)
