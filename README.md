@@ -45,7 +45,7 @@ python setup.py install
 
 Optional:
 ```shell script
-# msgpack support
+# msgpack support (for requests with Content-Type: application/x-msgpack)
 pipenv install msgpack
 ```
 
