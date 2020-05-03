@@ -305,12 +305,6 @@ class EnumFieldTests(SimpleTestCase):
         with self.assertRaisesMessage(ValidationError, expected_error):
             enum_field.clean(invalid_val)
 
-        # TEST: f-string vulnerability (this should be escaped in the error)
-        payload = 'self.__class__'
-        expected_error = '["Invalid enum value self.__class__ passed to <class \'enum.EnumMeta\'>"]'
-        with self.assertRaisesMessage(ValidationError, expected_error):
-            enum_field.clean(payload)
-
         # TEST: required=True - non-None empty values throw an error
         for empty_val in ['', [], (), {}]:
             expected_error = '["Invalid enum value {} passed to <class \'enum.EnumMeta\'>"]'
