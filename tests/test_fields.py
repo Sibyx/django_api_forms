@@ -144,16 +144,19 @@ class FormFieldTests(SimpleTestCase):
         valid_val = {'name': 'blah'}
         self.assertEqual(valid_val, form_field.clean(valid_val))
 
-        # TEST: invalid input (non-dict values)
-        """
-        invalid_vals = [None, 0, False, '0', 1, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
+        # TEST: invalid input (values the FormField considers invalid)
+        invalid_vals = ['0', 1, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
         expected_error = "({'name': [ValidationError(['Invalid value'])]}, None, None)"
         for invalid_val in invalid_vals:
             with self.assertRaisesMessage(RequestValidationError, expected_error):
                 log_input(invalid_val)
                 form_field.clean(invalid_val)
-        """
-        # "None", type: "<class 'NoneType'>" - ValidationError: ['This field is required.']
+
+        # TEST: required=True, form WITH required field - invalid input (empty value)
+        invalid_val = {'name': None}
+        expected_error = "({'name': [ValidationError(['This field is required.'])]}, None, None)"
+        with self.assertRaisesMessage(RequestValidationError, expected_error):
+            form_field.clean(invalid_val)
 
         # TEST: required=True, form WITH required field - invalid input (unexpected dict key)
         invalid_val = {'unexpected key': 'blah'}
