@@ -202,25 +202,40 @@ class FormFieldListTests(SimpleTestCase):
         form_field_list = FormFieldList(form=self.TestFormWithRequiredField)
 
         # TEST: valid input
-        valid_val = [{'number': 1}, {'number': 2}]
+        valid_val = [{'number': 1}, {'number': 2}, {'number': 0}]
         self.assertEqual(valid_val, form_field_list.clean(valid_val))
 
-        # TEST: invalid input (list of non-dict values)
-        """
-        invalid_vals = [None, '', [], (), 0, False, 1, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
-        expected_form_errors = [{'number': [ValidationError(['Invalid value'])]}] * len(invalid_vals)
-        expected_error = str((expected_form_errors, None, None))
-        with self.assertRaisesMessage(RequestValidationError, expected_error):
-            form_field_list.clean(invalid_vals)
-        """
-        # "([{'number': [ValidationError(['This field is required.'])]}, ~
+        # TEST: invalid input (non-list values the FormFieldList considers invalid)
+        invalid_vals = [datetime.datetime.now(), 'blah', {'blah'}, 1]
+        expected_error = str([FormFieldList.default_error_messages['not_list']])
+        for invalid_val in invalid_vals:
+            with self.assertRaisesMessage(ValidationError, expected_error):
+                log_input(invalid_val)
+                form_field_list.clean(invalid_val)
 
-        # TEST: required=True, form WITH required field - list of {} throws error
-        empty_vals = [{}, {}]
-        expected_form_errors = [{'number': [ValidationError(['This field is required.'])]}] * len(empty_vals)
+        # TEST: invalid input (non-list values the FormFieldList considers empty)
+        invalid_vals = [None, '', (), {}, False, 0]
+        for invalid_val in invalid_vals:
+            with self.assertRaisesMessage(ValidationError, "['This field is required.']"):
+                log_input(invalid_val)
+                form_field_list.clean(invalid_val)
+
+        # TEST: invalid input (values the FormFieldList's Form's IntegerField considers invalid)
+        invalid_vals = [False, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
+        expected_form_errors = [{'number': [ValidationError(['Enter a whole number.'])]}]
         expected_error = str((expected_form_errors, None, None))
-        with self.assertRaisesMessage(RequestValidationError, expected_error):
-            form_field_list.clean(empty_vals)
+        for invalid_val in invalid_vals:
+            with self.assertRaisesMessage(RequestValidationError, expected_error):
+                log_input(invalid_val)
+                form_field_list.clean([{'number': invalid_val}])
+
+        # TEST: invalid input (values the FieldList's Form's IntegerField considers empty)
+        expected_form_errors = [{'number': [ValidationError(['This field is required.'])]}]
+        expected_error = str((expected_form_errors, None, None))
+        for empty_val in EMPTY_VALUES:
+            with self.assertRaisesMessage(RequestValidationError, expected_error):
+                log_input(empty_val)
+                form_field_list.clean([{'number': empty_val}])
 
         # TEST: required=True, form WITHOUT required field - list of {} with unexpected keys returns key with blank
         """
@@ -231,7 +246,7 @@ class FormFieldListTests(SimpleTestCase):
         """
         # RequestValidationError: ({'number': [ValidationError(['Invalid value'])]}, None, None)
 
-        # this should throw RequestValidationError?
+        # TEST: required=True - [] is not allowed
         with self.assertRaisesMessage(ValidationError, "['This field is required.']"):
             form_field_list.clean([])
 
