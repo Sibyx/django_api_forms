@@ -101,14 +101,17 @@ class FieldListTests(SimpleTestCase):
         valid_val = [1, 2, 3]
         self.assertEqual(valid_val, field_list.clean(valid_val))
 
-        # TEST: invalid input (list of values that don't match the FieldList type)
-        """
-        invalid_vals = [None, '', {}, (), 0, False, 1, datetime.datetime.now(), 'blah', {'blah'}]
+        # TEST: invalid input (list of values the FieldList's IntegerField considers invalid)
+        invalid_vals = [False, datetime.datetime.now(), 'blah', {'blah'}]
+        expected_error = str(['Enter a whole number.'] * len(invalid_vals))
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            field_list.clean(invalid_vals)
+
+        # TEST: invalid input (list of values that the FieldList's IntegerField considers empty)
+        invalid_vals = list(EMPTY_VALUES)
         expected_error = str(['This field is required.'] * len(invalid_vals))
         with self.assertRaisesMessage(ValidationError, expected_error):
             field_list.clean(invalid_vals)
-        """
-        # AssertionError: "['This field is required.', 'This field is required.', ~
 
         # TEST: list of values with types NOT matching FieldList's field
         invalid_val = [datetime.datetime.now(), 'blah']
