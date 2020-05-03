@@ -184,11 +184,8 @@ class FormFieldTests(SimpleTestCase):
         self.assertEqual(valid_val, form_field.clean(valid_val))
 
         # TEST: required=False - empty values return {}
-        """
         for empty_val in EMPTY_VALUES:
             self.assertEqual({}, form_field.clean(empty_val))
-        """
-        # AssertionError: {} != None
 
 
 class FormFieldListTests(SimpleTestCase):

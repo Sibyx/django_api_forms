@@ -80,7 +80,7 @@ class FormField(Field):
 
     def to_python(self, value) -> typing.Union[typing.Dict, None]:
         if not value:
-            return None
+            return {}
 
         form = self._form(value)
         if form.is_valid():
