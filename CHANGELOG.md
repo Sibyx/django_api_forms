@@ -2,6 +2,7 @@
 
 ## 0.8.0 : TBD
 
+- **Maintenance**: Add tests for fields
 - **Change**: Msgpack dependency is no longer required.
 
 ## 0.7.1 : 13.04.2020
