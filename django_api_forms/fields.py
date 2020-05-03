@@ -1,10 +1,8 @@
 import typing
-
 from enum import Enum
 
 from django.core.exceptions import ValidationError
 from django.forms import Field
-
 from django.utils.translation import gettext_lazy as _
 
 from .exceptions import RequestValidationError
@@ -125,8 +123,10 @@ class EnumField(Field):
     }
 
     def __init__(self, enum: typing.Type, **kwargs):
-        if not issubclass(enum, Enum):
-            raise RuntimeError("Invalid Field type passed into FieldList!")
+        # isinstance(enum, type) prevents "TypeError: issubclass() arg 1 must be a class"
+        # based on: https://github.com/samuelcolvin/pydantic/blob/v0.32.x/pydantic/utils.py#L260-L261
+        if not (isinstance(enum, type) and issubclass(enum, Enum)):
+            raise RuntimeError("Invalid Enum type passed into EnumField!")
 
         self.enum = enum
 
