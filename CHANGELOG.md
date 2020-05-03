@@ -4,6 +4,7 @@
 
 - **Maintenance**: Add tests for fields
 - **Change**: Msgpack dependency is no longer required.
+- **Fix**: Throw a more user friendly error when passing non-Enums to EnumField.
 
 ## 0.7.1 : 13.04.2020
 
