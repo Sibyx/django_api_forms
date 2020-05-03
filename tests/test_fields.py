@@ -39,7 +39,10 @@ class BooleanFieldTests(SimpleTestCase):
     ]
     TRUTHY_VALUES = [
         1,
+        '1',
         True,
+        'true',
+        'True',
         #  'django_api_forms rocks',
     ]
 
