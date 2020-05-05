@@ -36,6 +36,9 @@ So I decided to create simple Python package to cover all my expectations.
 # Using pip
 pip install django-api-forms
 
+# Using poetry
+peotry add django-api-forms
+
 # Using pipenv
 pipenv install django-api-forms
 

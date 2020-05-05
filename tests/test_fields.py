@@ -266,9 +266,9 @@ class FormFieldListTests(SimpleTestCase):
 
 class EnumFieldTests(SimpleTestCase):
     class Color(Enum):
-            RED = 1
-            GREEN = 2
-            BLUE = 3
+        RED = 1
+        GREEN = 2
+        BLUE = 3
 
     def test_enumfield_init(self):
         # TEST: initialize EnumField with an instance of Enum
