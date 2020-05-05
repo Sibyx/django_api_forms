@@ -237,14 +237,11 @@ class FormFieldListTests(SimpleTestCase):
                 log_input(empty_val)
                 form_field_list.clean([{'number': empty_val}])
 
-        # TEST: required=True, form WITHOUT required field - list of {} with unexpected keys returns key with blank
-        """
+        # TEST: required=True, form WITHOUT required field - list of {} with unexpected key is allowed
         invalid_val = [{'unexpected key': 'blah'}, {'unexpected': 'blah2'}]
-        form_field_no_required_fields = FormField(form=self.TestFormWithoutRequiredField)
-        expected_result = [{'name': ''}] * len(invalid_val)
+        form_field_no_required_fields = FormFieldList(form=self.TestFormWithoutRequiredField)
+        expected_result = [{'number': None}] * len(invalid_val)
         self.assertEqual(expected_result, form_field_no_required_fields.clean(invalid_val))
-        """
-        # RequestValidationError: ({'number': [ValidationError(['Invalid value'])]}, None, None)
 
         # TEST: required=True - [] is not allowed
         with self.assertRaisesMessage(ValidationError, "['This field is required.']"):
@@ -258,20 +255,10 @@ class FormFieldListTests(SimpleTestCase):
         self.assertEqual(test_val, form_field_list.clean(test_val))
 
         # TEST: required=False, form WITHOUT required field - list of {} values is allowed
-        """
         empty_vals = [{}, {}]
-        form_field_no_required_fields = FormField(form=self.TestFormWithoutRequiredField)
-        self.assertEqual(empty_vals, form_field_no_required_fields.clean(empty_vals))
-        """
-        # RequestValidationError: ({'number': [ValidationError(['Invalid value'])]}, None, None)
-
-        # TEST: required=False, form WITHOUT required field - list of {} with unexpected key returns {}
-        """
-        invalid_val = [{'unexpected key': 'blah'}, {'unexpected': 1}]
-        form_field_no_required_fields = FormField(form=self.TestFormWithoutRequiredField)
-        self.assertEqual([{}, {}], form_field_no_required_fields.clean(invalid_val))
-        """
-        # RequestValidationError: ({'number': [ValidationError(['Invalid value'])]}, None, None)
+        form_field_no_required_fields = FormFieldList(form=self.TestFormWithoutRequiredField)
+        expected_result = [{'number': None}] * len(empty_vals)
+        self.assertEqual(expected_result, form_field_no_required_fields.clean(empty_vals))
 
         # TEST: required=False - [] allowed
         self.assertEqual([], form_field_list.clean([]))
