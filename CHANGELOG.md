@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.0 : TBD
+## 0.8.0 : 05.05.2020
 
 - **Maintenance**: Add tests for fields
 - **Change**: Remove DeclarativeFieldsMetaclass and import from Django instead.
