@@ -2,8 +2,11 @@
 
 ## 0.8.0 : TBD
 
+- **Maintenance**: Add tests for fields
 - **Change**: Remove DeclarativeFieldsMetaclass and import from Django instead.
 - **Change**: Msgpack dependency is no longer required.
+- **Change**: Empty values passed into a FormField now return {} rather than None.
+- **Fix**: Throw a more user friendly error when passing non-Enums or invalid values to EnumField.
 
 ## 0.7.1 : 13.04.2020
 

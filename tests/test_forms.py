@@ -1,13 +1,13 @@
 import json
 
 import msgpack
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 from django_api_forms import Form
 from django_api_forms.exceptions import UnsupportedMediaType
 
 
-class FormTests(TestCase):
+class FormTests(SimpleTestCase):
     def test_create_from_request(self):
         # TEST: Form.create_from_request with VALID JSON data
         request_factory = RequestFactory()
