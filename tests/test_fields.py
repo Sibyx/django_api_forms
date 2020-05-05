@@ -20,7 +20,7 @@ def log_input(val):
 
     Mainly for tests that can raise ValidationError, because ValidationError
     sometimes doesn't show the attempted value and a raised exception doesn't
-    return value for assert (which does show the attempted value).
+    return a value for assert (which does show the attempted value).
 
     Also helpful for showing attempted input with assertRaisesMessage where
     the input value is defined in a loop.
@@ -290,14 +290,14 @@ class EnumFieldTests(SimpleTestCase):
 
         # TEST: invalid enum value
         invalid_val = 4
-        expected_error = '["Invalid enum value {} passed to <class \'enum.EnumMeta\'>"]'
+        expected_error = '["Invalid enum value {} passed to <enum \'Color\'>"]'
         expected_error = expected_error.format(invalid_val)
         with self.assertRaisesMessage(ValidationError, expected_error):
             enum_field.clean(invalid_val)
 
         # TEST: required=True - non-None empty values throw an error
         for empty_val in ['', [], (), {}]:
-            expected_error = '["Invalid enum value {} passed to <class \'enum.EnumMeta\'>"]'
+            expected_error = '["Invalid enum value {} passed to <enum \'Color\'>"]'
             expected_error = expected_error.format(empty_val)
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
@@ -316,7 +316,7 @@ class EnumFieldTests(SimpleTestCase):
 
         # TEST: required=False - non-None empty values throw an error
         for empty_val in ['', [], (), {}]:
-            expected_error = '["Invalid enum value {} passed to <class \'enum.EnumMeta\'>"]'
+            expected_error = '["Invalid enum value {} passed to <enum \'Color\'>"]'
             expected_error = expected_error.format(empty_val)
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
