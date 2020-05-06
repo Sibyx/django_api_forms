@@ -91,9 +91,9 @@ class FieldListTests(SimpleTestCase):
         FieldList(field=fields.IntegerField())
 
         # TEST: initialize FieldList with non-Fields - throws an error
-        expected_error = "Invalid Field type passed into FieldList!"
+        expected_error = FieldList.default_error_messages['not_field']
         for non_field in [1, 'blah'] + list(EMPTY_VALUES):
-            with self.assertRaisesMessage(RuntimeError, expected_error):
+            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
                 log_input(non_field)
                 FieldList(field=non_field)
 
@@ -103,6 +103,13 @@ class FieldListTests(SimpleTestCase):
         # TEST: valid input
         valid_val = [1, 2, 3]
         self.assertEqual(valid_val, field_list.clean(valid_val))
+
+        # TEST: invalid input (individual non-list truthy values)
+        invalid_vals = [True, 1, datetime.datetime.now(), 'blah', {'blah'}]
+        expected_error = FieldList.default_error_messages['not_list']
+        for invalid_val in invalid_vals:
+            with self.assertRaisesMessage(ValidationError, str(expected_error)):
+                field_list.clean(invalid_val)
 
         # TEST: invalid input (list of values the FieldList's IntegerField considers invalid)
         invalid_vals = [False, datetime.datetime.now(), 'blah', {'blah'}]
@@ -266,9 +273,9 @@ class FormFieldListTests(SimpleTestCase):
 
 class EnumFieldTests(SimpleTestCase):
     class Color(Enum):
-        RED = 1
-        GREEN = 2
-        BLUE = 3
+            RED = 1
+            GREEN = 2
+            BLUE = 3
 
     def test_enumfield_init(self):
         # TEST: initialize EnumField with an instance of Enum
@@ -276,8 +283,9 @@ class EnumFieldTests(SimpleTestCase):
         EnumField(self.Color)
 
         # TEST: initialize EnumField with non-Enum - throws an error
+        expected_error = EnumField.default_error_messages['not_enum']
         for non_enum in [1, 'blah'] + list(EMPTY_VALUES):
-            with self.assertRaisesMessage(RuntimeError, "Invalid Enum type passed into EnumField!"):
+            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
                 log_input(non_enum)
                 EnumField(enum=non_enum)
 
@@ -290,15 +298,15 @@ class EnumFieldTests(SimpleTestCase):
 
         # TEST: invalid enum value
         invalid_val = 4
-        expected_error = '["Invalid enum value {} passed to <enum \'Color\'>"]'
-        expected_error = expected_error.format(invalid_val)
+        expected_error = EnumField.default_error_messages['invalid']
+        expected_error = str([expected_error.format(invalid_val, self.Color)])
         with self.assertRaisesMessage(ValidationError, expected_error):
             enum_field.clean(invalid_val)
 
         # TEST: required=True - non-None empty values throw an error
         for empty_val in ['', [], (), {}]:
-            expected_error = '["Invalid enum value {} passed to <enum \'Color\'>"]'
-            expected_error = expected_error.format(empty_val)
+            expected_error = EnumField.default_error_messages['invalid']
+            expected_error = str([expected_error.format(empty_val, self.Color)])
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
                 enum_field.clean(empty_val)
@@ -316,8 +324,8 @@ class EnumFieldTests(SimpleTestCase):
 
         # TEST: required=False - non-None empty values throw an error
         for empty_val in ['', [], (), {}]:
-            expected_error = '["Invalid enum value {} passed to <enum \'Color\'>"]'
-            expected_error = expected_error.format(empty_val)
+            expected_error = EnumField.default_error_messages['invalid']
+            expected_error = str([expected_error.format(empty_val, self.Color)])
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
                 enum_field.clean(empty_val)
@@ -333,9 +341,9 @@ class DictionaryFieldTests(SimpleTestCase):
         DictionaryField(value=fields.IntegerField())
 
         # TEST: initialize DictionaryField with non-Field - throws an error
-        expected_error = "Invalid Field type passed into DictionaryField!"
+        expected_error = DictionaryField.default_error_messages['not_field']
         for non_field in [1, 'blah']:
-            with self.assertRaisesMessage(RuntimeError, expected_error):
+            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
                 log_input(non_field)
                 DictionaryField(non_field)
 
@@ -362,7 +370,7 @@ class DictionaryFieldTests(SimpleTestCase):
 
         # TEST: required=True - all empty non-dict values throw an error
         for empty_val in [None, '', [], ()]:
-            expected_error = '["Invalid value passed to DictionaryField (got {}, expected dict)"]'
+            expected_error = DictionaryField.default_error_messages['not_dict']
             expected_error = expected_error.format(type(empty_val))
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
@@ -384,7 +392,8 @@ class DictionaryFieldTests(SimpleTestCase):
 
         # TEST: non-{} empty values throw an error
         for empty_val in [None, '', [], ()]:
-            expected_error = f"Invalid value passed to DictionaryField (got {type(empty_val)}, expected dict)"
+            expected_error = DictionaryField.default_error_messages['not_dict']
+            expected_error = expected_error.format(type(empty_val))
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
                 dict_field.clean(empty_val)

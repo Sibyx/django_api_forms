@@ -30,16 +30,17 @@ class BooleanField(Field):
 
 class FieldList(Field):
     default_error_messages = {
-        'not-list': _('This field have to be a list of objects!'),
+        'not_field': _('Invalid Field type passed into FieldList!'),
+        'not_list': _('This field needs to be a list of objects!'),
     }
 
     def __init__(self, field, **kwargs):
+        super().__init__(**kwargs)
+
         if not isinstance(field, Field):
-            raise RuntimeError("Invalid Field type passed into FieldList!")
+            raise RuntimeError(self.error_messages['not_field'])
 
         self._field = field
-
-        super().__init__(**kwargs)
 
     def to_python(self, value) -> typing.List:
         if not value:
@@ -52,15 +53,11 @@ class FieldList(Field):
         errors = []
 
         for item in value:
-            if isinstance(self._field, Field):
-                try:
-                    self._field.clean(item)
-                    result.append(self._field.to_python(item))
-                except ValidationError as e:
-                    errors.append(e)
-            else:
-                errors.append(
-                    ValidationError(f"Invalid field_type {type(self._field)} in FieldList", code='type_mismatch'))
+            try:
+                self._field.clean(item)
+                result.append(self._field.to_python(item))
+            except ValidationError as e:
+                errors.append(e)
 
         if errors:
             raise ValidationError(errors)
@@ -91,7 +88,7 @@ class FormField(Field):
 
 class FormFieldList(FormField):
     default_error_messages = {
-        'not_list': _('This field have to be a list of objects!')
+        'not_list': _('This field needs to be a list of objects!')
     }
 
     def to_python(self, value):
@@ -119,38 +116,48 @@ class FormFieldList(FormField):
 
 class EnumField(Field):
     default_error_messages = {
-        'not_enum': _('This field have to be a subclass of enum.Enum')
+        'not_enum': _('Invalid Enum type passed into EnumField!'),
+        'invalid': _('Invalid enum value "{}" passed to {}'),
     }
 
     def __init__(self, enum: typing.Type, **kwargs):
+        super().__init__(**kwargs)
+
         # isinstance(enum, type) prevents "TypeError: issubclass() arg 1 must be a class"
         # based on: https://github.com/samuelcolvin/pydantic/blob/v0.32.x/pydantic/utils.py#L260-L261
         if not (isinstance(enum, type) and issubclass(enum, Enum)):
-            raise RuntimeError("Invalid Enum type passed into EnumField!")
+            raise RuntimeError(self.error_messages['not_enum'])
 
         self.enum = enum
-
-        super().__init__(**kwargs)
 
     def to_python(self, value) -> typing.Union[typing.Type[Enum], None]:
         if value is not None:
             try:
                 return self.enum(value)
             except ValueError:
-                raise ValidationError(f"Invalid enum value {value} passed to {self.enum}")
+                msg = self.error_messages['invalid'].format(value, self.enum)
+                raise ValidationError(msg)
         return None
 
 
 class DictionaryField(Field):
+    default_error_messages = {
+        'not_field': _('Invalid Field type passed into DictionaryField!'),
+        'not_dict': _('Invalid value passed to DictionaryField (got {}, expected dict)'),
+    }
+
     def __init__(self, value, **kwargs):
-        if not isinstance(value, Field):
-            raise RuntimeError("Invalid Field type passed into DictionaryField!")
-        self._value = value
         super().__init__(**kwargs)
+
+        if not isinstance(value, Field):
+            raise RuntimeError(self.error_messages['not_field'])
+
+        self._value = value
 
     def to_python(self, value) -> dict:
         if not isinstance(value, dict):
-            raise ValidationError(f"Invalid value passed to DictionaryField (got {type(value)}, expected dict)")
+            msg = self.error_messages['not_dict'].format(type(value))
+            raise ValidationError(msg)
 
         result = {}
         errors = {}
