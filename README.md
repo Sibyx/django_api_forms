@@ -165,7 +165,7 @@ def create_album(request):
     print(payload)
 ```
 
-If you want example with whole Django project, check out repository created by @pawl
+If you want example with whole Django project, check out repository created by [pawl](https://github.com/pawl)
 [django_api_forms_modelchoicefield_example](https://github.com/pawl/django_api_forms_modelchoicefield_example), where
 he uses library with
 [ModelChoiceField](https://docs.djangoproject.com/en/3.0/ref/forms/fields/#django.forms.ModelChoiceField).
