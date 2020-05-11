@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0 : TBD
+
+- **Change**: Moved field error messages to default_error_messages for easier overriding and testing.
+- **Fix**: Fix KeyError when invalid values are sent to FieldList.
+- **Fix**: Removed unnecessary error checking in FieldList.
+
+
 ## 0.8.0 : 05.05.2020
 
 - **Maintenance**: Add tests for fields
