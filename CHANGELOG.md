@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0 :
+
+- **Change**: All package exceptions inherits from `ApiFormException`
+
 ## 0.9.0 : 11.05.2020
 
 - **Change**: Moved field error messages to default_error_messages for easier overriding and testing.
