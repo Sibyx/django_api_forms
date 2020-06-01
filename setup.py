@@ -10,13 +10,13 @@ REQUIRED = ['Django>=2.0']
 def read_files(files):
     data = []
     for file in files:
-        with open(file) as f:
-            data.append(f.read())
+        with open(file, encoding='utf-8') as my_file:
+            data.append(my_file.read())
     return "\n".join(data)
 
 
 meta = {}
-with open('django_api_forms/version.py') as f:
+with open('django_api_forms/version.py', encoding='utf-8') as f:
     exec(f.read(), meta)
 
 setup(

@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.10.0 :
+## 0.10.0 : 01.06.2020
 
-- **Change**: All package exceptions inherits from `ApiFormException`
+- **Change**: All package exceptions inherits from `ApiFormException`.
+- **Fix**: Specifying encoding while opening files in `setup.py` (failing on Windows OS).
 
 ## 0.9.0 : 11.05.2020
 
