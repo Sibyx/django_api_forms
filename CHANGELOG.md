@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0 : 02.06.2020
+
+- **Change**: Non specified non-required fields will no longer be available in the cleaned_data form attribute.
+
 ## 0.10.0 : 01.06.2020
 
 - **Change**: All package exceptions inherits from `ApiFormException`.

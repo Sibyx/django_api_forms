@@ -32,11 +32,15 @@ class AlbumForm(Form):
     metadata = DictionaryField(fields.DateTimeField())
 
     def clean_year(self):
-        if self.cleaned_data['year'] == 1992:
-            raise ValidationError("Year 1992 is forbidden!", 'forbidden-value')
-        return self.cleaned_data['year']
+        result = None
+
+        if 'year' in self.cleaned_data:
+            result = self.cleaned_data['year']
+            if self.cleaned_data['year'] == 1992:
+                raise ValidationError("Year 1992 is forbidden!", 'forbidden-value')
+        return result
 
     def clean(self):
-        if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
+        if (self.cleaned_data.get('year') == 1998) and (self.cleaned_data.get('artist')['name'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         return self.cleaned_data
