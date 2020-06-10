@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11.0 : 02.06.2020
+## 0.11.0 : 10.06.2020
 
 - **Change**: Non specified non-required fields will no longer be available in the cleaned_data form attribute.
 
