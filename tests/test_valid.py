@@ -21,8 +21,7 @@ def test_valid(rf: RequestFactory):
         'songs': [
             {
                 'title': "Disorder",
-                'duration': datetime.timedelta(seconds=209),
-                'metadata': None  # FIXME: this not suppose to be here
+                'duration': datetime.timedelta(seconds=209)
             },
             {
                 'title': "Day of the Lords",

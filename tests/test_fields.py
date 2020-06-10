@@ -177,8 +177,9 @@ class FormFieldTests(SimpleTestCase):
         # TEST: required=True, form WITHOUT required field - unexpected dict key returns blanks with keys
         # Django returns a normalized empty value when required=False rather than raising ValidationError
         invalid_val = {'unexpected key': 'blah'}
-        form_field_no_required_fields = FormField(form=self.TestFormWithoutRequiredField)
-        self.assertEqual({'name': ''}, form_field_no_required_fields.clean(invalid_val))
+        form_field_no_required_fields = FormField(required=False, form=self.TestFormWithoutRequiredField)
+
+        self.assertEqual({}, form_field_no_required_fields.clean(invalid_val))
 
         # TEST: required=True - empty values throw an error
         for empty_val in EMPTY_VALUES:
@@ -247,7 +248,7 @@ class FormFieldListTests(SimpleTestCase):
         # TEST: required=True, form WITHOUT required field - list of {} with unexpected key is allowed
         invalid_val = [{'unexpected key': 'blah'}, {'unexpected': 'blah2'}]
         form_field_no_required_fields = FormFieldList(form=self.TestFormWithoutRequiredField)
-        expected_result = [{'number': None}] * len(invalid_val)
+        expected_result = [{}] * len(invalid_val)
         self.assertEqual(expected_result, form_field_no_required_fields.clean(invalid_val))
 
         # TEST: required=True - [] is not allowed
@@ -264,7 +265,7 @@ class FormFieldListTests(SimpleTestCase):
         # TEST: required=False, form WITHOUT required field - list of {} values is allowed
         empty_vals = [{}, {}]
         form_field_no_required_fields = FormFieldList(form=self.TestFormWithoutRequiredField)
-        expected_result = [{'number': None}] * len(empty_vals)
+        expected_result = [{}] * len(empty_vals)
         self.assertEqual(expected_result, form_field_no_required_fields.clean(empty_vals))
 
         # TEST: required=False - [] allowed
@@ -433,3 +434,20 @@ class AnyFieldTests(SimpleTestCase):
         # TEST: non-empty values return the same value
         for non_empty_val in self.NON_EMPTY_VALUES:
             self.assertIs(non_empty_val, any_field.clean(non_empty_val))
+
+
+class NonRequiredTestCase(SimpleTestCase):
+    class TestFormWithNonRequiredFields(Form):
+        number = fields.IntegerField(required=False)
+        name = fields.CharField(required=False, empty_value=None)
+
+    def test_non_required_fields(self):
+        form_field_list = FormFieldList(form=self.TestFormWithNonRequiredFields)
+
+        # TEST: valid input
+        valid_val = [
+            {'name': 'aaa'},
+            {'number': 2},
+            {'number': 0, 'name': 'ccc'}
+        ]
+        self.assertEqual(valid_val, form_field_list.clean(valid_val))

@@ -1,6 +1,6 @@
 import copy
 import json
-from typing import Union
+from typing import Union, List
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.forms.forms import DeclarativeFieldsMetaclass
@@ -33,7 +33,8 @@ class BaseForm(object):
 
         if isinstance(data, dict):
             for key in data.keys():
-                self._dirty.append(key)
+                if key in self.fields.keys():
+                    self._dirty.append(key)
 
     def __getitem__(self, name):
         try:
@@ -68,6 +69,10 @@ class BaseForm(object):
             raise UnsupportedMediaType
 
         return cls(data)
+
+    @property
+    def dirty(self) -> List:
+        return self._dirty
 
     @property
     def errors(self) -> dict:
@@ -115,14 +120,25 @@ class BaseForm(object):
 
         for key, field in self.fields.items():
             try:
-                self.cleaned_data[key] = field.clean(self._data.get(key, None))
+                validated_form_item = field.clean(self._data.get(key, None))
+
+                if key in self.dirty:
+                    self.cleaned_data[key] = validated_form_item
+
                 if hasattr(self, f"clean_{key}"):
-                    self.cleaned_data[key] = getattr(self, f"clean_{key}")()
+                    validated_clean_item = getattr(self, f"clean_{key}")()
+                    if validated_clean_item:
+                        self.cleaned_data[key] = validated_clean_item
+                    else:
+                        try:
+                            self.cleaned_data.pop(key)
+                        except KeyError:
+                            self.add_error(key, ValidationError(_("Cannot remove attribute after clean")))
+
             except (ValidationError, RequestValidationError) as e:
                 self.add_error(key, e)
             except (AttributeError, TypeError, ValueError):
                 self.add_error(key, ValidationError(_("Invalid value")))
-
         try:
             cleaned_data = self.clean()
         except ValidationError as e:
