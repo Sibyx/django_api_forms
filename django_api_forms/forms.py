@@ -125,15 +125,15 @@ class BaseForm(object):
                 if key in self.dirty:
                     self.cleaned_data[key] = validated_form_item
 
-                if hasattr(self, f"clean_{key}"):
-                    validated_clean_item = getattr(self, f"clean_{key}")()
-                    if validated_clean_item:
-                        self.cleaned_data[key] = validated_clean_item
-                    else:
-                        try:
-                            self.cleaned_data.pop(key)
-                        except KeyError:
-                            self.add_error(key, ValidationError(_("Cannot remove attribute after clean")))
+                    if hasattr(self, f"clean_{key}"):
+                        validated_clean_item = getattr(self, f"clean_{key}")()
+                        if validated_clean_item:
+                            self.cleaned_data[key] = validated_clean_item
+                        else:
+                            try:
+                                self.cleaned_data.pop(key)
+                            except KeyError:
+                                self.add_error(key, ValidationError(_("Cannot remove attribute after clean")))
 
             except (ValidationError, RequestValidationError) as e:
                 self.add_error(key, e)

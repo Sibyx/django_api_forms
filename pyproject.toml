@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-api-forms"
-version = "0.10.0"
+version = "0.12.0"
 description = "Declarative Django request validation"
 authors = ["Jakub Dubec <jakub.dubec@gmail.com>", "Paul Brown <paul90brown+github@gmail.com>"]
 license = "MIT"
