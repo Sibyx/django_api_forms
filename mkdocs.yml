@@ -1,8 +1,8 @@
 # Project information
-site_name: django_api_forms
+site_name: 'Django API Forms'
 site_description: 'Declarative Django request validation for APIs'
 site_author: 'Jakub Dubec'
-site_url: 'https://sibyx.github.io/django_api_forms/'
+site_url: 'https://sibyx.github.io/django_api_forms'
 
 # Navigation
 nav:
@@ -19,7 +19,6 @@ theme:
   language: 'en'
   features:
     - instant
-    - tabs
 
 # Extensions
 markdown_extensions:
