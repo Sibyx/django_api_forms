@@ -9,6 +9,7 @@ license = "MIT"
 python = "^3.6"
 Django = ">=2.0"
 msgpack = "*"
+mkdocs-material = "^5.2.3"
 
 [tool.poetry.dev-dependencies]
 setuptools = "*"

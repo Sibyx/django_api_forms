@@ -1,0 +1,29 @@
+# Project information
+site_name: django_api_forms
+site_description: 'Declarative Django request validation for APIs'
+site_author: 'Jakub Dubec'
+site_url: 'https://sibyx.github.io/django_api_forms/'
+
+# Navigation
+nav:
+  - Home: index.md
+
+# Repository
+repo_name: 'Sibyx/django_api_forms'
+repo_url: 'https://github.com/Sibyx/django_api_forms'
+
+# Configuration
+theme:
+  name: 'material'
+  custom_dir: docs/custom/
+  language: 'en'
+  features:
+    - instant
+    - tabs
+
+# Extensions
+markdown_extensions:
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
