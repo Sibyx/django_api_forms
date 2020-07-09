@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.0 : 09.07.2020
+
+- **Fix**: Fixed `Content-Type` handling if `charset` or `boundary` is present
+
 ## 0.12.0 : 11.06.2020
 
 - **Fix**: Do not call resolvers methods, if property is not required and not present in request
