@@ -10,10 +10,10 @@ from .exceptions import RequestValidationError, UnsupportedMediaType
 
 try:
     import msgpack
+
     is_msgpack_installed = True
 except ImportError:
     is_msgpack_installed = False
-
 
 parsers_by_content_type = {'application/json': json.loads}
 if is_msgpack_installed:
@@ -61,8 +61,16 @@ class BaseForm(object):
         if not request.body:
             return cls(None)
 
-        content_type = request.META.get('CONTENT_TYPE', '')
+        all_attributes = request.META.get('CONTENT_TYPE', '').replace(' ', '').split(';')
+        content_type = all_attributes.pop(0)
+
+        optional_attributes = {}
+        for attribute in all_attributes:
+            key, value = attribute.split('=')
+            optional_attributes[key] = value
+
         parser = parsers_by_content_type.get(content_type)
+
         if parser:
             data = parser(request.body)
         else:

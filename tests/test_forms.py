@@ -58,3 +58,13 @@ class FormTests(SimpleTestCase):
             content_type='blah')
         with self.assertRaises(UnsupportedMediaType):
             form = Form.create_from_request(request)
+
+        # TEST: Form.create_from_request with VALID JSON data and charset
+        request_factory = RequestFactory()
+        valid_test_data = {'message': ['turned', 'into', 'json']}
+        request = request_factory.post(
+            '/test/',
+            data=valid_test_data,
+            content_type='application/json; charset=utf-8')
+        form = Form.create_from_request(request)
+        self.assertEqual(form._data, valid_test_data)
