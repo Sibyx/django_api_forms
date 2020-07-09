@@ -72,14 +72,7 @@ class BaseForm(object):
         parser = parsers_by_content_type.get(content_type)
 
         if parser:
-            charset = optional_attributes.get('charset')
-
-            if charset:
-                decoded_data = request.body.decode(charset)
-            else:
-                decoded_data = request.body
-
-            data = parser(decoded_data)
+            data = parser(request.body)
         else:
             raise UnsupportedMediaType
 
