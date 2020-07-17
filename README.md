@@ -3,8 +3,8 @@
 [![PyPI version](https://badge.fury.io/py/django-api-forms.svg)](https://badge.fury.io/py/django-api-forms)
 [![codecov](https://codecov.io/gh/Sibyx/django_api_forms/branch/master/graph/badge.svg)](https://codecov.io/gh/Sibyx/django_api_forms)
 
-[Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) approach in validation of request payload
-(especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
+[Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) approach in paring and validation of request
+payload (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
 without HTML front-end.
 
 ## Motivation
@@ -49,7 +49,10 @@ python setup.py install
 Optional:
 ```shell script
 # msgpack support (for requests with Content-Type: application/x-msgpack)
-pipenv install msgpack
+peotry add msgpack
+
+# msgpack support (for requests with Content-Type: application/x-msgpack)
+peotry add msgpack
 ```
 
 ## Example
