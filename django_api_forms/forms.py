@@ -21,7 +21,7 @@ if is_msgpack_installed:
 
 
 class BaseForm(object):
-    def __init__(self, data=None):
+    def __init__(self, data=None, request=None):
         if data is None:
             self._data = {}
         else:
@@ -30,6 +30,7 @@ class BaseForm(object):
         self._errors = None
         self._dirty = []
         self.cleaned_data = {}
+        self._request = request
 
         if isinstance(data, dict):
             for key in data.keys():
@@ -76,7 +77,7 @@ class BaseForm(object):
         else:
             raise UnsupportedMediaType
 
-        return cls(data)
+        return cls(data, request)
 
     @property
     def dirty(self) -> List:
@@ -142,7 +143,6 @@ class BaseForm(object):
                                 self.cleaned_data.pop(key)
                             except KeyError:
                                 self.add_error(key, ValidationError(_("Cannot remove attribute after clean")))
-
             except (ValidationError, RequestValidationError) as e:
                 self.add_error(key, e)
             except (AttributeError, TypeError, ValueError):

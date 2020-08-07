@@ -150,6 +150,8 @@ class AlbumForm(Form):
     def clean(self):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
+        if not self._request.user.is_authenticated():
+            raise ValidationError("You can use request in form validation!")
         return self.cleaned_data
 
 

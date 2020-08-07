@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0 : 07.08.2020
+
+- **Feature**: `BaseForm._request` property introduced (now it's possible to use request in `clean_` methods)
+
 ## 0.13.0 : 09.07.2020
 
 - **Fix**: Fixed `Content-Type` handling if `charset` or `boundary` is present
