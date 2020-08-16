@@ -1,11 +1,9 @@
 import datetime
-import os
 
+from django.conf import settings
 from django.test import RequestFactory
 
 from tests.testapp.forms import AlbumForm, AlbumType
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def test_valid(rf: RequestFactory):
@@ -50,7 +48,7 @@ def test_valid(rf: RequestFactory):
         }
     }
 
-    with open(f"{BASE_DIR}/tests/data/valid.json") as f:
+    with open(f"{settings.BASE_DIR}/data/valid.json") as f:
         request = rf.post('/foo/bar', data=f.read(), content_type='application/json')
 
     form = AlbumForm.create_from_request(request)

@@ -1,7 +1,11 @@
 import typing
+from base64 import b64decode
 from enum import Enum
+from io import BytesIO
+from mimetypes import guess_type
 
 from django.core.exceptions import ValidationError
+from django.core.files import File
 from django.forms import Field
 from django.utils.translation import gettext_lazy as _
 
@@ -177,3 +181,42 @@ class DictionaryField(Field):
 class AnyField(Field):
     def to_python(self, value) -> typing.Union[typing.Dict, typing.List]:
         return value
+
+
+class FileField(Field):
+    default_error_messages = {
+        'max_length': _('Ensure this filename has at most %(max)d character (it has %(length)d).'),
+        'invalid_mime': _("The submitted file is empty."),
+    }
+
+    def __init__(self, max_length=None, mime: typing.List[str] = None, **kwargs):
+        self._max_length = max_length
+        self._mime = mime
+        super().__init__(**kwargs)
+
+    def to_python(self, value: str) -> typing.Optional[File]:
+        if not value:
+            return None
+
+        mime = None
+
+        if ',' in value:
+            mime, strict = guess_type(value)
+            value = value.split(',')[-1]
+
+        if self._mime and mime not in self._mime:
+            params = {'allowed': ', '.join(self._mime), 'received': mime}
+            raise ValidationError(self.error_messages['invalid_mime'], code='invalid_mime', params=params)
+
+        file = File(BytesIO(b64decode(value)))
+
+        if self._max_length is not None and file.size > self._max_length:
+            params = {'max': self._max_length, 'length': file.size}
+            raise ValidationError(self.error_messages['max_length'], code='max_length', params=params)
+
+        return file
+
+
+class ImageField(FileField):
+    def to_python(self, value) -> typing.Optional[File]:
+        return super(ImageField, self).to_python(value)

@@ -7,11 +7,12 @@ import logging
 from enum import Enum
 
 from django.conf import settings
+from django.core.files import File
 from django.core.validators import EMPTY_VALUES
 from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
-                              FormFieldList, RequestValidationError)
+                              FormFieldList, RequestValidationError, FileField)
 
 
 def log_input(val):
@@ -451,3 +452,52 @@ class NonRequiredTestCase(SimpleTestCase):
             {'number': 0, 'name': 'ccc'}
         ]
         self.assertEqual(valid_val, form_field_list.clean(valid_val))
+
+
+class FileFieldTests(SimpleTestCase):
+    def setUp(self) -> None:
+        with open(f"{settings.BASE_DIR}/data/kitten.txt") as f:
+            self._payload = f.read()
+        pass
+
+    def test_simple(self):
+        file_field = FileField()
+        django_file = file_field.clean(self._payload)
+
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 12412)
+
+    def test_mime(self):
+        file_field = FileField(mime=['image/jpeg'])
+        django_file = file_field.clean(self._payload)
+
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 12412)
+
+    def test_max_length(self):
+        file_field = FileField(mime=['image/jpeg'], max_length=1000)
+
+        with self.assertRaises(ValidationError):
+            log_input(self._payload)
+            file_field.clean(self._payload)
+
+    def test_invalid_mime(self):
+        file_field = FileField(mime=['image/png', 'image/gif'])
+
+        expected_error = FileField.default_error_messages['invalid_mime']
+        expected_error = expected_error.format('image/png, image/gif', 'image/jpeg')
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            log_input(self._payload)
+            file_field.clean(self._payload)
+
+    def test_missing_mime(self):
+        file_field = FileField(mime=['image/jpeg', 'image/gif'])
+
+        with open(f"{settings.BASE_DIR}/data/kitten_missing.txt") as f:
+            kitten = f.read()
+
+        expected_error = FileField.default_error_messages['invalid_mime']
+        expected_error = expected_error.format('image/png, image/gif', 'image/jpeg')
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            log_input(kitten)
+            file_field.clean(kitten)

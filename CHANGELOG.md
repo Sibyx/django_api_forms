@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0 : 16.08.2020
+
+- **Feature**: `FileField` and `ImageField` introduced
+
 ## 0.14.0 : 07.08.2020
 
 - **Feature**: `BaseForm._request` property introduced (now it's possible to use request in `clean_` methods)
