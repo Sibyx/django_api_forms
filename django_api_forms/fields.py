@@ -238,7 +238,7 @@ class ImageField(FileField):
             image.verify()
             f.image = image
             f.content_type = Image.MIME.get(image.format)
-        except Exception as e:
+        except Exception:
             raise ValidationError(
                 self.error_messages['invalid_image'],
                 code='invalid_image'
