@@ -4,7 +4,14 @@ from setuptools import setup
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-REQUIRED = ['Django>=2.0']
+REQUIRED = [
+    'Django>=2.0'
+]
+
+EXTRAS = {
+    'Pillow': ['Pillow>=2.1'],
+    'msgpack': ['msgpack']
+}
 
 
 def read_files(files):
@@ -24,6 +31,7 @@ setup(
     version=meta['__version__'],
     packages=['django_api_forms'],
     install_requires=REQUIRED,
+    extras_require=EXTRAS,
     url='https://github.com/Sibyx/django_api_forms',
     license='MIT',
     author='Jakub Dubec',
@@ -44,6 +52,7 @@ setup(
         'Framework :: Django :: 2.1',
         'Framework :: Django :: 2.2',
         'Framework :: Django :: 3.0',
+        'Framework :: Django :: 3.1',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',

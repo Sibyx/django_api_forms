@@ -8,8 +8,9 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.6"
 Django = ">=2.0"
-msgpack = "*"
 mkdocs-material = "^5.2.3"
+Pillow = ">=2.1"
+msgpack = "*"
 
 [tool.poetry.dev-dependencies]
 setuptools = "*"

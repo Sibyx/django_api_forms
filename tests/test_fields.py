@@ -12,7 +12,7 @@ from django.core.validators import EMPTY_VALUES
 from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
-                              FormFieldList, RequestValidationError, FileField)
+                              FormFieldList, RequestValidationError, FileField, ImageField)
 
 
 def log_input(val):
@@ -464,7 +464,7 @@ class FileFieldTests(SimpleTestCase):
         file_field = FileField()
         django_file = file_field.clean(self._payload)
 
-        self.assertTrue(isinstance(django_file, File))
+        self.assertIsInstance(django_file, File)
         self.assertEqual(django_file.size, 12412)
 
     def test_mime(self):
@@ -499,5 +499,43 @@ class FileFieldTests(SimpleTestCase):
         expected_error = FileField.default_error_messages['invalid_mime']
         expected_error = expected_error.format('image/png, image/gif', 'image/jpeg')
         with self.assertRaisesMessage(ValidationError, expected_error):
+            log_input(kitten)
+            file_field.clean(kitten)
+
+
+class ImageFieldTests(SimpleTestCase):
+    def setUp(self) -> None:
+        with open(f"{settings.BASE_DIR}/data/kitten.txt") as f:
+            self._payload = f.read()
+        pass
+
+    def test_simple(self):
+        image_field = ImageField()
+        django_image = image_field.clean(self._payload)
+
+        self.assertIsInstance(django_image, File)
+        self.assertEqual(django_image.size, 12412)
+        self.assertEqual(django_image.content_type, 'image/jpeg')
+        self.assertIsNotNone(django_image.image)
+
+    def test_mime_mismatch(self):
+        file_field = ImageField(mime=['image/png', 'image/gif'])
+
+        with open(f"{settings.BASE_DIR}/data/kitten_mismatch.txt") as f:
+            kitten = f.read()
+
+        expected_error = FileField.default_error_messages['invalid_mime']
+        expected_error = expected_error.format('image/png, image/gif', 'image/jpeg')
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            log_input(kitten)
+            file_field.clean(kitten)
+
+    def test_invalid(self):
+        file_field = ImageField()
+
+        with open(f"{settings.BASE_DIR}/data/invalid_image.txt") as f:
+            kitten = f.read()
+
+        with self.assertRaises(ValidationError):
             log_input(kitten)
             file_field.clean(kitten)

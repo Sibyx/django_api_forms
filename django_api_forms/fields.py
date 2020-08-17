@@ -218,5 +218,36 @@ class FileField(Field):
 
 
 class ImageField(FileField):
+    default_error_messages = {
+        'invalid_image': _("Upload a valid image. The file you uploaded was either not an image or a corrupted image.")
+    }
+
     def to_python(self, value) -> typing.Optional[File]:
-        return super(ImageField, self).to_python(value)
+        f = super(ImageField, self).to_python(value)
+
+        if f is None:
+            return None
+
+        # Pillow is required for ImageField
+        from PIL import Image
+
+        file = BytesIO(f.read())  # Create fp for Pillow
+
+        try:
+            image = Image.open(file)
+            image.verify()
+            f.image = image
+            f.content_type = Image.MIME.get(image.format)
+        except Exception as e:
+            raise ValidationError(
+                self.error_messages['invalid_image'],
+                code='invalid_image'
+            )
+
+        if self._mime and f.content_type not in self._mime:
+            params = {'allowed': ', '.join(self._mime), 'received': f.content_type}
+            raise ValidationError(self.error_messages['invalid_mime'], code='invalid_mime', params=params)
+
+        f.seek(0)  # Return to start of the file
+
+        return f
