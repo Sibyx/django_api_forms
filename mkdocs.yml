@@ -7,6 +7,10 @@ site_url: 'https://sibyx.github.io/django_api_forms'
 # Navigation
 nav:
   - Home: index.md
+  - Installation: install.md
+  - Validation: validation.md
+  - Fields: fields.md
+  - Example: example.md
 
 # Repository
 repo_name: 'Sibyx/django_api_forms'
