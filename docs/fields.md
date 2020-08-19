@@ -35,6 +35,24 @@ Fields which are not in the list above were not been tested or been replaced wit
 
 ## BooleanField
 
+- Normalizes to: A Python **True** or **False** value (or **None** if it's not required)
+
+[Django BooleanField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#booleanfield)
+[checks only for False](https://github.com/django/django/blob/master/django/forms/fields.py#L712) (`false`, `0`)
+values and everything else is suppose to be **True**.
+
+In my point of view this kind of behaviour it's little bit weird, so we decided to check explicitly for **True** and
+**False** values. If field is required
+[ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#django.core.exceptions.ValidationError) is
+raised or value is normalized as **None**.
+
+Checked values:
+
+- **True**: `True` `'True'` `'true'` `1` `'1'`
+- **False**: `False` `'False'` `'false'` `0` `'0'`
+
+**Note: We would like to change this behaviour to support only boolean values and rely on deserializers.**
+
 ## FieldList
 
 ## FormField

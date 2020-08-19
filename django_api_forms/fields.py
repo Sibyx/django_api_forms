@@ -14,9 +14,9 @@ from .exceptions import RequestValidationError
 
 class BooleanField(Field):
     def to_python(self, value):
-        if value in (True, 'True', 'true', '1'):
+        if value in (True, 'True', 'true', '1', 1):
             return True
-        elif value in (False, 'False', 'false', '0'):
+        elif value in (False, 'False', 'false', '0', 0):
             return False
         else:
             return None
