@@ -1,14 +1,8 @@
-from enum import Enum
-
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
 from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField
-
-
-class AlbumType(Enum):
-    CD = 'cd'
-    VINYL = 'vinyl'
+from tests.testapp.models import Album
 
 
 class ArtistForm(Form):
@@ -28,7 +22,7 @@ class AlbumForm(Form):
     year = fields.IntegerField()
     artist = FormField(form=ArtistForm)
     songs = FormFieldList(form=SongForm)
-    type = EnumField(enum=AlbumType, required=True)
+    type = EnumField(enum=Album.AlbumType, required=True)
     metadata = DictionaryField(fields.DateTimeField())
 
     def clean_year(self):

@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.15.0 : 16.08.2020
+## 0.15.0 :
 
 - **Feature**: `FileField` and `ImageField` introduced
 - **Note**: Defined extras in `setup.py` for optional `Pillow` and `msgpack` dependencies
+- **Feature**: Working `Form::fill()` method for primitive data types. Introduced `IgnoreFillMixin`
 
 ## 0.14.0 : 07.08.2020
 

@@ -5,6 +5,9 @@ from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 from django_api_forms import Form
 from django_api_forms.exceptions import UnsupportedMediaType
+from tests import settings
+from tests.testapp.forms import AlbumForm
+from tests.testapp.models import Album
 
 
 class FormTests(SimpleTestCase):
@@ -68,3 +71,26 @@ class FormTests(SimpleTestCase):
             content_type='application/json; charset=utf-8')
         form = Form.create_from_request(request)
         self.assertEqual(form._data, valid_test_data)
+
+    def test_fill(self):
+        # Create form from request
+        with open(f"{settings.BASE_DIR}/data/valid.json") as f:
+            payload = f.read()
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test/',
+            data=payload,
+            content_type='application/json'
+        )
+        form = AlbumForm.create_from_request(request)
+        self.assertTrue(form.is_valid())
+
+        # Fill form
+        album = Album()
+        form.fill(album)
+
+        self.assertEqual(album.title, form.cleaned_data['title'])
+        self.assertEqual(album.year, form.cleaned_data['year'])
+        self.assertEqual(album.type, form.cleaned_data['type'])
+        self.assertIsInstance(album.type, Album.AlbumType)
+        self.assertEqual(album.metadata, form.cleaned_data['metadata'])

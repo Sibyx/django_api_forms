@@ -6,7 +6,7 @@ from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.utils.translation import gettext as _
 
-from .exceptions import RequestValidationError, UnsupportedMediaType
+from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
 
 try:
     import msgpack
@@ -164,15 +164,34 @@ class BaseForm(object):
         """
         return self.cleaned_data
 
-    def fill(self, obj):
+    def fill(self, obj, exclude: List[str] = None):
         """
-        WIP
-        TODO: Resolve embedded forms
+        :param exclude:
         :param obj:
         :return:
         """
-        for key, item in self._data.items():
-            setattr(obj, key, item)
+        if exclude is None:
+            exclude = []
+
+        if not self.cleaned_data:
+            raise ApiFormException("No clean data provided! Try to call is_valid() first.")
+
+        for key, field in self.fields.items():
+            # Skip if field is in exclude
+            if key in exclude:
+                continue
+
+            # Skip if field is not in validated data
+            if key not in self.cleaned_data.keys():
+                continue
+
+            # Skip if field is not fillable
+            if hasattr(field, 'ignore_fill') and field.ignore_fill:
+                continue
+
+            setattr(obj, key, self.cleaned_data[key])
+
+        return obj
 
 
 class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):

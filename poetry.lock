@@ -139,6 +139,20 @@ argon2 = ["argon2-cffi (>=16.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+category = "main"
+description = "A custom Django field able to use subclasses of Python's internal `Enum` class as choices"
+name = "django-enum-choices"
+optional = false
+python-versions = ">=3.5.0"
+version = "2.1.2"
+
+[package.dependencies]
+Django = ">=1.11"
+
+[package.extras]
+dev = ["Django (2.2.3)", "djangorestframework (3.9.4)", "psycopg2 (2.8.3)", "flake8 (3.7.7)", "pytest (4.6.3)", "pytest-django (3.5.0)", "pytest-pythonpath (0.7.3)", "django-environ (0.4.5)", "tox (3.13.2)", "bumpversion (0.5.3)", "tox-pyenv (1.1.0)", "django-filter (2.2.0)"]
+
+[[package]]
 category = "dev"
 description = "Docutils -- Python Documentation Utilities"
 name = "docutils"
@@ -794,7 +808,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "7da9945753d0e33d0c14298c785791ffbffcc2f9f8d660f0a5b4956cfa70b1ab"
+content-hash = "8722b49fae73f8eb015b0e40fc53b50da344cbd033f883dcb1017e7e1df37d38"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -923,6 +937,10 @@ cryptography = [
 django = [
     {file = "Django-3.1-py3-none-any.whl", hash = "sha256:1a63f5bb6ff4d7c42f62a519edc2adbb37f9b78068a5a862beff858b68e3dc8b"},
     {file = "Django-3.1.tar.gz", hash = "sha256:2d390268a13c655c97e0e2ede9d117007996db692c1bb93eabebd4fb7ea7012b"},
+]
+django-enum-choices = [
+    {file = "django_enum_choices-2.1.2-py2.py3-none-any.whl", hash = "sha256:f5a588f8aa6cd7329007a7b5ab4c1be6b683a9b5b55e7adec13757b5f91b7272"},
+    {file = "django_enum_choices-2.1.2.tar.gz", hash = "sha256:191eea8940d7101601bc41ffa269aa41c75439da9174ecc8a209410080fbeba4"},
 ]
 docutils = [
     {file = "docutils-0.16-py2.py3-none-any.whl", hash = "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af"},
