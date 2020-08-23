@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.15.0 :
+## 0.15.0 : 23.08.2020
 
 - **Feature**: `FileField` and `ImageField` introduced
 - **Note**: Defined extras in `setup.py` for optional `Pillow` and `msgpack` dependencies

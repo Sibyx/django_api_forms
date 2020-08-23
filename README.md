@@ -51,8 +51,8 @@ Optional:
 # msgpack support (for requests with Content-Type: application/x-msgpack)
 peotry add msgpack
 
-# msgpack support (for requests with Content-Type: application/x-msgpack)
-peotry add msgpack
+# ImageField support
+peotry add Pillow
 ```
 
 ## Example
