@@ -220,6 +220,8 @@ class FileField(Field, IgnoreFillMixin):
             params = {'max': self._max_length, 'length': file.size}
             raise ValidationError(self.error_messages['max_length'], code='max_length', params=params)
 
+        file.content_type = mime
+
         return file
 
 

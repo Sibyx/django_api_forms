@@ -502,6 +502,16 @@ class FileFieldTests(SimpleTestCase):
             log_input(kitten)
             file_field.clean(kitten)
 
+    def test_large_file(self):
+        file_field = FileField(required=False)
+
+        with open(f"{settings.BASE_DIR}/data/valid_pdf.txt") as f:
+            content = f.read()
+
+        result = file_field.clean(content)
+
+        self.assertEqual(result.content_type, 'application/pdf')
+
 
 class ImageFieldTests(SimpleTestCase):
     def setUp(self) -> None:

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.1 : 29.08.2020
+
+- **Feature**: `FileField.content_type` introduced (contains mime)
+
 ## 0.15.0 : 23.08.2020
 
 - **Feature**: `FileField` and `ImageField` introduced
