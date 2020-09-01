@@ -55,9 +55,121 @@ Checked values:
 
 ## FieldList
 
+This field is used to parse list of primitive values (like strings or numbers). If you want to parse list of object,
+check `FormFieldList`.
+
+- Normalizes to: A Python list
+- Error message keys: `not_field`, `not_list`
+- Required arguments:
+    - `field`: Instance of a form field representing children
+
+**JSON example**
+
+```json
+{
+  "numbers": [0, 1, 1, 2, 3, 5, 8, 13]
+}
+```
+
+**Python representation**
+
+```python
+from django_api_forms import Form, FieldList
+from django.forms import fields
+
+class FibonacciForm(Form):
+    numbers = FieldList(field=fields.IntegerField())
+```
+
 ## FormField
 
+Field used for embedded objects represented as another API form.
+
+- Normalizes to: A Python dictionary
+- Required arguments:
+    - `form`: Type of a nested form
+
+**JSON example**
+
+```json
+{
+  "title": "Unknown Pleasures",
+  "year": 1979,
+  "artist": {
+    "name": "Joy Division",
+    "genres": [
+      "rock",
+      "punk"
+    ],
+    "members": 4
+  }
+}
+```
+
+**Python representation**
+
+```python
+from django_api_forms import Form, FormField, FieldList
+from django.forms import fields
+
+
+class ArtistForm(Form):
+    name = fields.CharField(required=True, max_length=100)
+    genres = FieldList(field=fields.CharField(max_length=30))
+    members = fields.IntegerField()
+
+
+class AlbumForm(Form):
+    title = fields.CharField(max_length=100)
+    year = fields.IntegerField()
+    artist = FormField(form=ArtistForm)
+```
+
 ## FormFieldList
+
+Field used for embedded objects represented as another API form.
+
+- Normalizes to: A Python list of dictionaries
+- Error message keys: `not_list`
+- Required arguments:
+    - `form`: Type of a nested form
+
+**JSON example**
+
+```json
+{
+  "title": "Rock For People",
+  "artists": [
+    {
+      "name": "Joy Division",
+      "genres": [
+        "rock",
+        "punk"
+      ],
+      "members": 4
+    }
+  ]
+}
+```
+
+**Python representation**
+
+```python
+from django_api_forms import Form, FormFieldList, FieldList
+from django.forms import fields
+
+
+class ArtistForm(Form):
+    name = fields.CharField(required=True, max_length=100)
+    genres = FieldList(field=fields.CharField(max_length=30))
+    members = fields.IntegerField()
+
+
+class FestivalForm(Form):
+    title = fields.CharField(max_length=100)
+    year = fields.IntegerField()
+    artists = FormFieldList(form=ArtistForm)
+```
 
 ## EnumField
 
