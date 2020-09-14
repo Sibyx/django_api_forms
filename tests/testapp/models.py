@@ -9,8 +9,8 @@ class Artist(models.Model):
         db_table = 'artists'
         app_label = 'testapp'
 
-    name = models.CharField(max_length=100)
-    genders = models.JSONField(models.CharField(max_length=30))
+    name = models.CharField(max_length=100, unique=True)
+    genres = models.JSONField()
     members = models.PositiveIntegerField()
 
 

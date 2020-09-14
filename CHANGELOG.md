@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.0 : 14.09.2020
+
+- **Change**: Correctly resolve key postfix if `ModelChoiceField` is used in `Form::fill()`
+- **Change**: `DjangoApiFormsConfig` is created
+- **Note**: One more step to get rid of `pytest` in project (we don't need it)
+
 ## 0.15.1 : 29.08.2020
 
 - **Feature**: `FileField.content_type` introduced (contains mime)

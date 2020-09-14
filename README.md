@@ -55,6 +55,18 @@ peotry add msgpack
 peotry add Pillow
 ```
 
+Install application in your Django project by adding `django_api_forms` to yours `INSTALLED_APPS`:
+
+```python
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django_api_forms'
+)
+```
+
 ## Example
 
 **Simple nested JSON request**

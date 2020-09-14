@@ -173,6 +173,42 @@ class FestivalForm(Form):
 
 ## EnumField
 
+This field depends on [django-enum-choices](https://github.com/HackSoftware/django-enum-choices) (because normalized
+value is `Enum` object, not a string).
+
+- Normalizes to: A Python `Enum` object
+- Error message keys: `not_enum`, `invalid`
+- Required arguments:
+    - `enum`: Enum class
+
+**JSON example**
+
+```json
+{
+  "title": "Rock For People",
+  "type": "vinyl"
+}
+```
+
+**Python representation**
+
+```python
+from enum import Enum
+
+from django_api_forms import Form, EnumField
+from django.forms import fields
+
+
+class AlbumType(Enum):
+    CD = 'cd'
+    VINYL = 'vinyl'
+
+
+class AlbumForm(Form):
+    title = fields.CharField(required=True, max_length=100)
+    type = EnumField(enum=AlbumType)
+```
+
 ## DictionaryField
 
 ## AnyField

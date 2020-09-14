@@ -3,6 +3,7 @@ import json
 from typing import Union, List
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.forms import ModelChoiceField
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.utils.translation import gettext as _
 
@@ -189,7 +190,25 @@ class BaseForm(object):
             if hasattr(field, 'ignore_fill') and field.ignore_fill:
                 continue
 
-            setattr(obj, key, self.cleaned_data[key])
+            """
+            We need to changes key postfix if there is ModelChoiceField (because of _id etc.)
+            We always try to assign whole object instance, for example:
+            artis_id is normalized as Artist model, but it have to be assigned to artist model property
+            because artist_id in model has different type (for example int if your are using int primary keys)
+            If you are still confused (sorry), try to check docs
+            TODO: write docs (LOL)
+            """
+            if isinstance(field, ModelChoiceField):
+                model_key = key
+                if field.to_field_name:
+                    postfix_to_remove = f"_{field.to_field_name}"
+                else:
+                    postfix_to_remove = "_id"
+                if key.endswith(postfix_to_remove):
+                    model_key = key[:-len(postfix_to_remove)]
+                setattr(obj, model_key, self.cleaned_data[key])
+            else:
+                setattr(obj, key, self.cleaned_data[key])
 
         return obj
 
