@@ -1,6 +1,6 @@
 # Fields
 
-Even if we tried to use maximum of native Django field, we had to override some of them to be more fit for RESTful
+Even if we tried to most of the native Django fields, we had to override some of them to be more fit for RESTful
 applications. Also we introduced new ones, to cover extra functionality like nested requests. In this section we will
 explain our intentions and describe their usage.
 
@@ -211,7 +211,65 @@ class AlbumForm(Form):
 
 ## DictionaryField
 
+Field created for containing typed value pairs (currently library supports only value validation, see
+[Key validation in DictionaryField](https://github.com/Sibyx/django_api_forms/issues/21)).
+
+- Normalizes to: A Python dictionary
+- Error message keys: `not_dict`
+- Required arguments:
+    - `value_field`: Type of a nested form
+
+**JSON example**
+
+```json
+{
+  "my_dict": {
+    "b061bb03-1eaa-47d0-948f-3ce1f15bf3bb": 2.718,
+    "0a8912f0-6c10-4505-bc27-bbb099d2e395": 42
+  }
+}
+```
+
+**Python representation**
+
+```python
+from django_api_forms import Form, DictionaryField
+from django.forms import fields
+
+
+class DictionaryForm(Form):
+    my_typed_dict = DictionaryField(value_field=fields.DecimalField())
+```
+
 ## AnyField
+
+Field without default validators.
+
+- Normalizes to: Type according to the
+[chosen request payload parser](https://github.com/Sibyx/django_api_forms/blob/master/django_api_forms/forms.py#L19)
+
+**JSON example**
+
+```json
+{
+  "singer": {
+    "name": "Johnny",
+    "surname": "Rotten",
+    "age": 64,
+    "born_at": "1956-01-31"
+  }
+}
+```
+
+**Python representation**
+
+```python
+from django_api_forms import Form, DictionaryField, AnyField
+
+
+class BandForm(Form):
+    singer = DictionaryField(value_field=AnyField())
+```
 
 ## FileField
 

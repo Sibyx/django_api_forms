@@ -340,7 +340,7 @@ class DictionaryFieldTests(SimpleTestCase):
     def test_dictionaryfield_init(self):
         # TEST: initialize DictionaryField with an instance of Field
         DictionaryField(fields.IntegerField())
-        DictionaryField(value=fields.IntegerField())
+        DictionaryField(value_field=fields.IntegerField())
 
         # TEST: initialize DictionaryField with non-Field - throws an error
         expected_error = DictionaryField.default_error_messages['not_field']

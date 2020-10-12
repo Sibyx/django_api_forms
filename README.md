@@ -3,7 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/django-api-forms.svg)](https://badge.fury.io/py/django-api-forms)
 [![codecov](https://codecov.io/gh/Sibyx/django_api_forms/branch/master/graph/badge.svg)](https://codecov.io/gh/Sibyx/django_api_forms)
 
-[Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) approach in paring and validation of request
+[Django Forms](https://docs.djangoproject.com/en/3.1/topics/forms/) approach in paring and validation of request
 payload (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
 without HTML front-end.
 
@@ -25,8 +25,9 @@ I wanted to keep:
 
 - friendly declarative Django syntax
 ([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful)
-- [Django Validators](https://docs.djangoproject.com/en/3.0/ref/validators/)
-- [ValidationError](https://docs.djangoproject.com/en/3.0/ref/exceptions/#validationerror)
+- [Validators](https://docs.djangoproject.com/en/3.1/ref/validators/)
+- [ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#validationerror)
+- [Form fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/) (In the and, I had to "replace" some of them)
 
 So I decided to create simple Python package to cover all my expectations.
 
@@ -38,9 +39,6 @@ pip install django-api-forms
 
 # Using poetry
 peotry add django-api-forms
-
-# Using pipenv
-pipenv install django-api-forms
 
 # Using setup.py
 python setup.py install
@@ -101,10 +99,6 @@ INSTALLED_APPS = (
         "header": {
           "majorVersion": 3,
           "minorRevision": 0,
-          "flagsOctet": 0,
-          "unsynchronisationFlag": false,
-          "extendedHeaderFlag": false,
-          "experimentalIndicatorFlag": false,
           "size": 2038
         }
       }
@@ -115,7 +109,6 @@ INSTALLED_APPS = (
     "updated_at": "2019-10-21T18:57:03+0100"
   }
 }
-
 ```
 
 **Django API Forms equivalent + validation**

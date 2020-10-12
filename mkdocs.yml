@@ -8,7 +8,7 @@ site_url: 'https://sibyx.github.io/django_api_forms'
 nav:
   - Home: index.md
   - Installation: install.md
-  - Validation: validation.md
+#  - Validation: validation.md
   - Fields: fields.md
   - Example: example.md
 

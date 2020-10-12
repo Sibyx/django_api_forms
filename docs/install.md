@@ -37,6 +37,6 @@ require [Pillow](https://pypi.org/project/Pillow/) to be installed inside of you
 - `pip install django-api-forms[Pillow]`
 - `pip install Pillow`
 
-### Fun fact
+## Fun fact
 
 You can install all extra dependencies using one call `pip install django-api-forms[Pillow,msgpack]`.

@@ -156,13 +156,13 @@ class DictionaryField(Field):
         'not_dict': _('Invalid value passed to DictionaryField (got {}, expected dict)'),
     }
 
-    def __init__(self, value, **kwargs):
+    def __init__(self, value_field, **kwargs):
         super().__init__(**kwargs)
 
-        if not isinstance(value, Field):
+        if not isinstance(value_field, Field):
             raise RuntimeError(self.error_messages['not_field'])
 
-        self._value = value
+        self._value_field = value_field
 
     def to_python(self, value) -> dict:
         if not isinstance(value, dict):
@@ -174,7 +174,7 @@ class DictionaryField(Field):
 
         for key, item in value.items():
             try:
-                result[key] = self._value.clean(item)
+                result[key] = self._value_field.clean(item)
             except ValidationError as e:
                 errors[key] = e
 
