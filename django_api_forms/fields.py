@@ -191,7 +191,7 @@ class AnyField(Field):
 
 class FileField(Field, IgnoreFillMixin):
     default_error_messages = {
-        'max_length': _('Ensure this filename has at most %(max)d character (it has %(length)d).'),
+        'max_length': _('Ensure this file has at most %(max)d bytes (it has %(length)d).'),
         'invalid_mime': _("The submitted file is empty."),
     }
 
