@@ -3,7 +3,7 @@ import json
 from typing import Union, List
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.forms import ModelChoiceField
+from django.forms import ModelChoiceField, ModelMultipleChoiceField
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.utils.translation import gettext as _
 
@@ -188,6 +188,10 @@ class BaseForm(object):
 
             # Skip if field is not fillable
             if hasattr(field, 'ignore_fill') and field.ignore_fill:
+                continue
+
+            # ModelMultipleChoiceField is not fillable too (yet)
+            if isinstance(field, ModelMultipleChoiceField):
                 continue
 
             """

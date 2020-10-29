@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.1 : 29.10.2020
+
+- **Fix**: Ignore `ModelMultipleChoiceField` in `Form::fill()`
+
 ## 0.16.0 : 14.09.2020
 
 - **Change**: Correctly resolve key postfix if `ModelChoiceField` is used in `Form::fill()`
