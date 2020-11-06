@@ -1,6 +1,8 @@
 import json
+from typing import Optional
 
 import msgpack
+from django.forms import fields
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django_api_forms import Form
@@ -100,3 +102,40 @@ class FormTests(TestCase):
         self.assertEqual(album.type, form.cleaned_data['type'])
         self.assertIsInstance(album.type, Album.AlbumType)
         self.assertEqual(album.metadata, form.cleaned_data['metadata'])
+
+    def test_clean_data_keys(self):
+        class FunnyForm(Form):
+            title = fields.CharField(required=True)
+            code = fields.CharField(required=True)
+            url = fields.CharField(required=False)
+            description = fields.CharField(required=False)
+
+            @classmethod
+            def _normalize_url(cls, url: str) -> Optional[str]:
+                if not url:
+                    return None
+                if url.startswith('http://'):
+                    url = url.replace('http://', '')
+
+                if not url.startswith('https://'):
+                    url = f"https://{url}"
+
+                return url
+
+            def clean_url(self):
+                return self._normalize_url(self.cleaned_data['url'])
+
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test/',
+            data={
+                'title': "The Question",
+                'code': 'the-question',
+                'url': ''
+            },
+            content_type='application/json'
+        )
+        form = FunnyForm.create_from_request(request)
+        self.assertTrue(form.is_valid())
+        self.assertTrue(len(form.cleaned_data.keys()) == 3)
+        self.assertIsNone(form.cleaned_data['url'])

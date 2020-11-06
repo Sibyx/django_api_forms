@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.2 : 06.11.2020
+
+- **Fix**: Fixed issue with `clean_` methods returning values resolved as False (`False`, `None`, `''`)
+
 ## 0.16.1 : 29.10.2020
 
 - **Fix**: Ignore `ModelMultipleChoiceField` in `Form::fill()`
