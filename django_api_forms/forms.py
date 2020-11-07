@@ -61,7 +61,7 @@ class BaseForm(object):
         :rtype: BaseForm
         """
         if not request.body:
-            return cls(None)
+            return cls()
 
         all_attributes = request.META.get('CONTENT_TYPE', '').replace(' ', '').split(';')
         content_type = all_attributes.pop(0)
