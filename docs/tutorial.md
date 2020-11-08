@@ -6,9 +6,9 @@ images/files, nesting).
 
 `django_api_forms.Form` defines format of the request and help you with:
 
-- payload parsing (according to the `Content-Type` HTTP header
+- payload parsing (according to the `Content-Type` HTTP header)
 - data validation and normalisation (using [Django validators](https://docs.djangoproject.com/en/3.1/ref/validators/)
-or custom `_clean` method)
+or custom `clean_` method)
 - BASE64 file/image upload
 - construction of the basic validation response
 - filling objects attributes (if possible, see exceptions) using `setattr` function (super handy for Django database
@@ -30,7 +30,7 @@ def my_view(request):
 Currently supports:
 
 - JSON
-- [msgpack](https://msgpack.org/) - [msgpack](https://pypi.org/project/msgpack/) package have to be installed
+- [msgpack](https://msgpack.org/) (requires [msgpack](https://pypi.org/project/msgpack/) package)
 
 **TODO**: Add possibility to have custom parsers (or override them)
 
