@@ -1,5 +1,4 @@
 import json
-from dataclasses import dataclass
 from typing import Optional
 
 import msgpack
@@ -145,9 +144,8 @@ class FormTests(TestCase):
         class FunnyForm(Form):
             title = fields.CharField(required=False)
 
-        @dataclass
         class DummyObject:
-            title: str = None
+            title = None
 
         request_factory = RequestFactory()
         request = request_factory.post(
