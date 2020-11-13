@@ -30,7 +30,7 @@ class BaseForm(object):
         self.fields = copy.deepcopy(getattr(self, 'base_fields'))
         self._errors = None
         self._dirty = []
-        self.cleaned_data = {}
+        self.cleaned_data = None
         self._request = request
 
         if isinstance(data, dict):
@@ -167,7 +167,7 @@ class BaseForm(object):
         if exclude is None:
             exclude = []
 
-        if not self.cleaned_data:
+        if self.cleaned_data is None:
             raise ApiFormException("No clean data provided! Try to call is_valid() first.")
 
         for key, field in self.fields.items():

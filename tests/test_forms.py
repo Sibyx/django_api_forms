@@ -1,4 +1,5 @@
 import json
+from dataclasses import dataclass
 from typing import Optional
 
 import msgpack
@@ -139,3 +140,23 @@ class FormTests(TestCase):
         self.assertTrue(form.is_valid())
         self.assertTrue(len(form.cleaned_data.keys()) == 3)
         self.assertIsNone(form.cleaned_data['url'])
+
+    def test_empty_payload(self):
+        class FunnyForm(Form):
+            title = fields.CharField(required=False)
+
+        @dataclass
+        class DummyObject:
+            title: str = None
+
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test/',
+            data={},
+            content_type='application/json'
+        )
+        form = FunnyForm.create_from_request(request)
+        my_object = DummyObject()
+
+        self.assertTrue(form.is_valid())
+        form.fill(my_object)

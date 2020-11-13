@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.3 : 13.11.2020
+
+- **Fix**: `ApiFormException('No clean data provided! Try to call is_valid() first.')` was incorrectly raised if
+request payload was empty during `Form::fill` method call
+- **Change**: `clean_data` property is by default `None` instead of empty dictionary
+
 ## 0.16.2 : 06.11.2020
 
 - **Fix**: Fixed issue with `clean_` methods returning values resolved as False (`False`, `None`, `''`)
