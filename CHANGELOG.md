@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.4 : 20.12.2020
+
+- **Fix**: Pillow image object have to be reopened after `Image.verify()` call in `ImageField::to_python`
+
 ## 0.16.3 : 13.11.2020
 
 - **Fix**: `ApiFormException('No clean data provided! Try to call is_valid() first.')` was incorrectly raised if

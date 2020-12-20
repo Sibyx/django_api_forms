@@ -244,7 +244,7 @@ class ImageField(FileField, IgnoreFillMixin):
         try:
             image = Image.open(file)
             image.verify()
-            f.image = image
+            f.image = Image.open(file)  # Image have to be reopened after Image.verify() call
             f.content_type = Image.MIME.get(image.format)
         except Exception:
             raise ValidationError(
