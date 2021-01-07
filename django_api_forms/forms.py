@@ -3,8 +3,9 @@ import json
 from typing import Union, List, Optional
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.forms import ModelChoiceField, ModelMultipleChoiceField
+from django.forms import ModelChoiceField, ModelMultipleChoiceField, fields_for_model, IntegerField
 from django.forms.forms import DeclarativeFieldsMetaclass
+from django.forms.models import ModelFormOptions, ALL_FIELDS
 from django.utils.translation import gettext as _
 
 from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
@@ -226,6 +227,35 @@ class BaseForm(object):
                 setattr(obj, key, self.cleaned_data[key])
 
         return obj
+
+
+class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
+    def __new__(cls, *args, **kwargs):
+        new_object = super().__new__(cls, *args, **kwargs)
+        config = getattr(cls, 'Meta', None)
+
+        model_opts = ModelFormOptions(getattr(config.model, '_meta', None))
+        model_opts.exclude = getattr(config, 'exclude', tuple())
+
+        fields = fields_for_model(
+            model=model_opts.model,
+            fields=None,
+            exclude=model_opts.exclude,
+            widgets=None,
+            formfield_callback=None,
+            localized_fields=model_opts.localized_fields,
+            labels=model_opts.labels,
+            help_texts=model_opts.help_texts,
+            error_messages=model_opts.error_messages,
+            field_classes=model_opts.field_classes,
+            apply_limit_choices_to=False,
+        )
+
+        # AutoField has to be added manually
+        if config.model._meta.auto_field and config.model._meta.auto_field.attname not in model_opts.exclude:
+            fields[config.model._meta.auto_field.attname] = IntegerField()
+
+        return new_object
 
 
 class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):
