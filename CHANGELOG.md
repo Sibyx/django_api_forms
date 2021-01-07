@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.17.0 : TBD
+
+- **Feature**: ModelForm introduced
+
 ## 0.16.4 : 20.12.2020
 
 - **Fix**: Pillow image object have to be reopened after `Image.verify()` call in `ImageField::to_python`
