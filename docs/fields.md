@@ -173,8 +173,8 @@ class FestivalForm(Form):
 
 ## EnumField
 
-This field depends on [django-enum-choices](https://github.com/HackSoftware/django-enum-choices) (because normalized
-value is `Enum` object, not a string).
+**Tip**: Django has pretty cool implementation of the
+[enumeration types](https://docs.djangoproject.com/en/3.1/ref/models/fields/#enumeration-types).
 
 - Normalizes to: A Python `Enum` object
 - Error message keys: `not_enum`, `invalid`
@@ -193,15 +193,14 @@ value is `Enum` object, not a string).
 **Python representation**
 
 ```python
-from enum import Enum
-
 from django_api_forms import Form, EnumField
 from django.forms import fields
+from django.db.models import TextChoices
 
 
-class AlbumType(Enum):
-    CD = 'cd'
-    VINYL = 'vinyl'
+class AlbumType(TextChoices):
+    CD = 'cd', 'CD'
+    VINYL = 'vinyl', 'Vinyl'
 
 
 class AlbumForm(Form):

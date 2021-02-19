@@ -1,7 +1,4 @@
-from enum import Enum
-
 from django.db import models
-from django_enum_choices.fields import EnumChoiceField
 
 
 class Artist(models.Model):
@@ -19,14 +16,14 @@ class Album(models.Model):
         db_table = 'albums'
         app_label = 'testapp'
 
-    class AlbumType(Enum):
-        CD = 'cd'
-        VINYL = 'vinyl'
+    class AlbumType(models.TextChoices):
+        CD = 'cd', 'CD'
+        VINYL = 'vinyl', 'Vinyl'
 
     title = models.CharField(max_length=100)
     year = models.PositiveIntegerField()
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    type = EnumChoiceField(AlbumType)
+    type = models.CharField(choices=AlbumType.choices, max_length=10)
     metadata = models.JSONField(null=True)
 
 
