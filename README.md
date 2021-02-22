@@ -27,7 +27,7 @@ I wanted to keep:
 ([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful)
 - [Validators](https://docs.djangoproject.com/en/3.1/ref/validators/)
 - [ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#validationerror)
-- [Form fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/) (In the and, I had to "replace" some of them)
+- [Form fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/) (In the end, I had to "replace" some of them)
 
 So I decided to create simple Python package to cover all my expectations.
 
