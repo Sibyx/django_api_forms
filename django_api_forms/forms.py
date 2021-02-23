@@ -179,11 +179,16 @@ class BaseForm(object):
             if key not in self.cleaned_data.keys():
                 continue
 
+            # Skip default behaviour if there is fill_ method available
+            if hasattr(self, f"fill_{key}"):
+                setattr(obj, key, getattr(self, f"fill_{key}")(obj, self.cleaned_data[key]))
+                continue
+
             # Skip if field is not fillable
             if hasattr(field, 'ignore_fill') and field.ignore_fill:
                 continue
 
-            # ModelMultipleChoiceField is not fillable too (yet)
+            # ModelMultipleChoiceField is not fillable (yet)
             if isinstance(field, ModelMultipleChoiceField):
                 continue
 
@@ -193,7 +198,6 @@ class BaseForm(object):
             artis_id is normalized as Artist model, but it have to be assigned to artist model property
             because artist_id in model has different type (for example int if your are using int primary keys)
             If you are still confused (sorry), try to check docs
-            TODO: write docs (LOL)
             """
             if isinstance(field, ModelChoiceField):
                 model_key = key

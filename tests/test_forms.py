@@ -9,7 +9,7 @@ from django_api_forms import Form
 from django_api_forms.exceptions import UnsupportedMediaType
 from tests import settings
 from tests.testapp.forms import AlbumForm
-from tests.testapp.models import Album
+from tests.testapp.models import Album, Artist
 
 
 class FormTests(TestCase):
@@ -102,6 +102,10 @@ class FormTests(TestCase):
         self.assertEqual(album.type, form.cleaned_data['type'])
         self.assertIsInstance(album.type, Album.AlbumType)
         self.assertEqual(album.metadata, form.cleaned_data['metadata'])
+
+        # Fill method tests
+        self.assertIsInstance(album.artist, Artist)
+        self.assertEqual(album.artist.name, "Joy Division")
 
     def test_clean_data_keys(self):
         class FunnyForm(Form):

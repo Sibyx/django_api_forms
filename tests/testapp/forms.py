@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.forms import fields
 
 from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField
-from tests.testapp.models import Album
+from tests.testapp.models import Album, Artist
 
 
 class ArtistForm(Form):
@@ -34,3 +34,10 @@ class AlbumForm(Form):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         return self.cleaned_data
+
+    def fill_artist(self, obj, value: dict):
+        return Artist(
+            name=value.get('name'),
+            genres=value.get('genres'),
+            members=value.get('members')
+        )

@@ -27,7 +27,7 @@ def my_view(request):
     form = AlbumForm.create_from_request(request)
 ```
 
-Currently supports:
+Currently, supports:
 
 - JSON
 - [msgpack](https://msgpack.org/) (requires [msgpack](https://pypi.org/project/msgpack/) package)
@@ -90,6 +90,87 @@ class BookForm(Form):
 ## Database relationships
 
 ## Fill method
+
+**IMPORTANT**: Form fields `FormField`, `FormFieldList`, `FileField` and `ImageField` doesn't support this feature.
+You have to define `fill_` method, if you want these fields populated.
+
+Form object method `MyForm.fill(obj: Any, exclude: List[str] = None)` which fills input `obj` using `setattr` according
+to the form fields. Only data present in `clean_data` property (data from request) will be populated. You can use it
+like this:
+
+```python
+from tests.testapp.forms import AlbumForm
+from tests.testapp.models import Album
+
+def my_view(request):
+    form = AlbumForm.create_from_request(request)
+
+    if not form.is_valid():
+        # Raise validation error
+        pass
+
+    album = Album()
+    form.fill(album)
+    album.save()
+```
+
+### ModelChoiceField
+
+Field name is expected to have format like this: `{field_name}(_{to_field_name})?` so library is able to automatically
+resolve payload key postfix according to the `to_field_name` attribute. If there is no `to_field_name` provided,
+field name should be `{field_name}` or `{field_name}_id`. Normalised data are present in `clean_data` under key
+`{field_name}` (e.g. `clean_data['{field_name}']`).
+
+Few examples (normalized data are in `clean_data['artist']` in all use-cases):
+
+```python
+from django.forms import ModelChoiceField
+from django_api_forms import Form
+
+from tests.testapp.models import Artist
+
+class MyFormNoPostfix(Form):
+    artist = ModelChoiceField(queryset=Artist.objects.all())
+
+class MyFormFieldName(Form):
+    artist_name = ModelChoiceField(
+        queryset=Artist.objects.all(), to_field_name='name'
+    )
+
+class MyFormWithId(Form):
+    artist_id = ModelChoiceField(queryset=Artist.objects.all())
+```
+
+### Customization
+
+If you want to override default filling behaviour, you can define custom `fill_{field}` method inside your form class:
+
+```python
+from django.forms import fields
+
+from django_api_forms import Form, FormField, EnumField, DictionaryField
+from tests.testapp.models import Album, Artist
+from tests.testapp.forms import ArtistForm
+
+class AlbumForm(Form):
+    title = fields.CharField(max_length=100)
+    year = fields.IntegerField()
+    artist = FormField(form=ArtistForm)
+    type = EnumField(enum=Album.AlbumType, required=True)
+    metadata = DictionaryField(fields.DateTimeField())
+
+    def fill_year(self, obj, value: int) -> int:
+        return 2020
+
+    def fill_artist(self, obj, value: dict) -> Artist:
+        artist = Artist.objects.get_or_create(
+            name=value['name']
+        )
+        artist.genres = value['genres']
+        artist.members = value['members']
+        artist.save()
+        return artist
+```
 
 ## File uploads
 
