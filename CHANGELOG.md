@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.18.0 : TBD
+
+- **Change**: Positional validation errors for lists (old-school errors are available under `legacy_errors` property)
+- **Tests**: `pytest` and `coverage` configuration moved to `pyproject.toml`
+
 ## 0.17.0 : 24.02.2021
 
 - **Feature**: `fill_method` introduced

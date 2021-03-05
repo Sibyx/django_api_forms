@@ -10,6 +10,7 @@ from django.forms import Field
 from django.utils.translation import gettext_lazy as _
 
 from .exceptions import RequestValidationError
+from .forms import PositionalValidationError
 
 
 class IgnoreFillMixin:
@@ -62,12 +63,12 @@ class FieldList(Field):
         result = []
         errors = []
 
-        for item in value:
+        for index, item in enumerate(value):
             try:
                 self._field.clean(item)
                 result.append(self._field.to_python(item))
             except ValidationError as e:
-                errors.append(e)
+                errors.append(PositionalValidationError(message=e.message, code=e.code, params=e.params, index=index))
 
         if errors:
             raise ValidationError(errors)
@@ -111,12 +112,12 @@ class FormFieldList(FormField, IgnoreFillMixin):
         result = []
         errors = []
 
-        for item in value:
+        for index, item in enumerate(value):
             form = self._form(item)
             if form.is_valid():
                 result.append(form.cleaned_data)
             else:
-                errors.append(form.errors)
+                errors.append((index, form.errors))
 
         if errors:
             raise RequestValidationError(errors)

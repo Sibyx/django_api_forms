@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-api-forms"
-version = "0.17.0"
+version = "0.18.0"
 description = "Declarative Django request validation"
 authors = ["Jakub Dubec <jakub.dubec@gmail.com>", "Paul Brown <paul90brown+github@gmail.com>"]
 license = "MIT"
@@ -8,7 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.6"
 Django = ">=2.0"
-mkdocs-material = "^5.2.3"
+mkdocs-material = "^7.0.0"
 Pillow = ">=2.1"
 msgpack = "*"
 
@@ -17,10 +17,18 @@ setuptools = "*"
 wheel = "^0.34.2"
 twine = "^3.1.1"
 flake8 = "^3.7.9"
-pytest = "^5.4.1"
-pytest-django = "^3.8.0"
-pytest-cov = "^2.8.1"
+pytest = "^6.2.2"
+pytest-django = "^4.1.0"
+pytest-cov = "^2.11.1"
 pytest-flake8 = "^1.0.4"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = 'tests.settings'
+log_cli = 1
+log_cli_level = 'INFO'
+
+[tool.coverage.run]
+omit = ['*/tests/*', 'docs/']
 
 [build-system]
 requires = ["poetry>=0.12"]
