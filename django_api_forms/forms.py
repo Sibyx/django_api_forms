@@ -3,9 +3,9 @@ import json
 from typing import Union, List, Optional
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.forms import ModelChoiceField, ModelMultipleChoiceField, fields_for_model, IntegerField
+from django.forms import ModelChoiceField, ModelMultipleChoiceField, fields_for_model
 from django.forms.forms import DeclarativeFieldsMetaclass
-from django.forms.models import ModelFormOptions, ALL_FIELDS
+from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
 from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
