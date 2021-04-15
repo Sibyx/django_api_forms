@@ -9,6 +9,7 @@ from .fields import AnyField
 from .fields import FileField
 from .fields import ImageField
 from .forms import Form
+from .forms import ModelForm
 from .version import __version__
 
 __all__ = [
@@ -23,5 +24,6 @@ __all__ = [
     'FileField',
     'ImageField',
     'Form',
+    'ModelForm',
     '__version__'
 ]
