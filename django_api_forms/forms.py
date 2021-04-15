@@ -230,6 +230,9 @@ class BaseForm(object):
 
 
 class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
+    """
+    SUPER EXPERIMENTAL
+    """
     def __new__(cls, *args, **kwargs):
         new_object = super().__new__(cls, *args, **kwargs)
         config = getattr(cls, 'Meta', None)
