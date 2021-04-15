@@ -234,7 +234,7 @@ class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
     SUPER EXPERIMENTAL
     """
     def __new__(cls, *args, **kwargs):
-        new_object = super().__new__(cls, *args, **kwargs)
+        new_class = super().__new__(cls, **kwargs)
         config = getattr(cls, 'Meta', None)
 
         model_opts = ModelFormOptions(getattr(config.model, '_meta', None))
@@ -255,10 +255,18 @@ class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
         )
 
         # AutoField has to be added manually
-        if config.model._meta.auto_field and config.model._meta.auto_field.attname not in model_opts.exclude:
-            fields[config.model._meta.auto_field.attname] = IntegerField()
+        # Do not add AutoFields right now
+        # if config.model._meta.auto_field and config.model._meta.auto_field.attname not in model_opts.exclude:
+        #     fields[config.model._meta.auto_field.attname] = IntegerField()
 
-        return new_object
+        fields.update(new_class.declared_fields)
+        # Remove None value keys
+        fields = {k: v for k, v in fields.items() if v is not None}
+
+        new_class.base_fields = fields
+        new_class.declared_fields = fields
+
+        return new_class
 
 
 class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):

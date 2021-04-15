@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField
+from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField, ModelForm
 from tests.testapp.models import Album, Artist
 
 
@@ -41,3 +41,8 @@ class AlbumForm(Form):
             genres=value.get('genres'),
             members=value.get('members')
         )
+
+
+class ArtistModelForm(ModelForm):
+    class Meta:
+        model = Artist
