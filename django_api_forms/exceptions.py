@@ -1,6 +1,4 @@
-from typing import Union, List, Tuple
-
-from django.core.exceptions import ValidationError
+from typing import Union
 
 
 class ApiFormException(Exception):
@@ -14,7 +12,7 @@ class UnsupportedMediaType(ApiFormException):
 
 
 class RequestValidationError(ApiFormException):
-    def __init__(self, errors: Union[List[Tuple[int, List[ValidationError]]], dict], code=None, params=None):
+    def __init__(self, errors: Union[list, dict], code=None, params=None):
         super().__init__(errors, code, params)
         self._errors = errors
 

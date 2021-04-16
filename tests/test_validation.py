@@ -30,7 +30,7 @@ class ValidationTests(TestCase):
         form = AlbumForm.create_from_request(request)
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.legacy_errors.__repr__(), expected.__repr__())
+        self.assertEqual(form.errors.__repr__(), expected.__repr__())
 
     def test_valid(self):
         rf = RequestFactory()

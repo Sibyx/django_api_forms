@@ -231,7 +231,7 @@ class FormFieldListTests(SimpleTestCase):
 
         # TEST: invalid input (values the FormFieldList's Form's IntegerField considers invalid)
         invalid_vals = [False, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
-        expected_form_errors = [(0, {'number': [ValidationError(['Enter a whole number.'])]})]
+        expected_form_errors = [{'number': [ValidationError(['Enter a whole number.'])]}]
         expected_error = str((expected_form_errors, None, None))
         for invalid_val in invalid_vals:
             with self.assertRaisesMessage(RequestValidationError, expected_error):
@@ -239,7 +239,7 @@ class FormFieldListTests(SimpleTestCase):
                 form_field_list.clean([{'number': invalid_val}])
 
         # TEST: invalid input (values the FieldList's Form's IntegerField considers empty)
-        expected_form_errors = [(0, {'number': [ValidationError(['This field is required.'])]})]
+        expected_form_errors = [{'number': [ValidationError(['This field is required.'])]}]
         expected_error = str((expected_form_errors, None, None))
         for empty_val in EMPTY_VALUES:
             with self.assertRaisesMessage(RequestValidationError, expected_error):

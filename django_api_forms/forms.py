@@ -1,6 +1,6 @@
 import copy
 import json
-from typing import Union, List, Optional
+from typing import Union, List
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.forms import ModelChoiceField, ModelMultipleChoiceField, fields_for_model
@@ -22,12 +22,6 @@ if is_msgpack_installed:
     parsers_by_content_type['application/x-msgpack'] = msgpack.loads
 
 
-class PositionalValidationError(ValidationError):
-    def __init__(self, message, code=None, params=None, index=None):
-        super().__init__(message, code, params)
-        self.index: Optional[int] = index
-
-
 class BaseForm(object):
     def __init__(self, data=None, request=None):
         if data is None:
@@ -36,7 +30,6 @@ class BaseForm(object):
             self._data = data
         self.fields = copy.deepcopy(getattr(self, 'base_fields'))
         self._errors = None
-        self._legacy_errors = None
         self._dirty = []
         self.cleaned_data = None
         self._request = request
@@ -98,19 +91,12 @@ class BaseForm(object):
             self.full_clean()
         return self._errors
 
-    @property
-    def legacy_errors(self) -> dict:
-        if self._legacy_errors is None:
-            self.full_clean()
-        return self._legacy_errors
-
     def is_valid(self) -> bool:
         return not self.errors
 
     def add_error(self, field: Union[str, None], error: Union[ValidationError, RequestValidationError]):
         if isinstance(error, RequestValidationError):
             self._errors[field] = error.errors
-            self._legacy_errors[field] = [(i[1] if isinstance(i, tuple) else i) for i in error.errors]
             return
 
         if hasattr(error, 'error_dict'):
@@ -128,10 +114,11 @@ class BaseForm(object):
             if field not in self.errors:
                 if field != NON_FIELD_ERRORS and field not in self.fields:
                     raise ValueError("'%s' has no field named '%s'." % (self.__class__.__name__, field))
-                self._errors[field] = []
-                self._legacy_errors[field] = []
+                if field == NON_FIELD_ERRORS:
+                    self._errors[field] = []
+                else:
+                    self._errors[field] = []
             self._errors[field].extend(error_list)
-            self._legacy_errors[field].extend(error_list)
             if field in self.cleaned_data:
                 del self.cleaned_data[field]
 
@@ -140,7 +127,6 @@ class BaseForm(object):
         Clean all of self.data and populate self._errors and self.cleaned_data.
         """
         self._errors = {}
-        self._legacy_errors = {}
         self.cleaned_data = {}
 
         for key, field in self.fields.items():
