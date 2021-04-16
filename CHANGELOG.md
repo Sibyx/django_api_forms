@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.18.0 : 16.04.2021
+
+- **Feature**: `ModelForm` class introduced (experimental, initial support - not recommended for production)
+
 ## 0.17.0 : 24.02.2021
 
 - **Feature**: `fill_method` introduced
