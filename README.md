@@ -193,9 +193,7 @@ poetry run pytest
 
 ## Sponsorship
 
-<p align="center">
-  <img height="300" src="docs/navicat.png">
-</p>
+<img height="200" src="docs/navicat.png" align="left">
 
 [Navicat Premium](https://www.navicat.com/en/products/navicat-premium) is a super awesome database development tool for
 cool kids in the neighborhood that allows you to simultaneously connect to MySQL, MariaDB, MongoDB, SQL Server, Oracle,
