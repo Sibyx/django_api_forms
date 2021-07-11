@@ -140,6 +140,30 @@ class FieldListTests(SimpleTestCase):
         for empty_val in EMPTY_VALUES:
             self.assertEqual([], field_list.clean(empty_val))
 
+    def test_min_length(self):
+        form_field_list = FieldList(field=fields.IntegerField(), min_length=2)
+
+        # TEST: valid input
+        valid_val = [1, 2]
+        self.assertEqual(valid_val, form_field_list.clean(valid_val))
+
+        # TEST: invalid input (values more than the defined max length)
+        valid_val = [1]
+        with self.assertRaises(ValidationError):
+            form_field_list.clean(valid_val)
+
+    def test_max_length(self):
+        form_field_list = FieldList(field=fields.IntegerField(), max_length=3)
+
+        # TEST: valid input
+        valid_val = [1, 2, 3]
+        self.assertEqual(valid_val, form_field_list.clean(valid_val))
+
+        # TEST: invalid input (values more than the defined max length)
+        valid_val = [1, 2, 3, 4]
+        with self.assertRaises(ValidationError):
+            form_field_list.clean(valid_val)
+
 
 class FormFieldTests(SimpleTestCase):
     class TestFormWithRequiredField(Form):
@@ -271,6 +295,30 @@ class FormFieldListTests(SimpleTestCase):
 
         # TEST: required=False - [] allowed
         self.assertEqual([], form_field_list.clean([]))
+
+    def test_min_length(self):
+        form_field_list = FormFieldList(form=self.TestFormWithRequiredField, min_length=2)
+
+        # TEST: valid input
+        valid_val = [{'number': 1}, {'number': 2}]
+        self.assertEqual(valid_val, form_field_list.clean(valid_val))
+
+        # TEST: invalid input (values more than the defined max length)
+        valid_val = [{'number': 1}]
+        with self.assertRaises(ValidationError):
+            form_field_list.clean(valid_val)
+
+    def test_max_length(self):
+        form_field_list = FormFieldList(form=self.TestFormWithRequiredField, max_length=3)
+
+        # TEST: valid input
+        valid_val = [{'number': 1}, {'number': 2}, {'number': 0}]
+        self.assertEqual(valid_val, form_field_list.clean(valid_val))
+
+        # TEST: invalid input (values more than the defined max length)
+        valid_val = [{'number': 1}, {'number': 2}, {'number': 0}, {'number': 4}]
+        with self.assertRaises(ValidationError):
+            form_field_list.clean(valid_val)
 
 
 class EnumFieldTests(SimpleTestCase):
