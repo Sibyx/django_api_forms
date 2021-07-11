@@ -59,9 +59,11 @@ This field is used to parse list of primitive values (like strings or numbers). 
 check `FormFieldList`.
 
 - Normalizes to: A Python list
-- Error message keys: `not_field`, `not_list`
+- Error message keys: `not_field`, `not_list`, `min_length`, `max_length`
 - Required arguments:
     - `field`: Instance of a form field representing children
+    - `min_length`: Minimum length of field size in integer (optional)
+    - `max_length`: Maximum length of field size in integer (optional)
 
 **JSON example**
 
@@ -130,9 +132,11 @@ class AlbumForm(Form):
 Field used for embedded objects represented as another API form.
 
 - Normalizes to: A Python list of dictionaries
-- Error message keys: `not_list`
+- Error message keys: `not_list`, `min_length`, `max_length`
 - Required arguments:
     - `form`: Type of a nested form
+    - `min_length`: Minimum length of field size in integer (optional)
+    - `max_length`: Maximum length of field size in integer (optional)
 
 **JSON example**
 
