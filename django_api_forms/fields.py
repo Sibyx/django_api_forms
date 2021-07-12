@@ -40,16 +40,20 @@ class BooleanField(Field):
 
 class FieldList(Field):
     default_error_messages = {
+        'max_length': _('Ensure this list has at most %(max)d values (it has %(length)d).'),
+        'min_length': _('Ensure this list has at least %(max)d values (it has %(length)d).'),
         'not_field': _('Invalid Field type passed into FieldList!'),
         'not_list': _('This field needs to be a list of objects!'),
     }
 
-    def __init__(self, field, **kwargs):
+    def __init__(self, field, min_length=None, max_length=None, **kwargs):
         super().__init__(**kwargs)
 
         if not isinstance(field, Field):
             raise RuntimeError(self.error_messages['not_field'])
 
+        self._min_length = min_length
+        self._max_length = max_length
         self._field = field
 
     def to_python(self, value) -> typing.List:
@@ -58,6 +62,14 @@ class FieldList(Field):
 
         if not isinstance(value, list):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
+
+        if self._min_length is not None and len(value) < self._min_length:
+            params = {'max': self._min_length, 'length': len(value)}
+            raise ValidationError(self.error_messages['min_length'], code='min_length', params=params)
+
+        if self._max_length is not None and len(value) > self._max_length:
+            params = {'max': self._max_length, 'length': len(value)}
+            raise ValidationError(self.error_messages['max_length'], code='max_length', params=params)
 
         result = []
         errors = []
@@ -97,7 +109,14 @@ class FormField(Field, IgnoreFillMixin):
 
 
 class FormFieldList(FormField, IgnoreFillMixin):
+    def __init__(self, form: typing.Type, min_length=None, max_length=None, **kwargs):
+        self._min_length = min_length
+        self._max_length = max_length
+        super().__init__(form, **kwargs)
+
     default_error_messages = {
+        'max_length': _('Ensure this list has at most %(max)d values (it has %(length)d).'),
+        'min_length': _('Ensure this list has at least %(max)d values (it has %(length)d).'),
         'not_list': _('This field needs to be a list of objects!')
     }
 
@@ -107,6 +126,14 @@ class FormFieldList(FormField, IgnoreFillMixin):
 
         if not isinstance(value, list):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
+
+        if self._min_length is not None and len(value) < self._min_length:
+            params = {'max': self._min_length, 'length': len(value)}
+            raise ValidationError(self.error_messages['min_length'], code='min_length', params=params)
+
+        if self._max_length is not None and len(value) > self._max_length:
+            params = {'max': self._max_length, 'length': len(value)}
+            raise ValidationError(self.error_messages['max_length'], code='max_length', params=params)
 
         result = []
         errors = []
