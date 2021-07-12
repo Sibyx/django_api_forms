@@ -41,7 +41,7 @@ class BooleanField(Field):
 class FieldList(Field):
     default_error_messages = {
         'max_length': _('Ensure this list has at most %(max)d values (it has %(length)d).'),
-        'min_length': _('Ensure this list has at least %(max)d values (it has %(length)d).'),
+        'min_length': _('Ensure this list has at least %(min)d values (it has %(length)d).'),
         'not_field': _('Invalid Field type passed into FieldList!'),
         'not_list': _('This field needs to be a list of objects!'),
     }
@@ -64,7 +64,7 @@ class FieldList(Field):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
 
         if self._min_length is not None and len(value) < self._min_length:
-            params = {'max': self._min_length, 'length': len(value)}
+            params = {'min': self._min_length, 'length': len(value)}
             raise ValidationError(self.error_messages['min_length'], code='min_length', params=params)
 
         if self._max_length is not None and len(value) > self._max_length:
@@ -116,7 +116,7 @@ class FormFieldList(FormField, IgnoreFillMixin):
 
     default_error_messages = {
         'max_length': _('Ensure this list has at most %(max)d values (it has %(length)d).'),
-        'min_length': _('Ensure this list has at least %(max)d values (it has %(length)d).'),
+        'min_length': _('Ensure this list has at least %(min)d values (it has %(length)d).'),
         'not_list': _('This field needs to be a list of objects!')
     }
 
@@ -128,7 +128,7 @@ class FormFieldList(FormField, IgnoreFillMixin):
             raise ValidationError(self.error_messages['not_list'], code='not_list')
 
         if self._min_length is not None and len(value) < self._min_length:
-            params = {'max': self._min_length, 'length': len(value)}
+            params = {'min': self._min_length, 'length': len(value)}
             raise ValidationError(self.error_messages['min_length'], code='min_length', params=params)
 
         if self._max_length is not None and len(value) > self._max_length:

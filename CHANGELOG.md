@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.0 : 12.07.2021
+
+- **Feature**: `FieldList` and `FormFieldList` now supports optional min/max constrains using `min_length`/`max_length`
+
 ## 0.18.0 : 16.04.2021
 
 - **Feature**: `ModelForm` class introduced (experimental, initial support - not recommended for production)

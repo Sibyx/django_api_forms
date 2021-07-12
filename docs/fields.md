@@ -62,8 +62,9 @@ check `FormFieldList`.
 - Error message keys: `not_field`, `not_list`, `min_length`, `max_length`
 - Required arguments:
     - `field`: Instance of a form field representing children
-    - `min_length`: Minimum length of field size in integer (optional)
-    - `max_length`: Maximum length of field size in integer (optional)
+- Optional arguments:
+    - `min_length`: Minimum length of field size as integer
+    - `max_length`: Maximum length of field size as integer
 
 **JSON example**
 
@@ -135,8 +136,9 @@ Field used for embedded objects represented as another API form.
 - Error message keys: `not_list`, `min_length`, `max_length`
 - Required arguments:
     - `form`: Type of a nested form
-    - `min_length`: Minimum length of field size in integer (optional)
-    - `max_length`: Maximum length of field size in integer (optional)
+- Optional arguments:
+    - `min_length`: Minimum length of field size as integer
+    - `max_length`: Maximum length of field size as integer
 
 **JSON example**
 

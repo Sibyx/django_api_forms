@@ -205,4 +205,5 @@ Especially, I have to recommend their database design tool. Many thanks [Navicat
 supporting Open Source projects 🌈.
 
 ---
-Made with ❤️ and ☕️ by Jakub Dubec & [BACKBONE s.r.o.](https://www.backbone.sk/en/)
+Made with ❤️ and ☕️ by Jakub Dubec, [BACKBONE s.r.o.](https://www.backbone.sk/en/) &
+[contributors](https://github.com/Sibyx/django_api_forms/graphs/contributors).
