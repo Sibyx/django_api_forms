@@ -6,6 +6,8 @@ import datetime
 import logging
 from enum import Enum
 
+from unittest import mock
+
 from django.conf import settings
 from django.core.files import File
 from django.core.validators import EMPTY_VALUES
@@ -13,6 +15,7 @@ from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
                               FormFieldList, RequestValidationError, FileField, ImageField)
+from django_api_forms.fields import version
 
 
 def log_input(val):
@@ -560,6 +563,42 @@ class FileFieldTests(SimpleTestCase):
 
         self.assertEqual(result.content_type, 'application/pdf')
 
+    @mock.patch("django_api_forms.fields.version", "1.0.0")
+    def test_valid_data_uri(self):
+        file_field = FileField()
+
+        with self.assertRaises(ValidationError):
+            file_field.clean(self._payload)
+
+        # Simple values
+        django_file = file_field.clean("data:;base64;sdfgsdfgsdfasdfa=s,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 85)
+
+        # with meta key=value
+        django_file = file_field.clean("data:image/jpeg;key=value;base64,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        # without base64 key name
+        django_file = file_field.clean("data:image/jpeg;key=value,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        # without mime-type
+        django_file = file_field.clean("data:;base64;sdfgsdfgsdfasdfa=s,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        # without mime-type , base64 and meta key=value
+        django_file = file_field.clean("data:,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
 
 class ImageFieldTests(SimpleTestCase):
     def setUp(self) -> None:
@@ -597,3 +636,39 @@ class ImageFieldTests(SimpleTestCase):
         with self.assertRaises(ValidationError):
             log_input(kitten)
             file_field.clean(kitten)
+
+    @mock.patch("django_api_forms.fields.version", "1.0.0")
+    def test_valid_data_uri(self):
+        file_field = FileField()
+
+        with self.assertRaises(ValidationError):
+            file_field.clean(self._payload)
+        
+        # Simple values
+        django_file = file_field.clean("data:;base64;sdfgsdfgsdfasdfa=s,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 85)
+
+        # with meta key=value
+        django_file = file_field.clean("data:image/jpeg;key=value;base64,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        # without base64 key name
+        django_file = file_field.clean("data:image/jpeg;key=value,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        # without mime-type
+        django_file = file_field.clean("data:;base64;sdfgsdfgsdfasdfa=s,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)
+
+        # without mime-type , base64 and meta key=value
+        django_file = file_field.clean("data:,UEsDBBQAAAAI")
+        self.assertTrue(isinstance(django_file, File))
+        self.assertEqual(django_file.size, 9)

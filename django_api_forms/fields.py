@@ -3,6 +3,7 @@ from base64 import b64decode
 from enum import Enum
 from io import BytesIO
 from mimetypes import guess_type
+import re
 
 from django.core.exceptions import ValidationError
 from django.core.files import File
@@ -10,6 +11,9 @@ from django.forms import Field
 from django.utils.translation import gettext_lazy as _
 
 from .exceptions import RequestValidationError
+from .version import __version__ as version
+
+DATA_URI_PATTERN = r"data:((?:\w+\/(?:(?!;).)+)?)((?:;[\w=]*[^;])*),(.+)"
 
 
 class IgnoreFillMixin:
@@ -219,6 +223,7 @@ class AnyField(Field):
 class FileField(Field, IgnoreFillMixin):
     default_error_messages = {
         'max_length': _('Ensure this file has at most %(max)d bytes (it has %(length)d).'),
+        'invalid_uri': _("The given URI is not a valid Data URI."),
         'invalid_mime': _("The submitted file is empty."),
     }
 
@@ -230,6 +235,10 @@ class FileField(Field, IgnoreFillMixin):
     def to_python(self, value: str) -> typing.Optional[File]:
         if not value:
             return None
+
+        if version >= "1.0.0":
+            if re.fullmatch(DATA_URI_PATTERN, value) is None:
+                raise ValidationError(self.error_messages["invalid_uri"], code="invalid_uri")
 
         mime = None
 
@@ -254,10 +263,15 @@ class FileField(Field, IgnoreFillMixin):
 
 class ImageField(FileField, IgnoreFillMixin):
     default_error_messages = {
+        'invalid_uri': _("The given URI is not a valid Data URI."),
         'invalid_image': _("Upload a valid image. The file you uploaded was either not an image or a corrupted image.")
     }
 
     def to_python(self, value) -> typing.Optional[File]:
+        if version >= "1.0.0":
+            if re.fullmatch(DATA_URI_PATTERN, value) is None:
+                raise ValidationError(self.error_messages["invalid_uri"], code="invalid_uri")
+
         f = super(ImageField, self).to_python(value)
 
         if f is None:
