@@ -15,7 +15,6 @@ from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
                               FormFieldList, RequestValidationError, FileField, ImageField)
-from django_api_forms.fields import version
 
 
 def log_input(val):
@@ -575,7 +574,8 @@ class FileFieldTests(SimpleTestCase):
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 9)
 
-        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
+        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHE"
+                                       "lEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 85)
 
@@ -643,13 +643,14 @@ class ImageFieldTests(SimpleTestCase):
 
         with self.assertRaises(ValidationError):
             file_field.clean(self._payload)
-        
+
         # Simple values
         django_file = file_field.clean("data:;base64;sdfgsdfgsdfasdfa=s,UEsDBBQAAAAI")
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 9)
 
-        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
+        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHE"
+                                       "lEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 85)
 
