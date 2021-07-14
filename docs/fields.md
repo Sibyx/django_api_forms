@@ -281,7 +281,7 @@ class BandForm(Form):
 This field contains [BASE64](https://tools.ietf.org/html/rfc4648) encoded file.
 
 - Normalizes to: A Django [File](https://docs.djangoproject.com/en/3.1/ref/files/file/) object
-- Error message keys: `max_length`, `invalid_mime`
+- Error message keys: `max_length`, `invalid_uri`, `invalid_mime`
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
     - `mime`: List (should be a tuple in future) of allowed mime types (optional - if present, value must be in form of
@@ -320,7 +320,7 @@ image validation [Image.verify()](https://pillow.readthedocs.io/en/stable/refere
 is called.
 
 - Normalizes to: A Django [File](https://docs.djangoproject.com/en/3.1/ref/files/file/) object
-- Error message keys: `max_length`, `invalid_mime`, `invalid_image` (if Image.verify() failed)
+- Error message keys: `max_length`, `invalid_uri`, `invalid_mime`, `invalid_image` (if Image.verify() failed)
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
     - `mime`: List (should be a tuple in future) of allowed mime types (optional, value must be in
