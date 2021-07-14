@@ -263,15 +263,10 @@ class FileField(Field, IgnoreFillMixin):
 
 class ImageField(FileField, IgnoreFillMixin):
     default_error_messages = {
-        'invalid_uri': _("The given URI is not a valid Data URI."),
         'invalid_image': _("Upload a valid image. The file you uploaded was either not an image or a corrupted image.")
     }
 
     def to_python(self, value) -> typing.Optional[File]:
-        if version >= "1.0.0":
-            if re.fullmatch(DATA_URI_PATTERN, value) is None:
-                raise ValidationError(self.error_messages["invalid_uri"], code="invalid_uri")
-
         f = super(ImageField, self).to_python(value)
 
         if f is None:
