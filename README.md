@@ -187,8 +187,11 @@ he uses library with
 # install all dependencies
 poetry install
 
+# run code-style check
+poetry run flake8 .
+
 # run the tests
-poetry run pytest
+poetry run python runtests.py
 ```
 
 ## Sponsorship

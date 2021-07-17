@@ -23,13 +23,14 @@ jobs:
         poetry install
     - name: Lint with flake8
       run: |
-         poetry run pytest . -v --flake8
-    - name: Test with pytest
+         poetry run flake8 .
+    - name: Test with Django test
       run: |
-        poetry run pytest . -v
+        poetry run python runtests.py
     - name: Coverage with pytest
       run: |
-        poetry run pytest . --cov --cov-report xml --cov-config=pyproject.toml
+        poetry run coverage run runtests.py
+        poetry run coverage xml
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
