@@ -284,7 +284,7 @@ This field contains [BASE64](https://tools.ietf.org/html/rfc4648) encoded file.
 - Error message keys: `max_length`, `invalid_uri`, `invalid_mime`
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
-    - `mime`: List (should be a tuple in future) of allowed mime types (optional - if present, value must be in form of
+    - `mime`: Tuple of allowed mime types (optional - if present, value must be in form of
     [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
 - Extra normalised attributes:
     - `file_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
@@ -309,7 +309,7 @@ from django.forms import fields
 
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
-    audio = FileField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=['audio/mpeg'])
+    audio = FileField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('audio/mpeg', ))
 ```
 
 ## ImageField
@@ -323,7 +323,7 @@ is called.
 - Error message keys: `max_length`, `invalid_uri`, `invalid_mime`, `invalid_image` (if Image.verify() failed)
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
-    - `mime`: List (should be a tuple in future) of allowed mime types (optional, value must be in
+    - `mime`: Tuple of allowed mime types (optional, value must be in
     [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
 - Extra normalised attributes:
     - `image_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
@@ -351,5 +351,5 @@ from django.forms import fields
 
 class AlbumForm(Form):
     title = fields.CharField(required=True, max_length=100)
-    cover = ImageField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=['image/png'])
+    cover = ImageField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('image/png', ))
 ```
