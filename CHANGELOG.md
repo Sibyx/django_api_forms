@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.1 : 17.09.2021
+
+- **Typing**: `mime` argument in `FileField` is suppose to be a `tuple`
+
 ## 0.19.0 : 12.07.2021
 
 - **Feature**: `FieldList` and `FormFieldList` now supports optional min/max constrains using `min_length`/`max_length`

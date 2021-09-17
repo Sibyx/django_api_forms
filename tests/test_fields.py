@@ -458,7 +458,7 @@ class AnyFieldTests(SimpleTestCase):
         1.5,
         {'test': {'nested': 'dict'}},
         [123, 456],
-        set([123, 456]),
+        {123, 456},
         '0',
     ]
 
@@ -518,21 +518,21 @@ class FileFieldTests(SimpleTestCase):
         self.assertEqual(django_file.size, 12412)
 
     def test_mime(self):
-        file_field = FileField(mime=['image/jpeg'])
+        file_field = FileField(mime=('image/jpeg', ))
         django_file = file_field.clean(self._payload)
 
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 12412)
 
     def test_max_length(self):
-        file_field = FileField(mime=['image/jpeg'], max_length=1000)
+        file_field = FileField(mime=('image/jpeg', ), max_length=1000)
 
         with self.assertRaises(ValidationError):
             log_input(self._payload)
             file_field.clean(self._payload)
 
     def test_invalid_mime(self):
-        file_field = FileField(mime=['image/png', 'image/gif'])
+        file_field = FileField(mime=('image/png', 'image/gif'))
 
         expected_error = FileField.default_error_messages['invalid_mime']
         expected_error = expected_error.format('image/png, image/gif', 'image/jpeg')
@@ -541,7 +541,7 @@ class FileFieldTests(SimpleTestCase):
             file_field.clean(self._payload)
 
     def test_missing_mime(self):
-        file_field = FileField(mime=['image/jpeg', 'image/gif'])
+        file_field = FileField(mime=('image/jpeg', 'image/gif'))
 
         with open(f"{settings.BASE_DIR}/data/kitten_missing.txt") as f:
             kitten = f.read()
@@ -616,7 +616,7 @@ class ImageFieldTests(SimpleTestCase):
         self.assertIsNotNone(django_image.image)
 
     def test_mime_mismatch(self):
-        file_field = ImageField(mime=['image/png', 'image/gif'])
+        file_field = ImageField(mime=('image/png', 'image/gif'))
 
         with open(f"{settings.BASE_DIR}/data/kitten_mismatch.txt") as f:
             kitten = f.read()

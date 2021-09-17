@@ -227,7 +227,7 @@ class FileField(Field, IgnoreFillMixin):
         'invalid_mime': _("The submitted file is empty."),
     }
 
-    def __init__(self, max_length=None, mime: typing.List[str] = None, **kwargs):
+    def __init__(self, max_length=None, mime: typing.Tuple = None, **kwargs):
         self._max_length = max_length
         self._mime = mime
         super().__init__(**kwargs)
