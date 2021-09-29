@@ -1,5 +1,8 @@
 # Contributing to django-api-forms
 
+If you like nice diagrams you can also check repository
+[code map](https://app.codesee.io/maps/public/c7286640-20f6-11ec-a894-61b8cbaa0d26).
+
 ## Pull requests
 
 Feel free to open pull requests but please keep in mind this checklist:
@@ -16,16 +19,14 @@ We use [poetry](https://python-poetry.org/) for dependency management. Please wr
 code-style and code-quality checks. Please, be sure that your IDE is following settings according to `.editorconfig`
 file.
 
-Right now we still use [pytest](https://pytest.org) for unit testing, but we are on the way to replace it with
-[Django-style tests](https://docs.djangoproject.com/en/3.1/topics/testing/overview/). Tests are already Django native,
-we just need to change CI/CD (GitHub Actions).
+We use[Django-style tests](https://docs.djangoproject.com/en/3.1/topics/testing/overview/).
 
 ```shell script
 # Run tests
-poetry run pytest
+poetry run python runtests.py
 
 # Run flake8
-poetry run pytest --flake8
+poetry run flake8 .
 ```
 
 ## Documentation

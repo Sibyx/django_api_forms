@@ -3,33 +3,33 @@
 [![PyPI version](https://badge.fury.io/py/django-api-forms.svg)](https://badge.fury.io/py/django-api-forms)
 [![codecov](https://codecov.io/gh/Sibyx/django_api_forms/branch/master/graph/badge.svg)](https://codecov.io/gh/Sibyx/django_api_forms)
 
-[Django Forms](https://docs.djangoproject.com/en/3.1/topics/forms/) approach in paring and validation of request
+[Django Forms](https://docs.djangoproject.com/en/3.2/topics/forms/) approach in processing of RESTful HTTP request
 payload (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
 without HTML front-end.
 
 ## Motivation
 
-Main idea was to create a simple and declarative way to specify format of expecting request with ability to validate
-them. Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to validate my API
-request (I use pure Django in my APIs). I have encountered a problem with nesting my requests without huge boilerplate.
-Also, the whole HTML thing was pretty useless in my RESTful APIs.
+The main idea was to create a simple and declarative way to specify the format of expecting requests with the ability
+to validate them. Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to
+validate my API requests (I use pure Django in my APIs). I have encountered a problem with nesting my requests without
+a huge boilerplate. Also, the whole HTML thing was pretty useless in my RESTful APIs.
 
-I wanted something to:
+I wanted to:
 
-- define my requests as object (`Form`)
-- pass the request to my defined object (`form = Form.create_from_request(request)`)
-- validate my request `form.is_valid()`
-- extract data `form.clean_data` property
+- define my requests as object (`Form`),
+- pass the request to my defined object (`form = Form.create_from_request(request)`),
+- validate my request `form.is_valid()`,
+- extract data `form.clean_data` property.
 
 I wanted to keep:
 
-- friendly declarative Django syntax
-([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful)
-- [Validators](https://docs.djangoproject.com/en/3.1/ref/validators/)
-- [ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#validationerror)
-- [Form fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/) (In the end, I had to "replace" some of them)
+- friendly declarative Django syntax,
+([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful),
+- [Validators](https://docs.djangoproject.com/en/3.1/ref/validators/),
+- [ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#validationerror),
+- [Form fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/) (In the end, I had to "replace" some of them).
 
-So I decided to create simple Python package to cover all my expectations.
+So I have decided to create a simple Python package to cover all my expectations.
 
 ## Installation
 

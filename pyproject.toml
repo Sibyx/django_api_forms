@@ -20,11 +20,6 @@ mkdocs-material = "^7.0.0"
 toml = "^0.10.2"
 coverage = "^5.5"
 
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = 'tests.settings'
-log_cli = 1
-log_cli_level = 'INFO'
-
 [tool.coverage.run]
 omit = [
     '*/tests/*', 'docs/', 'venv/*', 'build/', 'dist/', '.github/', 'django_api_forms.egg-info/', 'setup.py',
