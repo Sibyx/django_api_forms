@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-api-forms"
-version = "0.19.1"
+version = "0.20.0"
 description = "Declarative Django request validation"
 authors = ["Jakub Dubec <jakub.dubec@gmail.com>", "Paul Brown <paul90brown+github@gmail.com>"]
 license = "MIT"
@@ -15,10 +15,10 @@ msgpack = "*"
 setuptools = "*"
 wheel = "^0.34.2"
 twine = "^3.1.1"
-flake8 = "^3.9.2"
+flake8 = "^4.0"
 mkdocs-material = "^7.0.0"
 toml = "^0.10.2"
-coverage = "^5.5"
+coverage = {version = "^6.0.2", extras = ["toml"]}
 
 [tool.coverage.run]
 omit = [

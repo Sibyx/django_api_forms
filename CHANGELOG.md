@@ -1,8 +1,17 @@
 # Changelog
 
+## 0.20.0 : TBD
+
+Anniversary release 🥳
+
+- **Feature**: Population strategies introduced
+- **Feature**: `fill` method is deprecated and replaced by `populate`
+- **Feature**: `Settings` object introduced (`form.settings`)
+- **Feature**: Pluggable content-type parsers using `DJANGO_API_FORMS_PARSERS` setting
+
 ## 0.19.1 : 17.09.2021
 
-- **Typing**: `mime` argument in `FileField` is suppose to be a `tuple`
+- **Typing**: `mime` argument in `FileField` is supposed to be a `tuple`
 
 ## 0.19.0 : 12.07.2021
 

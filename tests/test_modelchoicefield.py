@@ -38,7 +38,7 @@ class FormTests(TestCase):
         form = MyAlbumForm.create_from_request(request)
         self.assertTrue(form.is_valid())
 
-        form.fill(my_model)
+        form.populate(my_model)
         self.assertIsInstance(my_model.artist, Artist)
         self.assertEqual(my_model.artist.pk, self._my_artist.pk)
         self.assertEqual(my_model.artist, self._my_artist)
@@ -68,7 +68,7 @@ class FormTests(TestCase):
         form = MyAlbumForm.create_from_request(request)
         self.assertTrue(form.is_valid())
 
-        form.fill(my_model)
+        form.populate(my_model)
         self.assertIsInstance(my_model.artist, Artist)
         self.assertEqual(my_model.artist.pk, self._my_artist.pk)
         self.assertEqual(my_model.artist, self._my_artist)
@@ -98,7 +98,7 @@ class FormTests(TestCase):
         form = MyAlbumForm.create_from_request(request)
         self.assertTrue(form.is_valid())
 
-        form.fill(my_model)
+        form.populate(my_model)
         self.assertIsInstance(my_model.artist, Artist)
         self.assertEqual(my_model.artist.pk, self._my_artist.pk)
         self.assertEqual(my_model.artist, self._my_artist)

@@ -89,14 +89,14 @@ class BookForm(Form):
 
 ## Database relationships
 
-## Fill method
+## Populate objects
 
 **IMPORTANT**: Form fields `FormField`, `FormFieldList`, `FileField` and `ImageField` doesn't support this feature.
-You have to define `fill_` method, if you want these fields populated.
+You have to define `populate_` method, if you want these fields populated.
 
-Form object method `MyForm.fill(obj: Any, exclude: List[str] = None)` which fills input `obj` using `setattr` according
-to the form fields. Only data present in `clean_data` property (data from request) will be populated. You can use it
-like this:
+Form object method `MyForm.populate(obj: Any, exclude: List[str] = None)` which fills input `obj` using `setattr`
+according to the form fields. Only data present in `clean_data` property (data from request) will be populated. You
+can use it like this:
 
 ```python
 from tests.testapp.forms import AlbumForm
@@ -110,9 +110,13 @@ def my_view(request):
         pass
 
     album = Album()
-    form.fill(album)
+    form.populate(album)
     album.save()
 ```
+
+### Population strategies
+
+Library provides 
 
 ### ModelChoiceField
 

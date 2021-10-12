@@ -1,29 +1,20 @@
 import copy
-import json
+import warnings
 from typing import Union, List
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
-from django.forms import ModelChoiceField, ModelMultipleChoiceField, fields_for_model
+from django.forms import fields_for_model
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
 from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
-
-try:
-    import msgpack
-
-    is_msgpack_installed = True
-except ImportError:
-    is_msgpack_installed = False
-
-parsers_by_content_type = {'application/json': json.loads}
-if is_msgpack_installed:
-    parsers_by_content_type['application/x-msgpack'] = msgpack.loads
+from .settings import Settings
+from .utils import resolve_from_path
 
 
 class BaseForm(object):
-    def __init__(self, data=None, request=None):
+    def __init__(self, data=None, request=None, settings: Settings = None):
         if data is None:
             self._data = {}
         else:
@@ -33,6 +24,7 @@ class BaseForm(object):
         self._dirty = []
         self.cleaned_data = None
         self._request = request
+        self.settings = settings or Settings()
 
         if isinstance(data, dict):
             for key in data.keys():
@@ -64,6 +56,8 @@ class BaseForm(object):
         if not request.body:
             return cls()
 
+        settings = Settings()
+
         all_attributes = request.META.get('CONTENT_TYPE', '').replace(' ', '').split(';')
         content_type = all_attributes.pop(0)
 
@@ -72,14 +66,13 @@ class BaseForm(object):
             key, value = attribute.split('=')
             optional_attributes[key] = value
 
-        parser = parsers_by_content_type.get(content_type)
+        if content_type not in settings.PARSERS:
+            raise UnsupportedMediaType()
 
-        if parser:
-            data = parser(request.body)
-        else:
-            raise UnsupportedMediaType
+        parser = resolve_from_path(settings.PARSERS[content_type])
+        data = parser(request.body)
 
-        return cls(data, request)
+        return cls(data, request, settings)
 
     @property
     def dirty(self) -> List:
@@ -159,12 +152,12 @@ class BaseForm(object):
         """
         return self.cleaned_data
 
-    def fill(self, obj, exclude: List[str] = None):
+    def populate(self, obj, exclude: List[str] = None):
         """
-        :param exclude:
-        :param obj:
-        :return:
-        """
+                :param exclude:
+                :param obj:
+                :return:
+                """
         if exclude is None:
             exclude = []
 
@@ -182,37 +175,30 @@ class BaseForm(object):
 
             # Skip default behaviour if there is fill_ method available
             if hasattr(self, f"fill_{key}"):
+                warnings.warn(
+                    "Form.fill_ methods are deprecated and will be not supported in 1.0. Use Form.populate_ instead.",
+                    DeprecationWarning,
+                    stacklevel=2
+                )
                 setattr(obj, key, getattr(self, f"fill_{key}")(obj, self.cleaned_data[key]))
                 continue
 
-            # Skip if field is not fillable
-            if hasattr(field, 'ignore_fill') and field.ignore_fill:
-                continue
-
-            # ModelMultipleChoiceField is not fillable (yet)
-            if isinstance(field, ModelMultipleChoiceField):
-                continue
-
-            """
-            We need to changes key postfix if there is ModelChoiceField (because of _id etc.)
-            We always try to assign whole object instance, for example:
-            artis_id is normalized as Artist model, but it have to be assigned to artist model property
-            because artist_id in model has different type (for example int if your are using int primary keys)
-            If you are still confused (sorry), try to check docs
-            """
-            if isinstance(field, ModelChoiceField):
-                model_key = key
-                if field.to_field_name:
-                    postfix_to_remove = f"_{field.to_field_name}"
-                else:
-                    postfix_to_remove = "_id"
-                if key.endswith(postfix_to_remove):
-                    model_key = key[:-len(postfix_to_remove)]
-                setattr(obj, model_key, self.cleaned_data[key])
-            else:
-                setattr(obj, key, self.cleaned_data[key])
+            field_class = f"{field.__class__.__module__}.{field.__class__.__name__}"
+            strategy = resolve_from_path(
+                self.settings.POPULATION_STRATEGIES.get(
+                    field_class, "django_api_forms.population_strategies.BaseStrategy"
+                )
+            )
+            strategy()(field, obj, key, self.cleaned_data[key])
 
         return obj
+
+    def fill(self, obj, exclude: List[str] = None):
+        warnings.warn(
+            "Form.fill() method is deprecated and will be removed in 1.0. Use Form.populate() instead.",
+            DeprecationWarning
+        )
+        return self.populate(obj, exclude)
 
 
 class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
