@@ -4,10 +4,10 @@ This library helps you to handle basic RESTful API use-cases with Django Forms f
 `django.forms.Form` with `django_api_forms.Form` and introduces few extra fields (boolean handling, BASE64
 images/files, nesting).
 
-`django_api_forms.Form` defines format of the request and help you with:
+`django_api_forms.Form` defines the format of the request and help you with:
 
 - payload parsing (according to the `Content-Type` HTTP header)
-- data validation and normalisation (using [Django validators](https://docs.djangoproject.com/en/3.1/ref/validators/)
+- data validation and normalisation (using [Django validators](https://docs.djangoproject.com/en/3.2/ref/validators/)
 or custom `clean_` method)
 - BASE64 file/image upload
 - construction of the basic validation response
@@ -27,15 +27,17 @@ def my_view(request):
     form = AlbumForm.create_from_request(request)
 ```
 
-Currently, supports:
+Library by default keeps configuration for handling:
 
-- JSON
-- [msgpack](https://msgpack.org/) (requires [msgpack](https://pypi.org/project/msgpack/) package)
+- JSON (using `jsong.loads`),
+- [msgpack](https://msgpack.org/) (requires [msgpack](https://pypi.org/project/msgpack/) package).
 
-**TODO**: Add possibility to have custom parsers (or override them)
+You can extend or override that behavior by setting the `DJANGO_API_FORMS_PARSERS` variable in your `settings.py`.
+Default settings for such variables are listed in the
+[Example documentation page](https://sibyx.github.io/django_api_forms/example/#settings).
 
-During construction `Form.dirty: List[str]` property is populated with property keys presented in obtained payload
-(sluts!!).
+During construction `Form.dirty: List[str]` property is populated with property keys presented in the obtained payload
+(dirty sluts!!).
 
 ## Validation and normalisation
 
@@ -80,7 +82,7 @@ class BookForm(Form):
             # Non field validation errors are present under key `__all__` in Form.errors property
             self.add_error(None, ValidationError("Is it you Doctor?", code='time-travelling'))
 
-        # Last chance to do some touchy touchy with self.clean_data
+        # The last chance to do some touchy touchy with the self.clean_data
 
         return self.cleaned_data
 ```
@@ -89,14 +91,14 @@ class BookForm(Form):
 
 ## Database relationships
 
-## Fill method
+## Populate objects
 
 **IMPORTANT**: Form fields `FormField`, `FormFieldList`, `FileField` and `ImageField` doesn't support this feature.
-You have to define `fill_` method, if you want these fields populated.
+You have to define `populate_` method, if you want these fields populated.
 
-Form object method `MyForm.fill(obj: Any, exclude: List[str] = None)` which fills input `obj` using `setattr` according
-to the form fields. Only data present in `clean_data` property (data from request) will be populated. You can use it
-like this:
+Form object method `MyForm.populate(obj: Any, exclude: List[str] = None)` which fills input `obj` using `setattr`
+according to the form fields. Only data present in `clean_data` property (data from request) will be populated. You
+can use it like this:
 
 ```python
 from tests.testapp.forms import AlbumForm
@@ -110,11 +112,39 @@ def my_view(request):
         pass
 
     album = Album()
-    form.fill(album)
+    form.populate(album)
     album.save()
 ```
 
-### ModelChoiceField
+### Population strategies
+
+Library provides ability to change population strategy for each field using `DJANGO_API_FORMS_POPULATION_STRATEGIES`
+setting, or you can access settings directly `form.settings.POPULATION_STRATEGIES`. If there is no population strategy
+provided for field type, the `DJANGO_API_FORMS_DEFAULT_POPULATION_STRATEGY` is used. Default values are listed bellow:
+
+```python
+DJANGO_API_FORMS_POPULATION_STRATEGIES = {
+    'django_api_forms.fields.FormFieldList': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FileField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.ImageField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django.forms.models.ModelMultipleChoiceField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django.forms.models.ModelChoiceField': 'django_api_forms.population_strategies.ModelChoiceFieldStrategy'
+}
+
+DJANGO_API_FORMS_DEFAULT_POPULATION_STRATEGY = 'django_api_forms.population_strategies.BaseStrategy'
+```
+
+#### BaseStrategy
+
+Object property is populated using `1:1` mapping and
+[setattr](https://docs.python.org/3/library/functions.html#setattr) function.
+
+#### IgnoreStrategy
+
+If this strategy is used, the target object is kept untouched.
+
+#### ModelChoiceField
 
 Field name is expected to have format like this: `{field_name}(_{to_field_name})?` so library is able to automatically
 resolve payload key postfix according to the `to_field_name` attribute. If there is no `to_field_name` provided,
@@ -143,7 +173,25 @@ class MyFormWithId(Form):
 
 ### Customization
 
-If you want to override default filling behaviour, you can define custom `fill_{field}` method inside your form class:
+#### Creating custom strategy
+
+You can create your own population strategy by inheriting `BaseStrategy` and overriding it's
+`__call__(self, field, obj, key: str, value)` method.
+
+```python
+from django_api_forms.population_strategies import BaseStrategy
+
+
+class ExampleStrategy(BaseStrategy):
+    def __call__(self, field, obj, key: str, value):
+        # Do your logic here
+        setattr(obj, key, value)
+```
+
+#### Using populate_ method
+
+If you want to override population strategy for explicit field, you can define custom `populate_{field}` method inside
+your form class:
 
 ```python
 from django.forms import fields
@@ -159,10 +207,10 @@ class AlbumForm(Form):
     type = EnumField(enum=Album.AlbumType, required=True)
     metadata = DictionaryField(fields.DateTimeField())
 
-    def fill_year(self, obj, value: int) -> int:
+    def populate_year(self, obj, value: int) -> int:
         return 2020
 
-    def fill_artist(self, obj, value: dict) -> Artist:
+    def populate_artist(self, obj, value: dict) -> Artist:
         artist = Artist.objects.get_or_create(
             name=value['name']
         )

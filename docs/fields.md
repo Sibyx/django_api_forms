@@ -1,7 +1,7 @@
 # Fields
 
-Even if we tried to most of the native Django fields, we had to override some of them to be more fit for RESTful
-applications. Also we introduced new ones, to cover extra functionality like nested requests. In this section we will
+Even if we tried to keep most of the native Django fields, we had to override some of them to be more fit for RESTful
+applications. Also, we introduced new ones, to cover extra functionality like nested requests. In this section, we will
 explain our intentions and describe their usage.
 
 To sum up:
@@ -30,8 +30,8 @@ To sum up:
     - [ModelMultipleChoiceField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#modelmultiplechoicefield)
 - You can use [Django Validators](https://docs.djangoproject.com/en/3.1/ref/validators/).
 
-Fields which are not in the list above were not been tested or been replaced with our customized implementation
-(or it just doesn't make sense use them in RESTful APIs).
+Fields that are not in the list above were not been tested or been replaced with our customized implementation
+(or it just doesn't make sense to use them in RESTful APIs).
 
 ## BooleanField
 

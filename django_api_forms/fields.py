@@ -16,12 +16,6 @@ from .version import __version__ as version
 DATA_URI_PATTERN = r"data:((?:\w+\/(?:(?!;).)+)?)((?:;[\w=]*[^;])*),(.+)"
 
 
-class IgnoreFillMixin:
-    @property
-    def ignore_fill(self) -> bool:
-        return True
-
-
 class BooleanField(Field):
     def to_python(self, value):
         if value in (True, 'True', 'true', '1', 1):
@@ -91,7 +85,7 @@ class FieldList(Field):
         return result
 
 
-class FormField(Field, IgnoreFillMixin):
+class FormField(Field):
     def __init__(self, form: typing.Type, **kwargs):
         self._form = form
 
@@ -112,7 +106,7 @@ class FormField(Field, IgnoreFillMixin):
             raise RequestValidationError(form.errors)
 
 
-class FormFieldList(FormField, IgnoreFillMixin):
+class FormFieldList(FormField):
     def __init__(self, form: typing.Type, min_length=None, max_length=None, **kwargs):
         self._min_length = min_length
         self._max_length = max_length
@@ -220,7 +214,7 @@ class AnyField(Field):
         return value
 
 
-class FileField(Field, IgnoreFillMixin):
+class FileField(Field):
     default_error_messages = {
         'max_length': _('Ensure this file has at most %(max)d bytes (it has %(length)d).'),
         'invalid_uri': _("The given URI is not a valid Data URI."),
@@ -261,7 +255,7 @@ class FileField(Field, IgnoreFillMixin):
         return file
 
 
-class ImageField(FileField, IgnoreFillMixin):
+class ImageField(FileField):
     default_error_messages = {
         'invalid_image': _("Upload a valid image. The file you uploaded was either not an image or a corrupted image.")
     }

@@ -1,5 +1,25 @@
 # Example
 
+## Settings
+
+```python
+DJANGO_API_FORMS_POPULATION_STRATEGIES = {
+    'django_api_forms.fields.FormFieldList': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FileField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.ImageField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django.forms.models.ModelMultipleChoiceField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django.forms.models.ModelChoiceField': 'django_api_forms.population_strategies.ModelChoiceFieldStrategy'
+}
+
+DJANGO_API_FORMS_DEFAULT_POPULATION_STRATEGY = 'django_api_forms.population_strategies.BaseStrategy'
+
+DJANGO_API_FORMS_PARSERS = {
+    'application/json': 'json.loads',
+    'application/x-msgpack': 'msgpack.loads'
+}
+```
+
 ## JSON request
 
 ```json
