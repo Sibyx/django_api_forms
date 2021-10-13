@@ -70,7 +70,6 @@ values). Keep in mind, that dictionaries are not replaced by your settings they 
 
 For more information about the parsers and the population strategies check the documentation.
 
-
 ```python
 DJANGO_API_FORMS_POPULATION_STRATEGIES = {
     'django_api_forms.fields.FormFieldList': 'django_api_forms.population_strategies.IgnoreStrategy',

@@ -4,7 +4,6 @@ Even if we tried to keep most of the native Django fields, we had to override so
 applications. Also, we introduced new ones, to cover extra functionality like nested requests. In this section, we will
 explain our intentions and describe their usage.
 
-
 To sum up:
 
 - You can use [Django Form Fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#module-django.forms.fields):
