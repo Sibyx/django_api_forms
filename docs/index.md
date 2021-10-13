@@ -1,13 +1,13 @@
 # Django API Forms
 
-[Django Forms](https://docs.djangoproject.com/en/3.2/topics/forms/) approach in processing of RESTful HTTP request
-payload (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
+[Django Forms](https://docs.djangoproject.com/en/3.2/topics/forms/) approach in the processing of a RESTful HTTP
+request payload (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
 without HTML front-end.
 
 ## Motivation
 
 The main idea was to create a simple and declarative way to specify the format of expecting requests with the ability
-to validate them. Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to
+to validate them. Firstly, I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to
 validate my API requests (I use pure Django in my APIs). I have encountered a problem with nesting my requests without
 a huge boilerplate. Also, the whole HTML thing was pretty useless in my RESTful APIs.
 

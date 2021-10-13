@@ -3,14 +3,14 @@
 [![PyPI version](https://badge.fury.io/py/django-api-forms.svg)](https://badge.fury.io/py/django-api-forms)
 [![codecov](https://codecov.io/gh/Sibyx/django_api_forms/branch/master/graph/badge.svg)](https://codecov.io/gh/Sibyx/django_api_forms)
 
-[Django Forms](https://docs.djangoproject.com/en/3.2/topics/forms/) approach in processing of RESTful HTTP request
-payload (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
+[Django Forms](https://docs.djangoproject.com/en/3.2/topics/forms/) approach in the processing of a RESTful HTTP
+request payload (especially for content type like [JSON](https://www.json.org/) or [MessagePack](https://msgpack.org/))
 without HTML front-end.
 
 ## Motivation
 
 The main idea was to create a simple and declarative way to specify the format of expecting requests with the ability
-to validate them. Firstly I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to
+to validate them. Firstly, I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to
 validate my API requests (I use pure Django in my APIs). I have encountered a problem with nesting my requests without
 a huge boilerplate. Also, the whole HTML thing was pretty useless in my RESTful APIs.
 
@@ -24,10 +24,10 @@ I wanted to:
 I wanted to keep:
 
 - friendly declarative Django syntax,
-([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful),
-- [Validators](https://docs.djangoproject.com/en/3.1/ref/validators/),
-- [ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#validationerror),
-- [Form fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/) (In the end, I had to "replace" some of them).
+([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L25) is beautiful),
+- [Validators](https://docs.djangoproject.com/en/3.2/ref/validators/),
+- [ValidationError](https://docs.djangoproject.com/en/3.2/ref/exceptions/#validationerror),
+- [Form fields](https://docs.djangoproject.com/en/3.2/ref/forms/fields/) (In the end, I had to "replace" some of them).
 
 So I have decided to create a simple Python package to cover all my expectations.
 
@@ -63,6 +63,30 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django_api_forms'
 )
+```
+
+You can change the default behavior of population strategies or parsers using these settings (listed with default
+values). Keep in mind, that dictionaries are not replaced by your settings they are merged with defaults.
+
+For more information about the parsers and the population strategies check the documentation.
+
+
+```python
+DJANGO_API_FORMS_POPULATION_STRATEGIES = {
+    'django_api_forms.fields.FormFieldList': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FileField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.ImageField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django.forms.models.ModelMultipleChoiceField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django.forms.models.ModelChoiceField': 'django_api_forms.population_strategies.ModelChoiceFieldStrategy'
+}
+
+DJANGO_API_FORMS_DEFAULT_POPULATION_STRATEGY = 'django_api_forms.population_strategies.BaseStrategy'
+
+DJANGO_API_FORMS_PARSERS = {
+    'application/json': 'json.loads',
+    'application/x-msgpack': 'msgpack.loads'
+}
 ```
 
 ## Example

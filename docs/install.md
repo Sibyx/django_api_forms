@@ -1,7 +1,7 @@
 # Installation
 
 Library is published on PyPi index as [django-api-forms](https://pypi.org/project/django-api-forms/). You can add it to
-your project using your favourite package manager. Few examples:
+your project using your favorite package manager. Few examples:
 
 ```shell
 # Using pip
