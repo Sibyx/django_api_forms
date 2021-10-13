@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.20.0 : TBD
+## 0.20.0 : 14.10.2021
 
 Anniversary release 🥳
 
