@@ -1,0 +1,20 @@
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project: false
+    patch: true
+    changes: false
+
+comment:
+  layout: "header, diff, changes, tree"
+  behavior: default
+
+ignore:
+  - "docs/**"
+  - ".github/**"
+  - "tests/**"
+  - "setup.py"
+  - "runtests.py"
