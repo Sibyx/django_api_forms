@@ -9,6 +9,7 @@ class IgnoreStrategy(BaseStrategy):
 
 
 class ModelChoiceFieldStrategy(BaseStrategy):
+
     """
     We need to changes key postfix if there is ModelChoiceField (because of _id etc.)
     We always try to assign whole object instance, for example:
