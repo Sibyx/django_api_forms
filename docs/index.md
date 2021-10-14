@@ -22,15 +22,15 @@ I wanted to keep:
 
 - friendly declarative Django syntax,
 ([DeclarativeFieldsMetaclass](https://github.com/django/django/blob/master/django/forms/forms.py#L22) is beautiful),
-- [Validators](https://docs.djangoproject.com/en/3.1/ref/validators/),
-- [ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#validationerror),
-- [Form fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/) (In the end, I had to "replace" some of them).
+- [Validators](https://docs.djangoproject.com/en/3.2/ref/validators/),
+- [ValidationError](https://docs.djangoproject.com/en/3.2/ref/exceptions/#validationerror),
+- [Form fields](https://docs.djangoproject.com/en/3.2/ref/forms/fields/) (In the end, I had to "replace" some of them).
 
 So I have decided to create a simple Python package to cover all my expectations.
 
 ## Running Tests
 
-```shell script
+```shell
 # install all dependencies
 poetry install
 
