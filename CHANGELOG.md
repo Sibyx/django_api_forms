@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.0 : TBD
+
+This release has been inspired by [Problem Details for HTTP APIs - RFC7807](https://tools.ietf.org/html/rfc7807) and
+blog post [Structuring validation errors in REST APIs](https://medium.com/engineering-brainly/structuring-validation-errors-in-rest-apis-40c15fbb7bc3)
+ written by [@k3nn7](https://github.com/k3nn7).
+
+The main idea has been to simplify validation process on the client side by flattening errors output. To achieve such
+a goal, the whole validation process has been rewritten (and luckily for us, much simplified).
+
+- **Breaking change**: Positional validation errors for lists
+- **Breaking change**: `ImageField` and `FileField` requires [Data URI](https://datatracker.ietf.org/doc/html/rfc2397)
+  (issue [Raise ValidationError in invalid Data URI by default](https://github.com/Sibyx/django_api_forms/issues/22))
+
 ## 0.20.0 : 14.10.2021
 
 Anniversary release 🥳

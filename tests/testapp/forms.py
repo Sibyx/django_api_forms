@@ -21,7 +21,7 @@ class AlbumForm(Form):
     title = fields.CharField(max_length=100)
     year = fields.IntegerField()
     artist = FormField(form=ArtistForm)
-    songs = FormFieldList(form=SongForm)
+    songs = FormFieldList(form=SongForm, min_length=2)
     type = EnumField(enum=Album.AlbumType, required=True)
     metadata = DictionaryField(fields.DateTimeField())
 
@@ -32,7 +32,7 @@ class AlbumForm(Form):
 
     def clean(self):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
-            raise ValidationError("Sounds like a bullshit", code='time-traveling')
+            raise ValidationError("Sounds like a bullshit.", code='time-traveling')
         return self.cleaned_data
 
     def fill_artist(self, obj, value: dict):
