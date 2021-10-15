@@ -9,7 +9,7 @@ class ValidationTests(TestCase):
         rf = RequestFactory()
         expected = {
             'name': "Joy Division",
-            'genres': ['rock', 'punk'],
+            'genres': ['rock', 'punk', 'post-punk'],
             'members': 4
         }
 

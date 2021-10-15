@@ -88,7 +88,7 @@ class BaseForm(object):
         return self._dirty
 
     @property
-    def errors(self) -> dict:
+    def errors(self) -> list:
         if self._errors is None:
             self.full_clean()
         return self._errors

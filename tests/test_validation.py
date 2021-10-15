@@ -1,9 +1,9 @@
 import datetime
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.test import RequestFactory, TestCase
 
+from django_api_forms.exceptions import DetailedValidationError
 from tests.testapp.forms import AlbumForm
 from tests.testapp.models import Album
 
@@ -11,18 +11,24 @@ from tests.testapp.models import Album
 class ValidationTests(TestCase):
     def test_invalid(self):
         rf = RequestFactory()
-        expected = {
-            'songs': [
-                {
-                    'title': [
-                        ValidationError("This field is required.", code='required')
-                    ]
-                }
-            ],
-            '__all__': [
-                ValidationError("Sounds like a bullshit", code='time-travelling')
-            ],
-        }
+        expected = [
+            DetailedValidationError(
+                message="This field is required.",
+                path=('songs', 1, 'title'),
+                code='required'
+            ),
+            DetailedValidationError(
+                message="List has to contains at least %(min_length)s items.",
+                path='songs',
+                code='too-short',
+                params={'min_length': 3}
+            ),
+            DetailedValidationError(
+                message="Sounds like a bullshit.",
+                path='$body',
+                code='time-travelling'
+            )
+        ]
 
         with open(f"{settings.BASE_DIR}/data/invalid.json") as f:
             request = rf.post('/foo/bar', data=f.read(), content_type='application/json')
@@ -30,7 +36,7 @@ class ValidationTests(TestCase):
         form = AlbumForm.create_from_request(request)
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors.__repr__(), expected.__repr__())
+        self.assertListEqual(form.errors, expected)
 
     def test_valid(self):
         rf = RequestFactory()
@@ -40,7 +46,7 @@ class ValidationTests(TestCase):
             'type': Album.AlbumType.VINYL,
             'artist': {
                 'name': "Joy Division",
-                'genres': ['rock', 'punk'],
+                'genres': ['rock', 'punk', 'post-punk'],
                 'members': 4
             },
             'songs': [
@@ -54,16 +60,9 @@ class ValidationTests(TestCase):
                     'metadata': {
                         '_section': {
                             "type": "ID3v2",
-                            "offset": 0,
-                            "byteLength": 2048
                         },
                         'header': {
                             "majorVersion": 3,
-                            "minorRevision": 0,
-                            "flagsOctet": 0,
-                            "unsynchronisationFlag": False,
-                            "extendedHeaderFlag": False,
-                            "experimentalIndicatorFlag": False,
                             "size": 2038
                         }
                     }
@@ -81,4 +80,4 @@ class ValidationTests(TestCase):
         form = AlbumForm.create_from_request(request)
 
         self.assertTrue(form.is_valid())
-        self.assertEqual(form.cleaned_data, expected)
+        self.assertDictEqual(form.cleaned_data, expected)
