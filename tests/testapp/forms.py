@@ -28,12 +28,12 @@ class AlbumForm(Form):
 
     def clean_year(self):
         if self.cleaned_data['year'] == 1992:
-            raise ValidationError("Year 1992 is forbidden!", 'forbidden-value')
+            raise ValidationError("Year 1992 is forbidden!", 'forbidden_value')
         return self.cleaned_data['year']
 
     def clean(self):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
-            raise ValidationError("Sounds like a bullshit.", code='time-traveling')
+            raise ValidationError("Sounds like a bullshit.", code='time_traveling')
         return self.cleaned_data
 
     def fill_artist(self, obj, value: dict):
