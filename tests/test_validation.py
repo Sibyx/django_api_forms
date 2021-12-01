@@ -1,6 +1,7 @@
 import datetime
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.test import RequestFactory, TestCase
 
 from django_api_forms.exceptions import DetailedValidationError
@@ -13,20 +14,23 @@ class ValidationTests(TestCase):
         rf = RequestFactory()
         expected = [
             DetailedValidationError(
-                message="This field is required.",
+                ValidationError("This field is required.", code='required'),
                 path=('songs', 1, 'title'),
-                code='required'
             ),
             DetailedValidationError(
-                message="List has to contains at least %(min_length)s items.",
+                ValidationError(
+                    message="List has to contains at least %(min_length)s items.",
+                    code='min_length',
+                    params={'min_length': 3}
+                ),
                 path='songs',
-                code='too-short',
-                params={'min_length': 3}
             ),
             DetailedValidationError(
-                message="Sounds like a bullshit.",
+                ValidationError(
+                    message="Sounds like a bullshit.",
+                    code='time_travelling'
+                ),
                 path='$body',
-                code='time-travelling'
             )
         ]
 

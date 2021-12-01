@@ -1,4 +1,4 @@
-from typing import Union, Tuple, Dict
+from typing import Union, Tuple, Dict, List
 
 from django.core.exceptions import ValidationError
 
@@ -27,18 +27,17 @@ class RequestValidationError(ApiFormException):
 
 
 class DetailedValidationError(ValidationError):
-    def __init__(self, message: str, path: Union[Tuple, str], code: str = None, params: Dict = None):
-        super().__init__(message, code, params)
+    def __init__(self, error: ValidationError, path: Union[Tuple, str]):
+        super().__init__(error.message, error.code, error.params)
+        if isinstance(error, str):
+            path = (error, )
         self._path = path
 
-    def path(self) -> Union[Tuple, str]:
+    def path(self) -> Tuple:
         return self._path
 
-    def prepend(self, key: Union[Tuple, str]):
-        if isinstance(key, str):
-            self._path = (key,) + self._path
-        elif isinstance(key, tuple):
-            self._path = key + self._path
+    def prepend(self, key: str):
+        self._path = (key, ) + self._path
 
     def to_dict(self):
         return {

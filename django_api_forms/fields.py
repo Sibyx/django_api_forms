@@ -10,7 +10,7 @@ from django.core.files import File
 from django.forms import Field
 from django.utils.translation import gettext_lazy as _
 
-from .exceptions import RequestValidationError
+from .exceptions import DetailedValidationError
 from .version import __version__ as version
 
 DATA_URI_PATTERN = r"data:((?:\w+\/(?:(?!;).)+)?)((?:;[\w=]*[^;])*),(.+)"
@@ -72,12 +72,12 @@ class FieldList(Field):
         result = []
         errors = []
 
-        for item in value:
+        for position, item in enumerate(value):
             try:
                 self._field.clean(item)
                 result.append(self._field.to_python(item))
             except ValidationError as e:
-                errors.append(e)
+                errors.append(DetailedValidationError(e, (position, )))
 
         if errors:
             raise ValidationError(errors)
@@ -103,7 +103,7 @@ class FormField(Field):
         if form.is_valid():
             return form.cleaned_data
         else:
-            raise RequestValidationError(form.errors)
+            raise ValidationError(form.errors)
 
 
 class FormFieldList(FormField):
@@ -136,15 +136,15 @@ class FormFieldList(FormField):
         result = []
         errors = []
 
-        for item in value:
+        for position, item in enumerate(value):
             form = self._form(item)
             if form.is_valid():
                 result.append(form.cleaned_data)
             else:
-                errors.append(form.errors)
+                errors.append(DetailedValidationError(form.errors, (position,)))
 
         if errors:
-            raise RequestValidationError(errors)
+            raise ValidationError(errors)
 
         return result
 
@@ -152,7 +152,7 @@ class FormFieldList(FormField):
 class EnumField(Field):
     default_error_messages = {
         'not_enum': _('Invalid Enum type passed into EnumField!'),
-        'invalid': _('Invalid enum value "{}" passed to {}'),
+        'invalid': _('Invalid enum value "%(value)s" passed to %(enum_class)s'),
     }
 
     def __init__(self, enum: typing.Type, **kwargs):
@@ -170,8 +170,11 @@ class EnumField(Field):
             try:
                 return self.enum(value)
             except ValueError:
-                msg = self.error_messages['invalid'].format(value, self.enum)
-                raise ValidationError(msg)
+                raise ValidationError(
+                    self.error_messages['invalid'],
+                    code='invalid',
+                    params={'value': value, 'enum_class': self.enum}
+                )
         return None
 
 

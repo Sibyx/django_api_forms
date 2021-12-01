@@ -21,7 +21,7 @@ class PopulationTests(TestCase):
 
         # Populate form
         album = Album()
-        self.assertWarns(DeprecationWarning, lambda: form.fill(album))
+        self.assertWarns(DeprecationWarning, lambda: form.populate(album))
         form.populate(album)
 
         self.assertEqual(album.title, form.cleaned_data['title'])

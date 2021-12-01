@@ -1,14 +1,14 @@
 import copy
 import warnings
-from typing import Union, List
+from typing import Union, List, Tuple
 
-from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.exceptions import ValidationError
 from django.forms import fields_for_model
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
-from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
+from .exceptions import UnsupportedMediaType, ApiFormException, DetailedValidationError
 from .settings import Settings
 from .utils import resolve_from_path
 
@@ -87,39 +87,33 @@ class BaseForm(object):
     def is_valid(self) -> bool:
         return not self.errors
 
-    def add_error(self, field: Union[str, None], error: Union[ValidationError, RequestValidationError]):
-        if isinstance(error, RequestValidationError):
-            self._errors[field] = error.errors
-            return
-
+    def add_error(self, path: Tuple, error: ValidationError):
         if hasattr(error, 'error_dict'):
-            if field is not None:
-                raise TypeError(
-                    "The argument `field` must be `None` when the `error` "
-                    "argument contains errors for multiple fields."
-                )
-            else:
-                error = error.error_dict
-        else:
-            error = {field or NON_FIELD_ERRORS: error.error_list}
-
-        for field, error_list in error.items():
-            if field not in self.errors:
-                if field != NON_FIELD_ERRORS and field not in self.fields:
-                    raise ValueError("'%s' has no field named '%s'." % (self.__class__.__name__, field))
-                if field == NON_FIELD_ERRORS:
-                    self._errors[field] = []
+            for key, item in error.error_dict.items():
+                if isinstance(item, DetailedValidationError):
+                    self.add_error((path, key) + item.path(), item)
                 else:
-                    self._errors[field] = []
-            self._errors[field].extend(error_list)
-            if field in self.cleaned_data:
-                del self.cleaned_data[field]
+                    self.add_error((path, key), item)
+        elif not hasattr(error, 'message') and isinstance(error.error_list, list):
+            for item in error.error_list:
+                if isinstance(item, DetailedValidationError):
+                    item.prepend()
+                    self.add_error((path, ) + item.path(), item)
+                else:
+                    self.add_error((path, ), item)
+        else:
+            if self._errors is None:
+                self._errors = []
+
+            self._errors.append(
+                DetailedValidationError(error, path)
+            )
 
     def full_clean(self):
         """
         Clean all of self.data and populate self._errors and self.cleaned_data.
         """
-        self._errors = {}
+        self._errors = []
         self.cleaned_data = {}
 
         for key, field in self.fields.items():
@@ -131,14 +125,14 @@ class BaseForm(object):
 
                     if hasattr(self, f"clean_{key}"):
                         self.cleaned_data[key] = getattr(self, f"clean_{key}")()
-            except (ValidationError, RequestValidationError) as e:
-                self.add_error(key, e)
+            except (ValidationError, DetailedValidationError) as e:
+                self.add_error((key, ), e)
             except (AttributeError, TypeError, ValueError):
-                self.add_error(key, ValidationError(_("Invalid value")))
+                self.add_error((key, ), ValidationError(_("Invalid value")))
         try:
             cleaned_data = self.clean()
         except ValidationError as e:
-            self.add_error(None, e)
+            self.add_error(("$body", ), e)
         else:
             if cleaned_data is not None:
                 self.cleaned_data = cleaned_data

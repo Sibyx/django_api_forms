@@ -185,7 +185,7 @@ class FormFieldTests(SimpleTestCase):
         invalid_vals = ['0', 1, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
         expected_error = "({'name': [ValidationError(['Invalid value'])]}, None, None)"
         for invalid_val in invalid_vals:
-            with self.assertRaisesMessage(RequestValidationError, expected_error):
+            with self.assertRaises(ValidationError):
                 log_input(invalid_val)
                 form_field.clean(invalid_val)
 
