@@ -16,7 +16,7 @@ setuptools = "*"
 wheel = "^0.34.2"
 twine = "^3.1.1"
 flake8 = "^4.0"
-mkdocs-material = "^7.0.0"
+mkdocs-material = "^8.0.0"
 toml = "^0.10.2"
 coverage = {version = "^6.0.2", extras = ["toml"]}
 

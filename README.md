@@ -97,7 +97,7 @@ DJANGO_API_FORMS_PARSERS = {
   "title": "Unknown Pleasures",
   "type": "vinyl",
   "artist": {
-    "name": "Joy Division",
+    "full_name": "Joy Division",
     "genres": [
       "rock",
       "punk"
@@ -151,6 +151,11 @@ class AlbumType(Enum):
 
 
 class ArtistForm(Form):
+    class Meta:
+        mapping = {
+            'full_name': 'name'
+        }
+
     name = fields.CharField(required=True, max_length=100)
     genres = FieldList(field=fields.CharField(max_length=30))
     members = fields.IntegerField()

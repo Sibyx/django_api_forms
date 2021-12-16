@@ -353,3 +353,42 @@ class AlbumForm(Form):
     title = fields.CharField(required=True, max_length=100)
     cover = ImageField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('image/png', ))
 ```
+
+## Meta class
+
+This class allows you to map JSON attribute from request to your preferred name in forms.
+
+- Optional arguments:
+    - `mapping`: Dictionary for mapping JSON attribute on `Form` attribute
+
+**JSON example**
+
+```json
+{
+    "full_name": "Joy Division",
+    "genres": [
+        "rock",
+        "punk"
+    ],
+    "members": 4
+}
+```
+
+**Python representation**
+
+```python
+from django.forms import fields
+
+from django_api_forms import FieldList, Form
+
+
+class ArtistForm(Form):
+    class Meta:
+        mapping = {
+            'full_name': 'name'
+        }
+
+    name = fields.CharField(required=True, max_length=100)
+    genres = FieldList(field=fields.CharField(max_length=30))
+    members = fields.IntegerField()
+```

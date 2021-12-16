@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0 : 15.12.2021
+
+- **Feature**: `Form` class now supports optional `class Meta`
+
 ## 0.20.0 : 14.10.2021
 
 Anniversary release 🥳

@@ -8,6 +8,9 @@ from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
+from django.forms.widgets import MediaDefiningClass
+from django.forms.fields import Field
+
 from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
 from .settings import Settings
 from .utils import resolve_from_path
@@ -25,6 +28,12 @@ class BaseForm(object):
         self.cleaned_data = None
         self._request = request
         self.settings = settings or Settings()
+
+        if isinstance(self.Meta, type):
+            if hasattr(self.Meta, 'mapping'):
+                for key in data.copy():
+                    if key in self.Meta.mapping.keys():
+                        data[self.Meta.mapping[key]] = data.pop(key)
 
         if isinstance(data, dict):
             for key in data.keys():
@@ -237,6 +246,37 @@ class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
 
         new_class.base_fields = fields
         new_class.declared_fields = fields
+
+        return new_class
+
+
+class DeclarativeFieldsMetaclass(MediaDefiningClass):
+    """Collect Fields declared on the base classes."""
+    def __new__(mcs, name, bases, attrs):
+        # Collect fields from current class and remove them from attrs.
+        attrs['declared_fields'] = {
+            key: attrs.pop(key) for key, value in list(attrs.items())
+            if isinstance(value, Field)
+        }
+
+        new_class = super().__new__(mcs, name, bases, attrs)
+
+        new_class.Meta = attrs.pop('Meta', None)
+
+        # Walk through the MRO.
+        declared_fields = {}
+        for base in reversed(new_class.__mro__):
+            # Collect fields from base class.
+            if hasattr(base, 'declared_fields'):
+                declared_fields.update(base.declared_fields)
+
+            # Field shadowing.
+            for attr, value in base.__dict__.items():
+                if value is None and attr in declared_fields:
+                    declared_fields.pop(attr)
+
+        new_class.base_fields = declared_fields
+        new_class.declared_fields = declared_fields
 
         return new_class
 

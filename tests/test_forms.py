@@ -79,6 +79,12 @@ class FormTests(TestCase):
 
     def test_clean_data_keys(self):
         class FunnyForm(Form):
+            class Meta:
+                # source:destination
+                mapping = {
+                    'kode': 'code',
+                    'titul': 'title'
+                }
             title = fields.CharField(required=True)
             code = fields.CharField(required=True)
             url = fields.CharField(required=False)
@@ -103,9 +109,9 @@ class FormTests(TestCase):
         request = request_factory.post(
             '/test/',
             data={
-                'title': "The Question",
-                'code': 'the-question',
-                'url': ''
+                'titul': "The Question",
+                'kode': 'the-question',
+                'url': '',
             },
             content_type='application/json'
         )
