@@ -250,36 +250,15 @@ class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
         return new_class
 
 
-class DeclarativeFieldsMetaclass(MediaDefiningClass):
+class MyDeclarativeFieldsMetaclass(DeclarativeFieldsMetaclass):
     """Collect Fields declared on the base classes."""
     def __new__(mcs, name, bases, attrs):
-        # Collect fields from current class and remove them from attrs.
-        attrs['declared_fields'] = {
-            key: attrs.pop(key) for key, value in list(attrs.items())
-            if isinstance(value, Field)
-        }
-
         new_class = super().__new__(mcs, name, bases, attrs)
 
         new_class.Meta = attrs.pop('Meta', None)
 
-        # Walk through the MRO.
-        declared_fields = {}
-        for base in reversed(new_class.__mro__):
-            # Collect fields from base class.
-            if hasattr(base, 'declared_fields'):
-                declared_fields.update(base.declared_fields)
-
-            # Field shadowing.
-            for attr, value in base.__dict__.items():
-                if value is None and attr in declared_fields:
-                    declared_fields.pop(attr)
-
-        new_class.base_fields = declared_fields
-        new_class.declared_fields = declared_fields
-
         return new_class
 
 
-class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):
+class Form(BaseForm, metaclass=MyDeclarativeFieldsMetaclass):
     """A collection of Fields, plus their associated data."""
