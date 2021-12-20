@@ -8,9 +8,6 @@ from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
-from django.forms.widgets import MediaDefiningClass
-from django.forms.fields import Field
-
 from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
 from .settings import Settings
 from .utils import resolve_from_path
