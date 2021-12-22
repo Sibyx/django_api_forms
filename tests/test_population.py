@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from tests import settings
-from tests.testapp.forms import AlbumForm
-from tests.testapp.models import Album, Artist
+from tests.testapp.forms import AlbumForm, BandForm
+from tests.testapp.models import Album, Artist, Band
 
 
 class PopulationTests(TestCase):
@@ -33,3 +33,27 @@ class PopulationTests(TestCase):
         # Populate method tests
         self.assertIsInstance(album.artist, Artist)
         self.assertEqual(album.artist.name, "Joy Division")
+
+    def test_meta_class_populate(self):
+        # Create form from request
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test/',
+            data={
+                'name': "Queen",
+                'formed': '1970',
+                'has_award': 'True'
+            },
+            content_type='application/json'
+        )
+        form = BandForm.create_from_request(request)
+        self.assertTrue(form.is_valid())
+
+        # Populate form
+        band = Band()
+        self.assertWarns(DeprecationWarning, lambda: form.fill(band))
+        form.populate(band)
+
+        self.assertEqual(band.name, form.cleaned_data['name'])
+        self.assertEqual(band.formed, form.cleaned_data['formed'])
+        self.assertEqual(band.has_award, form.cleaned_data['has_award'])

@@ -195,6 +195,18 @@ class BaseForm(object):
                     field_class, "django_api_forms.population_strategies.BaseStrategy"
                 )
             )
+            if isinstance(self.Meta, type):
+                if hasattr(self.Meta, 'field_type_strategy'):
+                    if field_class in self.Meta.field_type_strategy.keys():
+                        strategy = resolve_from_path(
+                            self.Meta.field_type_strategy[field_class]
+                        )
+                if hasattr(self.Meta, 'field_strategy'):
+                    if key in self.Meta.field_strategy.keys():
+                        strategy = resolve_from_path(
+                            self.Meta.field_strategy[key]
+                        )
+
             strategy()(field, obj, key, self.cleaned_data[key])
 
         return obj

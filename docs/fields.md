@@ -356,39 +356,47 @@ class AlbumForm(Form):
 
 ## Meta class
 
-This class allows you to map JSON attribute from request to your preferred name in forms.
+This class gives your `Form` class extended functionality
 
 - Optional arguments:
     - `mapping`: Dictionary for mapping JSON attribute on `Form` attribute
+    - `field_type_strategy`: Dictionary for implementing strategies on `Form` type attributes
+    - `field_strategy`: Dictionary for implementing strategies on `Form` attributes
 
 **JSON example**
 
 ```json
 {
-    "full_name": "Joy Division",
-    "genres": [
-        "rock",
-        "punk"
-    ],
-    "members": 4
+    "full_name": "Queen",
+    "formed": "1970",
+    "has_award": "True"
 }
 ```
 
 **Python representation**
 
 ```python
+
 from django.forms import fields
 
-from django_api_forms import FieldList, Form
+from django_api_forms import BooleanField, Form
 
 
-class ArtistForm(Form):
+class BandForm(Form):
     class Meta:
         mapping = {
             'full_name': 'name'
         }
 
-    name = fields.CharField(required=True, max_length=100)
-    genres = FieldList(field=fields.CharField(max_length=30))
-    members = fields.IntegerField()
+        field_type_strategy = {
+            'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.BooleanField'
+        }
+
+        field_strategy = {
+            'formed': 'django_api_forms.population_strategies.FormedStrategy'
+        }
+
+    name = fields.CharField(max_length=100)
+    formed = fields.IntegerField()
+    has_award = BooleanField()
 ```

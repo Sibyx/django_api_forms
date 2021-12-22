@@ -39,6 +39,43 @@ Default settings for such variables are listed in the
 During construction `Form.dirty: List[str]` property is populated with property keys presented in the obtained payload
 (dirty sluts!!).
 
+### Customization
+
+#### Map custom JSON attributes to from attributes
+
+You can create `Meta` class in specific `Form` class with optional dictionary type attribute `mapping = {}` which allows you to map JSON
+attributes on `Form` attributes:
+
+**JSON example**
+
+```json
+{
+    "full_name": "Queen",
+    "formed": "1970",
+    "has_award": "True"
+}
+```
+
+**Python representation**
+
+```python
+
+from django.forms import fields
+
+from django_api_forms import BooleanField, Form
+
+
+class BandForm(Form):
+    class Meta:
+        mapping = {
+            'full_name': 'name'
+        }
+
+    name = fields.CharField(max_length=100)
+    formed = fields.IntegerField()
+    has_award = BooleanField()
+```
+
 ## Validation and normalisation
 
 This process is much more simple than in classic Django form. It consists of:
@@ -186,6 +223,34 @@ class ExampleStrategy(BaseStrategy):
     def __call__(self, field, obj, key: str, value):
         # Do your logic here
         setattr(obj, key, value)
+```
+
+#### Creating custom form strategy
+
+You can create your own population strategy in specific `From` class using `Meta` class with optional dictionary type
+attributes `field_type_strategy = {}` or `field_strategy = {}` which allows you to populate `Form` type attributes or
+`Form` attributes:
+
+```python
+
+from django.forms import fields
+
+from django_api_forms import BooleanField, Form
+
+
+class BandForm(Form):
+    class Meta:
+        field_type_strategy = {
+            'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.ExampleStrategy1'
+        }
+
+        field_strategy = {
+            'formed': 'django_api_forms.population_strategies.ExampleStrategy2'
+        }
+
+    name = fields.CharField(max_length=100)
+    formed = fields.IntegerField()
+    has_award = BooleanField()
 ```
 
 #### Using populate_ method

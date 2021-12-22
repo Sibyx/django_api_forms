@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField, ModelForm
+from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField, \
+    ModelForm, BooleanField
 from tests.testapp.models import Album, Artist
 
 
@@ -46,3 +47,18 @@ class AlbumForm(Form):
 class ArtistModelForm(ModelForm):
     class Meta:
         model = Artist
+
+
+class BandForm(Form):
+    class Meta:
+        field_type_strategy = {
+            'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.BooleanField'
+        }
+
+        field_strategy = {
+            'formed': 'django_api_forms.population_strategies.FormedStrategy'
+        }
+
+    name = fields.CharField(max_length=100)
+    formed = fields.IntegerField()
+    has_award = BooleanField()

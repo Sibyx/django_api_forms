@@ -5,8 +5,9 @@ import msgpack
 from django.forms import fields
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django_api_forms import Form
+from django_api_forms import Form, BooleanField
 from django_api_forms.exceptions import UnsupportedMediaType
+from django.db import models
 
 
 class FormTests(TestCase):
@@ -105,7 +106,7 @@ class FormTests(TestCase):
             data={
                 'title': "The Question",
                 'code': 'the-question',
-                'url': '',
+                'url': ''
             },
             content_type='application/json'
         )
@@ -114,7 +115,7 @@ class FormTests(TestCase):
         self.assertTrue(len(form.cleaned_data.keys()) == 3)
         self.assertIsNone(form.cleaned_data['url'])
 
-    def test_meta_class(self):
+    def test_meta_class_mapping(self):
         class FunnyForm(Form):
             class Meta:
                 # source:destination
@@ -122,6 +123,7 @@ class FormTests(TestCase):
                     'kode': 'code',
                     'titul': 'title'
                 }
+
             title = fields.CharField(required=True)
             code = fields.CharField(required=True)
             url = fields.CharField(required=False)
@@ -148,7 +150,7 @@ class FormTests(TestCase):
             data={
                 'titul': "The Question",
                 'kode': 'the-question',
-                'url': '',
+                'url': ''
             },
             content_type='application/json'
         )
@@ -156,6 +158,65 @@ class FormTests(TestCase):
         self.assertTrue(form.is_valid())
         self.assertTrue(len(form.cleaned_data.keys()) == 3)
         self.assertIsNone(form.cleaned_data['url'])
+
+    def test_meta_class(self):
+        class FunnyForm(Form):
+            class Meta:
+                # source:destination
+                mapping = {
+                    'kode': 'code',
+                    'titul': 'title'
+                }
+
+                field_type_strategy = {
+                    'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.BooleanField'
+                }
+
+                field_strategy = {
+                    'formed': 'django_api_forms.population_strategies.FormedStrategy'
+                }
+
+            title = fields.CharField(required=True)
+            code = fields.CharField(required=True)
+            url = fields.CharField(required=False)
+            description = fields.CharField(required=False)
+            formed = fields.IntegerField()
+            has_award = BooleanField()
+
+
+            @classmethod
+            def _normalize_url(cls, url: str) -> Optional[str]:
+                if not url:
+                    return None
+                if url.startswith('http://'):
+                    url = url.replace('http://', '')
+
+                if not url.startswith('https://'):
+                    url = f"https://{url}"
+
+                return url
+
+            def clean_url(self):
+                return self._normalize_url(self.cleaned_data['url'])
+
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test/',
+            data={
+                'titul': "The Question",
+                'kode': 'the-question',
+                'url': '',
+                'formed': '1970',
+                'has_award': 'True'
+            },
+            content_type='application/json'
+        )
+        form = FunnyForm.create_from_request(request)
+        self.assertTrue(form.is_valid())
+        self.assertTrue(len(form.cleaned_data.keys()) == 5)
+        self.assertIsNone(form.cleaned_data['url'])
+
+
 
     def test_empty_payload(self):
         class FunnyForm(Form):

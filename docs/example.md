@@ -77,7 +77,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_api_forms import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField, Form
+from django_api_forms import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField, Form, BooleanField
 
 
 class AlbumType(Enum):
@@ -120,6 +120,20 @@ class AlbumForm(Form):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         return self.cleaned_data
 
+
+class BandForm(Form):
+    class Meta:
+        field_type_strategy = {
+            'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.BooleanField'
+        }
+
+        field_strategy = {
+            'formed': 'django_api_forms.population_strategies.FormedStrategy'
+        }
+
+    name = fields.CharField(max_length=100)
+    formed = fields.IntegerField()
+    has_award = BooleanField()
 
 
 """
