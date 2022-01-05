@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django_api_forms import Form, BooleanField
 from django_api_forms.exceptions import UnsupportedMediaType
+from tests.testapp.models import Band
 
 
 class FormTests(TestCase):
@@ -163,22 +164,19 @@ class FormTests(TestCase):
             class Meta:
                 # source:destination
                 mapping = {
-                    'kode': 'code',
-                    'titul': 'title'
+                    '_name': 'name',
+                    'created': 'formed'
                 }
 
                 field_type_strategy = {
-                    'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.BooleanField'
+                    'django_api_forms.fields.BooleanField': 'tests.population_strategies.BooleanField'
                 }
 
                 field_strategy = {
-                    'formed': 'django_api_forms.population_strategies.FormedStrategy'
+                    'formed': 'tests.population_strategies.FormedStrategy'
                 }
 
-            title = fields.CharField(required=True)
-            code = fields.CharField(required=True)
-            url = fields.CharField(required=False)
-            description = fields.CharField(required=False)
+            name = fields.CharField(max_length=100)
             formed = fields.IntegerField()
             has_award = BooleanField()
 
@@ -201,18 +199,24 @@ class FormTests(TestCase):
         request = request_factory.post(
             '/test/',
             data={
-                'titul': "The Question",
-                'kode': 'the-question',
-                'url': '',
-                'formed': '1970',
+                '_name': 'Queen',
+                'created': '1870',
                 'has_award': 'True'
             },
             content_type='application/json'
         )
         form = FunnyForm.create_from_request(request)
         self.assertTrue(form.is_valid())
-        self.assertTrue(len(form.cleaned_data.keys()) == 5)
-        self.assertIsNone(form.cleaned_data['url'])
+
+        # Populate form
+        band = Band()
+        self.assertWarns(DeprecationWarning, lambda: form.fill(band))
+        form.populate(band)
+
+        self.assertTrue(len(form.cleaned_data.keys()) == 3)
+        self.assertEqual(band.name, form.cleaned_data['name'])
+        self.assertEqual(band.formed, 2000)
+        self.assertEqual(band.has_award, False)
 
     def test_empty_payload(self):
         class FunnyForm(Form):

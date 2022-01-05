@@ -8,20 +8,6 @@ class IgnoreStrategy(BaseStrategy):
         pass
 
 
-class BooleanField(BaseStrategy):
-    def __call__(self, field, obj, key: str, value):
-        super().__call__(field, obj, key, value)
-
-
-class FormedStrategy(BaseStrategy):
-    def __call__(self, field, obj, key: str, value):
-        model_value = value
-        if model_value > 2021 or model_value < 1900:
-            model_value = 2000
-
-        setattr(obj, key, model_value)
-
-
 class ModelChoiceFieldStrategy(BaseStrategy):
 
     """

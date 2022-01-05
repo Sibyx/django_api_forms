@@ -27,6 +27,9 @@ class BaseForm(object):
         self.settings = settings or Settings()
 
         if isinstance(self.Meta, type):
+            if hasattr(self.Meta, 'field_type_strategy'):
+                for key in self.Meta.field_type_strategy.keys():
+                    self.settings.POPULATION_STRATEGIES[key] = self.Meta.field_type_strategy[key]
             if hasattr(self.Meta, 'mapping'):
                 for key in data.copy():
                     if key in self.Meta.mapping.keys():
@@ -196,11 +199,6 @@ class BaseForm(object):
                 )
             )
             if isinstance(self.Meta, type):
-                if hasattr(self.Meta, 'field_type_strategy'):
-                    if field_class in self.Meta.field_type_strategy.keys():
-                        strategy = resolve_from_path(
-                            self.Meta.field_type_strategy[field_class]
-                        )
                 if hasattr(self.Meta, 'field_strategy'):
                     if key in self.Meta.field_strategy.keys():
                         strategy = resolve_from_path(

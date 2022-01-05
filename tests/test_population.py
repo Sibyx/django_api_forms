@@ -41,8 +41,8 @@ class PopulationTests(TestCase):
             '/test/',
             data={
                 'name': "Queen",
-                'formed': '1970',
-                'has_award': 'True'
+                'formed': '1870',
+                'has_award': 'False'
             },
             content_type='application/json'
         )
@@ -55,5 +55,5 @@ class PopulationTests(TestCase):
         form.populate(band)
 
         self.assertEqual(band.name, form.cleaned_data['name'])
-        self.assertEqual(band.formed, form.cleaned_data['formed'])
-        self.assertEqual(band.has_award, form.cleaned_data['has_award'])
+        self.assertEqual(band.formed, 2000)
+        self.assertEqual(band.has_award, True)

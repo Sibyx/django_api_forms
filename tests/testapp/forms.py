@@ -52,11 +52,11 @@ class ArtistModelForm(ModelForm):
 class BandForm(Form):
     class Meta:
         field_type_strategy = {
-            'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.BooleanField'
+            'django_api_forms.fields.BooleanField': 'tests.population_strategies.BooleanField'
         }
 
         field_strategy = {
-            'formed': 'django_api_forms.population_strategies.FormedStrategy'
+            'formed': 'tests.population_strategies.FormedStrategy'
         }
 
     name = fields.CharField(max_length=100)

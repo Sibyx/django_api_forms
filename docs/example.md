@@ -27,7 +27,7 @@ DJANGO_API_FORMS_PARSERS = {
   "title": "Unknown Pleasures",
   "type": "vinyl",
   "artist": {
-    "full_name": "Joy Division",
+    "_name": "Joy Division",
     "genres": [
       "rock",
       "punk"
@@ -77,7 +77,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from django.forms import fields
 
-from django_api_forms import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField, Form, BooleanField
+from django_api_forms import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField, Form
 
 
 class AlbumType(Enum):
@@ -88,7 +88,7 @@ class AlbumType(Enum):
 class ArtistForm(Form):
     class Meta:
         mapping = {
-            'full_name': 'name'
+            '_name': 'name'
         }
 
     name = fields.CharField(required=True, max_length=100)
@@ -119,21 +119,6 @@ class AlbumForm(Form):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         return self.cleaned_data
-
-
-class BandForm(Form):
-    class Meta:
-        field_type_strategy = {
-            'django_api_forms.fields.BooleanField': 'django_api_forms.population_strategies.BooleanField'
-        }
-
-        field_strategy = {
-            'formed': 'django_api_forms.population_strategies.FormedStrategy'
-        }
-
-    name = fields.CharField(max_length=100)
-    formed = fields.IntegerField()
-    has_award = BooleanField()
 
 
 """
