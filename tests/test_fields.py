@@ -417,7 +417,9 @@ class DictionaryFieldTests(SimpleTestCase):
 
         # TEST: invalid value (type of dict values DO NOT match DictionaryField)
         test_input = {"created_at": "blah"}
-        with self.assertRaisesMessage(ValidationError, "{'created_at': ['Enter a valid date/time.']}"):
+        with self.assertRaisesMessage(
+            RequestValidationError, "({'created_at': ValidationError(['Enter a valid date/time.'])}, None, None)"
+        ):
             dict_field.clean(test_input)
 
         # TEST: required=True - all empty non-dict values throw an error

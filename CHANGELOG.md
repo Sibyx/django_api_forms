@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.1 : 13.1.2022
+
+- **Fix**: `DictionaryField` was unable to raise validation errors for keys
+
 ## 0.20.0 : 14.10.2021
 
 Anniversary release 🥳

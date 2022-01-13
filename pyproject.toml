@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "django-api-forms"
-version = "0.20.0"
+version = "0.20.1"
 description = "Declarative Django request validation"
 authors = ["Jakub Dubec <jakub.dubec@gmail.com>", "Paul Brown <paul90brown+github@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 Django = ">=2.0"
 Pillow = ">=2.1"
 msgpack = "*"

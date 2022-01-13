@@ -204,7 +204,7 @@ class DictionaryField(Field):
                 errors[key] = e
 
         if errors:
-            raise ValidationError(errors)
+            raise RequestValidationError(errors)
 
         return result
 
