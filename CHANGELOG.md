@@ -3,7 +3,7 @@
 ## 0.21.0 : 15.12.2021
 
 - **Feature**: Introduced `mapping`
-- **Feature**: Override strategies as `field_type_strategy` and `field_strategy`
+- **Feature**: Override strategies using `field_type_strategy` and `field_strategy`
 
 ## 0.20.0 : 14.10.2021
 

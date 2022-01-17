@@ -4,7 +4,7 @@ from typing import Union, List
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.forms import fields_for_model
-from django.forms.forms import DeclarativeFieldsMetaclass
+from django.forms.forms import DeclarativeFieldsMetaclass as DjangoDeclarativeFieldsMetaclass
 from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
@@ -217,7 +217,7 @@ class BaseForm(object):
         return self.populate(obj, exclude)
 
 
-class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
+class ModelForm(BaseForm, metaclass=DjangoDeclarativeFieldsMetaclass):
     """
     SUPER EXPERIMENTAL
     """
@@ -257,7 +257,7 @@ class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
         return new_class
 
 
-class MyDeclarativeFieldsMetaclass(DeclarativeFieldsMetaclass):
+class DeclarativeFieldsMetaclass(DjangoDeclarativeFieldsMetaclass):
     """Collect Fields declared on the base classes."""
     def __new__(mcs, name, bases, attrs):
         new_class = super().__new__(mcs, name, bases, attrs)
@@ -267,5 +267,5 @@ class MyDeclarativeFieldsMetaclass(DeclarativeFieldsMetaclass):
         return new_class
 
 
-class Form(BaseForm, metaclass=MyDeclarativeFieldsMetaclass):
+class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):
     """A collection of Fields, plus their associated data."""

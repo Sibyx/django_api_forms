@@ -225,10 +225,10 @@ class ExampleStrategy(BaseStrategy):
 
 #### Override strategy
 
-You can override settings population strategies by creating your own population strategy in specific `From` class using
+You can override settings population strategies by creating your own population strategy in specific local `From` class using
 `Meta` class with optional attributes `field_type_strategy = {}` or `field_strategy = {}`:
-  - `field_type_strategy`: Dictionary for implementing populate strategy on `Form` type attributes
-  - `field_strategy`: Dictionary for implementing populate strategies on `Form` attributes
+  - `field_type_strategy`: Dictionary for overriding populate strategy on `Form` type attributes
+  - `field_strategy`: Dictionary for overriding populate strategies on `Form` attributes
 
 ```python
 from django.forms import fields
