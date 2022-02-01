@@ -40,9 +40,9 @@ class PopulationTests(TestCase):
         request = request_factory.post(
             '/test/',
             data={
-                'name': "Queen",
+                'name': 'Queen',
                 'formed': '1870',
-                'has_award': 'False'
+                'has_award': False
             },
             content_type='application/json'
         )

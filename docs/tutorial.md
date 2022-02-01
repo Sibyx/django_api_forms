@@ -42,7 +42,7 @@ During construction `Form.dirty: List[str]` property is populated with property 
 ### Mapping
 
 You can use `Meta` class in specific `Form` class with optional dictionary type attribute `mapping = {}` which allows
-you to map JSON attributes on `Form` attributes:
+you to map JSON attributes to `Form` attributes:
 
 **JSON example**
 
@@ -50,7 +50,7 @@ you to map JSON attributes on `Form` attributes:
 {
     "_name": "Queen",
     "formed": "1970",
-    "has_award": "True"
+    "has_award": true
 }
 ```
 

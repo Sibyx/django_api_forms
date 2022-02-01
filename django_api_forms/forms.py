@@ -217,7 +217,17 @@ class BaseForm(object):
         return self.populate(obj, exclude)
 
 
-class ModelForm(BaseForm, metaclass=DjangoDeclarativeFieldsMetaclass):
+class DeclarativeFieldsMetaclass(DjangoDeclarativeFieldsMetaclass):
+    """Collect Fields declared on the base classes."""
+    def __new__(mcs, name, bases, attrs):
+        new_class = super().__new__(mcs, name, bases, attrs)
+
+        new_class.Meta = attrs.pop('Meta', None)
+
+        return new_class
+
+
+class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):
     """
     SUPER EXPERIMENTAL
     """
@@ -253,16 +263,6 @@ class ModelForm(BaseForm, metaclass=DjangoDeclarativeFieldsMetaclass):
 
         new_class.base_fields = fields
         new_class.declared_fields = fields
-
-        return new_class
-
-
-class DeclarativeFieldsMetaclass(DjangoDeclarativeFieldsMetaclass):
-    """Collect Fields declared on the base classes."""
-    def __new__(mcs, name, bases, attrs):
-        new_class = super().__new__(mcs, name, bases, attrs)
-
-        new_class.Meta = attrs.pop('Meta', None)
 
         return new_class
 
