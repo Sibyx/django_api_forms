@@ -4,7 +4,7 @@ from typing import Union, List
 
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.forms import fields_for_model
-from django.forms.forms import DeclarativeFieldsMetaclass
+from django.forms.forms import DeclarativeFieldsMetaclass as DjangoDeclarativeFieldsMetaclass
 from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
@@ -25,6 +25,15 @@ class BaseForm(object):
         self.cleaned_data = None
         self._request = request
         self.settings = settings or Settings()
+
+        if isinstance(self.Meta, type):
+            if hasattr(self.Meta, 'field_type_strategy'):
+                for key in self.Meta.field_type_strategy.keys():
+                    self.settings.POPULATION_STRATEGIES[key] = self.Meta.field_type_strategy[key]
+            if hasattr(self.Meta, 'mapping'):
+                for key in data.copy():
+                    if key in self.Meta.mapping.keys():
+                        data[self.Meta.mapping[key]] = data.pop(key)
 
         if isinstance(data, dict):
             for key in data.keys():
@@ -189,6 +198,13 @@ class BaseForm(object):
                     field_class, "django_api_forms.population_strategies.BaseStrategy"
                 )
             )
+            if isinstance(self.Meta, type):
+                if hasattr(self.Meta, 'field_strategy'):
+                    if key in self.Meta.field_strategy.keys():
+                        strategy = resolve_from_path(
+                            self.Meta.field_strategy[key]
+                        )
+
             strategy()(field, obj, key, self.cleaned_data[key])
 
         return obj
@@ -199,6 +215,16 @@ class BaseForm(object):
             DeprecationWarning
         )
         return self.populate(obj, exclude)
+
+
+class DeclarativeFieldsMetaclass(DjangoDeclarativeFieldsMetaclass):
+    """Collect Fields declared on the base classes."""
+    def __new__(mcs, name, bases, attrs):
+        new_class = super().__new__(mcs, name, bases, attrs)
+
+        new_class.Meta = attrs.pop('Meta', None)
+
+        return new_class
 
 
 class ModelForm(BaseForm, metaclass=DeclarativeFieldsMetaclass):

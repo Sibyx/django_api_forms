@@ -39,6 +39,41 @@ Default settings for such variables are listed in the
 During construction `Form.dirty: List[str]` property is populated with property keys presented in the obtained payload
 (dirty sluts!!).
 
+### Mapping
+
+You can use `Meta` class in specific `Form` class with optional dictionary type attribute `mapping = {}` which allows
+you to map JSON attributes to `Form` attributes:
+
+**JSON example**
+
+```json
+{
+    "_name": "Queen",
+    "formed": "1970",
+    "has_award": true
+}
+```
+
+**Python representation**
+
+```python
+
+from django.forms import fields
+
+from django_api_forms import BooleanField, Form
+
+
+class BandForm(Form):
+    class Meta:
+        mapping = {
+            '_name': 'name'
+        }
+
+    name = fields.CharField(max_length=100)
+    formed = fields.IntegerField()
+    has_award = BooleanField()
+```
+
 ## Validation and normalisation
 
 This process is much more simple than in classic Django form. It consists of:
@@ -186,6 +221,34 @@ class ExampleStrategy(BaseStrategy):
     def __call__(self, field, obj, key: str, value):
         # Do your logic here
         setattr(obj, key, value)
+```
+
+#### Override strategy
+
+You can override settings population strategies by creating your own population strategy in specific local `From` class using
+`Meta` class with optional attributes `field_type_strategy = {}` or `field_strategy = {}`:
+- `field_type_strategy`: Dictionary for overriding populate strategy on `Form` type attributes
+- `field_strategy`: Dictionary for overriding populate strategies on `Form` attributes
+
+```python
+from django.forms import fields
+
+from django_api_forms import BooleanField, Form
+
+
+class BandForm(Form):
+    class Meta:
+        field_type_strategy = {
+            'django_api_forms.fields.BooleanField': 'app.population_strategies.ExampleStrategy1'
+        }
+
+        field_strategy = {
+            'formed': 'app.population_strategies.ExampleStrategy2'
+        }
+
+    name = fields.CharField(max_length=100)
+    formed = fields.IntegerField()
+    has_award = BooleanField()
 ```
 
 #### Using populate_ method

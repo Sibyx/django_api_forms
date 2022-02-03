@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.21.0 : 15.12.2021
+
+- **Feature**: Introduced `mapping`
+- **Feature**: Override strategies using `field_type_strategy` and `field_strategy`
+
 ## 0.20.1 : 13.1.2022
 
 - **Fix**: `DictionaryField` was unable to raise validation errors for keys

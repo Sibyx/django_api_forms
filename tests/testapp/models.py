@@ -36,3 +36,13 @@ class Song(models.Model):
     title = models.CharField(max_length=100)
     duration = models.DurationField(null=False)
     metadata = models.JSONField(null=False)
+
+
+class Band(models.Model):
+    class Meta:
+        db_table = 'bands'
+        app_label = 'testapp'
+
+    name = models.CharField(max_length=100)
+    formed = models.PositiveIntegerField()
+    has_award = models.BooleanField()

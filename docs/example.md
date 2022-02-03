@@ -27,7 +27,7 @@ DJANGO_API_FORMS_PARSERS = {
   "title": "Unknown Pleasures",
   "type": "vinyl",
   "artist": {
-    "name": "Joy Division",
+    "_name": "Joy Division",
     "genres": [
       "rock",
       "punk"
@@ -86,6 +86,11 @@ class AlbumType(Enum):
 
 
 class ArtistForm(Form):
+    class Meta:
+        mapping = {
+            '_name': 'name'
+        }
+
     name = fields.CharField(required=True, max_length=100)
     genres = FieldList(field=fields.CharField(max_length=30))
     members = fields.IntegerField()
@@ -114,7 +119,6 @@ class AlbumForm(Form):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         return self.cleaned_data
-
 
 
 """
