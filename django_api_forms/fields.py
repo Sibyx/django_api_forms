@@ -1,4 +1,5 @@
 import typing
+import warnings
 from base64 import b64decode
 from enum import Enum
 from io import BytesIO
@@ -230,8 +231,13 @@ class FileField(Field):
         if not value:
             return None
 
-        if version >= "1.0.0":
-            if re.fullmatch(DATA_URI_PATTERN, value) is None:
+        if re.fullmatch(DATA_URI_PATTERN, value) is None:
+            warnings.warn(
+                "Raw base64 inside of FileField/ImageField is deprecated and will throw a validation error from "
+                "version >=1.0.0 Provide value as a Data URI.",
+                DeprecationWarning
+            )
+            if version >= "1.0.0":
                 raise ValidationError(self.error_messages["invalid_uri"], code="invalid_uri")
 
         mime = None

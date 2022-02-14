@@ -31,7 +31,7 @@ poetry run flake8 .
 
 ## Documentation
 
-Documentation is places in `docs` directory and it's generated using
+Documentation is placed in `docs` directory and it's generated using
 [mkdocs-material](https://squidfunk.github.io/mkdocs-material/). You can build docs calling `poetry run mkdocs build`.
 Docs will be in `sites` directory after build. Documentation is updated after every push to `origin/master` branch
 using GitHub Actions.

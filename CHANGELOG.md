@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.21.0 : 15.12.2021
+## 0.21.1 : 14.02.2022
+
+- **Change**: Raw base64 payload in `FileField` and `ImageField` fires `DeprecationWarning`. Use Data URI instead.
+
+## 0.21.0 : 03.02.2022
 
 - **Feature**: Introduced `mapping`
 - **Feature**: Override strategies using `field_type_strategy` and `field_strategy`

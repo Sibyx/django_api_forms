@@ -516,6 +516,7 @@ class FileFieldTests(SimpleTestCase):
         file_field = FileField()
         django_file = file_field.clean(self._payload)
 
+        self.assertWarns(DeprecationWarning, lambda: file_field.clean(self._payload))
         self.assertIsInstance(django_file, File)
         self.assertEqual(django_file.size, 12412)
 
@@ -612,6 +613,7 @@ class ImageFieldTests(SimpleTestCase):
         image_field = ImageField()
         django_image = image_field.clean(self._payload)
 
+        self.assertWarns(DeprecationWarning, lambda: image_field.clean(self._payload))
         self.assertIsInstance(django_image, File)
         self.assertEqual(django_image.size, 12412)
         self.assertEqual(django_image.content_type, 'image/jpeg')
