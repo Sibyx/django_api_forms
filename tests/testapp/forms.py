@@ -14,7 +14,7 @@ class ArtistForm(Form):
 
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
-    duration = fields.DurationField(required=False)
+    duration = fields.DurationField(required=True)
     metadata = AnyField(required=False)
 
 
@@ -32,9 +32,10 @@ class AlbumForm(Form):
         return self.cleaned_data['year']
 
     def clean(self):
-        if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
+        if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['members'] == 4):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
-        return self.cleaned_data
+        else:
+            return self.cleaned_data
 
     def fill_artist(self, obj, value: dict):
         return Artist(

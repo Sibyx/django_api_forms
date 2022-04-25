@@ -1,4 +1,6 @@
-from typing import Union
+from typing import Union, Tuple
+
+from django.core.exceptions import ValidationError
 
 
 class ApiFormException(Exception):
@@ -22,3 +24,42 @@ class RequestValidationError(ApiFormException):
 
     def __repr__(self):
         return self.errors
+
+
+class DetailValidationError(ValidationError):
+    def __init__(self, error: ValidationError, path: Union[Tuple, str]):
+        super().__init__(error.message, error.code, error.params)
+        if isinstance(path[0], Tuple):
+            path = path[0]
+        self._path = path
+
+    @property
+    def path(self) -> Tuple:
+        return self._path
+
+    def prepend(self, key: str):
+        self._path = (key, ) + self._path
+
+    def to_list(self) -> list:
+        return list(self.path)
+
+    def to_dict(self) -> dict:
+        return {
+            'code': self.code,
+            'message': self.message,
+            'path': self.to_list()
+        }
+
+
+def build(form):
+    error_list = []
+    for error in form.errors:
+        error_list.append(
+            error.to_dict()
+        )
+
+    message = {
+        'errors': error_list
+    }
+
+    return message

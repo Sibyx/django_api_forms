@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0 : 25.4.2022
+
+- **Change**: Error messages has new format
+
 ## 0.21.1 : 14.02.2022
 
 - **Change**: Raw base64 payload in `FileField` and `ImageField` fires `DeprecationWarning`. Use Data URI instead.

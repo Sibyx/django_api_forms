@@ -1,9 +1,9 @@
 import datetime
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.test import RequestFactory, TestCase
 
+from django_api_forms.exceptions import build
 from tests.testapp.forms import AlbumForm
 from tests.testapp.models import Album
 
@@ -11,17 +11,92 @@ from tests.testapp.models import Album
 class ValidationTests(TestCase):
     def test_invalid(self):
         rf = RequestFactory()
-        expected = {
-            'songs': [
+
+        # e = {
+        #     "errors": [
+        #         {
+        #             "code": "required",
+        #             "message": "This field is required.",
+        #             "path": [
+        #                 "artist",
+        #                 "name"
+        #             ]
+        #         },
+        #         {
+        #             "code": "required",
+        #             "message": "This field is required.",
+        #             "path": [
+        #                 "artist",
+        #                 "members"
+        #             ]
+        #         },
+        #         {
+        #             "code": "required",
+        #             "message": "This field is required.",
+        #             "path": [
+        #                 "songs",
+        #                 0,
+        #                 "title"
+        #             ]
+        #         },
+        #         {
+        #             "code": "required",
+        #             "message": "This field is required.",
+        #             "path": [
+        #                 "songs",
+        #                 0,
+        #                 "duration"
+        #             ]
+        #         },
+        #         {
+        #             "code": "required",
+        #             "message": "This field is required.",
+        #             "path": [
+        #                 "songs",
+        #                 1,
+        #                 "title"
+        #             ]
+        #         }
+        #     ]
+        # }
+
+        new_err = {
+            "errors": [
                 {
-                    'title': [
-                        ValidationError("This field is required.", code='required')
+                    "code": "required",
+                    "message": "This field is required.",
+                    "path": [
+                        "songs",
+                        0,
+                        "title"
+                    ]
+                },
+                {
+                    "code": "required",
+                    "message": "This field is required.",
+                    "path": [
+                        "songs",
+                        0,
+                        "duration"
+                    ]
+                },
+                {
+                    "code": "required",
+                    "message": "This field is required.",
+                    "path": [
+                        "songs",
+                        1,
+                        "title"
+                    ]
+                },
+                {
+                    "code": "time-traveling",
+                    "message": "Sounds like a bullshit",
+                    "path": [
+                        "$body"
                     ]
                 }
-            ],
-            '__all__': [
-                ValidationError("Sounds like a bullshit", code='time-travelling')
-            ],
+            ]
         }
 
         with open(f"{settings.BASE_DIR}/data/invalid.json") as f:
@@ -30,7 +105,7 @@ class ValidationTests(TestCase):
         form = AlbumForm.create_from_request(request)
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors.__repr__(), expected.__repr__())
+        self.assertEqual(build(form), new_err)
 
     def test_valid(self):
         rf = RequestFactory()

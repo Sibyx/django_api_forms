@@ -1,14 +1,14 @@
 import copy
 import warnings
-from typing import Union, List
+from typing import Union, List, Tuple
 
-from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.exceptions import ValidationError
 from django.forms import fields_for_model
 from django.forms.forms import DeclarativeFieldsMetaclass as DjangoDeclarativeFieldsMetaclass
 from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
-from .exceptions import RequestValidationError, UnsupportedMediaType, ApiFormException
+from .exceptions import UnsupportedMediaType, ApiFormException, DetailValidationError
 from .settings import Settings
 from .utils import resolve_from_path
 
@@ -89,38 +89,30 @@ class BaseForm(object):
 
     @property
     def errors(self) -> dict:
-        if self._errors is None:
+        if not self._errors:
             self.full_clean()
         return self._errors
 
     def is_valid(self) -> bool:
         return not self.errors
 
-    def add_error(self, field: Union[str, None], error: Union[ValidationError, RequestValidationError]):
-        if isinstance(error, RequestValidationError):
-            self._errors[field] = error.errors
-            return
-
-        if hasattr(error, 'error_dict'):
-            if field is not None:
-                raise TypeError(
-                    "The argument `field` must be `None` when the `error` "
-                    "argument contains errors for multiple fields."
-                )
-            else:
-                error = error.error_dict
+    def add_error(self, field, errors: Union[ValidationError, DetailValidationError]):
+        if hasattr(errors, 'error_dict'):
+            for key, item in errors.error_dict.items():
+                for error in item:
+                    if isinstance(error, DetailValidationError):
+                        error.prepend(field)
+                        self.add_error(error.path, error)
+        elif not hasattr(errors, 'message') and isinstance(errors.error_list, list):
+            for item in errors.error_list:
+                if isinstance(item, DetailValidationError):
+                    item.prepend(field)
+                    self.add_error(item.path, item)
         else:
-            error = {field or NON_FIELD_ERRORS: error.error_list}
+            self._errors.append(
+                DetailValidationError(errors, (field,))
+            )
 
-        for field, error_list in error.items():
-            if field not in self.errors:
-                if field != NON_FIELD_ERRORS and field not in self.fields:
-                    raise ValueError("'%s' has no field named '%s'." % (self.__class__.__name__, field))
-                if field == NON_FIELD_ERRORS:
-                    self._errors[field] = []
-                else:
-                    self._errors[field] = []
-            self._errors[field].extend(error_list)
             if field in self.cleaned_data:
                 del self.cleaned_data[field]
 
@@ -128,7 +120,7 @@ class BaseForm(object):
         """
         Clean all of self.data and populate self._errors and self.cleaned_data.
         """
-        self._errors = {}
+        self._errors = []
         self.cleaned_data = {}
 
         for key, field in self.fields.items():
@@ -140,14 +132,14 @@ class BaseForm(object):
 
                     if hasattr(self, f"clean_{key}"):
                         self.cleaned_data[key] = getattr(self, f"clean_{key}")()
-            except (ValidationError, RequestValidationError) as e:
+            except (ValidationError, DetailValidationError) as e:
                 self.add_error(key, e)
             except (AttributeError, TypeError, ValueError):
                 self.add_error(key, ValidationError(_("Invalid value")))
         try:
             cleaned_data = self.clean()
         except ValidationError as e:
-            self.add_error(None, e)
+            self.add_error('$body', e)
         else:
             if cleaned_data is not None:
                 self.cleaned_data = cleaned_data
@@ -157,7 +149,7 @@ class BaseForm(object):
         Hook for doing any extra form-wide cleaning after Field.clean() has been
         called on every field. Any ValidationError raised by this method will
         not be associated with a particular field; it will have a special-case
-        association with the field named '__all__'.
+        association with the field named '$body'.
         """
         return self.cleaned_data
 
