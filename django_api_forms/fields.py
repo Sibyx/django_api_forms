@@ -11,7 +11,7 @@ from django.core.files import File
 from django.forms import Field
 from django.utils.translation import gettext_lazy as _
 
-from .exceptions import RequestValidationError, DetailValidationError
+from .exceptions import DetailValidationError
 from .version import __version__ as version
 
 DATA_URI_PATTERN = r"data:((?:\w+\/(?:(?!;).)+)?)((?:;[\w=]*[^;])*),(.+)"
@@ -210,10 +210,10 @@ class DictionaryField(Field):
             try:
                 result[key] = self._value_field.clean(item)
             except ValidationError as e:
-                errors[key] = e
+                errors[key] = DetailValidationError(e, key)
 
         if errors:
-            raise RequestValidationError(errors)
+            raise ValidationError(errors)
 
         return result
 

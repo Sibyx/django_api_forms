@@ -15,7 +15,6 @@ from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
                               FormFieldList, RequestValidationError, FileField, ImageField)
-from django_api_forms.exceptions import DetailValidationError
 
 
 def log_input(val):
@@ -186,20 +185,20 @@ class FormFieldTests(SimpleTestCase):
         invalid_vals = ['0', 1, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
         expected_error = "({'name': [ValidationError(['Invalid value'])]}, None, None)"
         for invalid_val in invalid_vals:
-            with self.assertRaisesMessage(RequestValidationError, expected_error):
+            with self.assertRaisesMessage(ValidationError, "['Invalid value']"):
                 log_input(invalid_val)
                 form_field.clean(invalid_val)
 
         # TEST: required=True, form WITH required field - invalid input (empty value)
         invalid_val = {'name': None}
         expected_error = "({'name': [ValidationError(['This field is required.'])]}, None, None)"
-        with self.assertRaisesMessage(RequestValidationError, expected_error):
+        with self.assertRaisesMessage(ValidationError, "['This field is required.']"):
             form_field.clean(invalid_val)
 
         # TEST: required=True, form WITH required field - invalid input (unexpected dict key)
         invalid_val = {'unexpected key': 'blah'}
-        expected_error = "({'name': [ValidationError(['This field is required.'])]}, None, None)"
-        with self.assertRaisesMessage(DetailValidationError, expected_error):
+        expected_error = "['This field is required.']"
+        with self.assertRaisesMessage(ValidationError, expected_error):
             form_field.clean(invalid_val)
 
         # TEST: required=True, form WITHOUT required field - unexpected dict key returns blanks with keys
@@ -252,7 +251,7 @@ class FormFieldListTests(SimpleTestCase):
         # TEST: invalid input (non-list values the FormFieldList considers empty)
         invalid_vals = [None, '', (), {}, False, 0]
         for invalid_val in invalid_vals:
-            with self.assertRaises(DetailValidationError, "['This field is required.']"):
+            with self.assertRaisesMessage(ValidationError, "['This field is required.']"):
                 log_input(invalid_val)
                 form_field_list.clean(invalid_val)
 
@@ -261,7 +260,7 @@ class FormFieldListTests(SimpleTestCase):
         expected_form_errors = [{'number': [ValidationError(['Enter a whole number.'])]}]
         expected_error = str((expected_form_errors, None, None))
         for invalid_val in invalid_vals:
-            with self.assertRaisesMessage(DetailValidationError, expected_error):
+            with self.assertRaisesMessage(ValidationError, "['Enter a whole number.']"):
                 log_input(invalid_val)
                 form_field_list.clean([{'number': invalid_val}])
 
@@ -269,7 +268,7 @@ class FormFieldListTests(SimpleTestCase):
         expected_form_errors = [{'number': [ValidationError(['This field is required.'])]}]
         expected_error = str((expected_form_errors, None, None))
         for empty_val in EMPTY_VALUES:
-            with self.assertRaisesMessage(RequestValidationError, expected_error):
+            with self.assertRaisesMessage(ValidationError, "['This field is required.']"):
                 log_input(empty_val)
                 form_field_list.clean([{'number': empty_val}])
 
