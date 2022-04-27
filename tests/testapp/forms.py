@@ -19,6 +19,11 @@ class SongForm(Form):
 
 
 class AlbumForm(Form):
+    class Meta:
+        field_strategy = {
+            'artist': 'tests.testapp.population_strategies.PopulateArtistStrategy'
+        }
+
     title = fields.CharField(max_length=100)
     year = fields.IntegerField()
     artist = FormField(form=ArtistForm)
@@ -37,13 +42,6 @@ class AlbumForm(Form):
         else:
             return self.cleaned_data
 
-    def fill_artist(self, obj, value: dict):
-        return Artist(
-            name=value.get('name'),
-            genres=value.get('genres'),
-            members=value.get('members')
-        )
-
 
 class ArtistModelForm(ModelForm):
     class Meta:
@@ -53,11 +51,11 @@ class ArtistModelForm(ModelForm):
 class BandForm(Form):
     class Meta:
         field_type_strategy = {
-            'django_api_forms.fields.BooleanField': 'tests.population_strategies.BooleanField'
+            'django_api_forms.fields.BooleanField': 'tests.testapp.population_strategies.BooleanField'
         }
 
         field_strategy = {
-            'formed': 'tests.population_strategies.FormedStrategy'
+            'formed': 'tests.testapp.population_strategies.FormedStrategy'
         }
 
     name = fields.CharField(max_length=100)

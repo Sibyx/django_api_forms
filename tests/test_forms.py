@@ -169,11 +169,11 @@ class FormTests(TestCase):
                 }
 
                 field_type_strategy = {
-                    'django_api_forms.fields.BooleanField': 'tests.population_strategies.BooleanField'
+                    'django_api_forms.fields.BooleanField': 'tests.testapp.population_strategies.BooleanField'
                 }
 
                 field_strategy = {
-                    'formed': 'tests.population_strategies.FormedStrategy'
+                    'formed': 'tests.testapp.population_strategies.FormedStrategy'
                 }
 
             name = fields.CharField(max_length=100)
@@ -210,7 +210,6 @@ class FormTests(TestCase):
 
         # Populate form
         band = Band()
-        self.assertWarns(DeprecationWarning, lambda: form.fill(band))
         form.populate(band)
 
         self.assertTrue(len(form.cleaned_data.keys()) == 3)
