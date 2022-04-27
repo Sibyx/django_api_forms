@@ -13,19 +13,6 @@ class UnsupportedMediaType(ApiFormException):
     pass
 
 
-class RequestValidationError(ApiFormException):
-    def __init__(self, errors: Union[list, dict], code=None, params=None):
-        super().__init__(errors, code, params)
-        self._errors = errors
-
-    @property
-    def errors(self):
-        return self._errors
-
-    def __repr__(self):
-        return self.errors
-
-
 class DetailValidationError(ValidationError):
     def __init__(self, error: ValidationError, path: Union[Tuple, str]):
         super().__init__(error.message, error.code, error.params)
@@ -49,17 +36,3 @@ class DetailValidationError(ValidationError):
             'message': self.message,
             'path': self.to_list()
         }
-
-
-def build(form):
-    error_list = []
-    for error in form.errors:
-        error_list.append(
-            error.to_dict()
-        )
-
-    message = {
-        'errors': error_list
-    }
-
-    return message

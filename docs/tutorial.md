@@ -89,14 +89,14 @@ sing `Form.add_error()`)
 
 Normalized data are available in `Form.clean_data` property (keys suppose to correspond with values from `Form.dirty`).
 
-Validation errors are presented for each field in `Form.errors: Dictionary[str, List[ValidationError]]` property after
+Validation errors are presented for each field in `Form.errors: List[ValidationError]` property after
 `Form.is_valid()` method is called.
 
 As was mentioned above, you can extend property validation or normalisation by creating form method like
 `clean_<property_name>`. You can add additional
 [ValidationError](https://docs.djangoproject.com/en/3.1/ref/forms/validation/#raising-validationerror)
-objects using `Form.add_error(field: str, error: ValidationError)` method. Result is final normalised value of the
-attribute.
+objects using `Form.add_error(field: Union[str, Tuple], error: ValidationError)` method. Result is final normalised
+value of the attribute.
 
 ```python
 from django.forms import fields
@@ -114,8 +114,8 @@ class BookForm(Form):
 
     def clean(self):
         if self.cleaned_data['title'] == "The Hitchhiker's Guide to the Galaxy" and self.cleaned_data['year'] < 1979:
-            # Non field validation errors are present under key `__all__` in Form.errors property
-            self.add_error(None, ValidationError("Is it you Doctor?", code='time-travelling'))
+            # Non field validation errors are present under key `$body` in Form.errors property
+            raise ValidationError("Is it you Doctor?", code='time-travelling')
 
         # The last chance to do some touchy touchy with the self.clean_data
 

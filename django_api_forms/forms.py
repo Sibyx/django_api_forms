@@ -96,7 +96,7 @@ class BaseForm(object):
     def is_valid(self) -> bool:
         return not self.errors
 
-    def add_error(self, field, errors: Union[ValidationError, DetailValidationError]):
+    def add_error(self, field: Union[str, Tuple], errors: ValidationError):
         if hasattr(errors, 'error_dict'):
             for key, item in errors.error_dict.items():
                 for error in item:
@@ -132,7 +132,7 @@ class BaseForm(object):
 
                     if hasattr(self, f"clean_{key}"):
                         self.cleaned_data[key] = getattr(self, f"clean_{key}")()
-            except (ValidationError, DetailValidationError) as e:
+            except ValidationError as e:
                 self.add_error(key, e)
             except (AttributeError, TypeError, ValueError):
                 self.add_error(key, ValidationError(_("Invalid value")))

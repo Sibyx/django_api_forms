@@ -14,7 +14,7 @@ from django.core.validators import EMPTY_VALUES
 from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
-                              FormFieldList, RequestValidationError, FileField, ImageField)
+                              FormFieldList, FileField, ImageField)
 
 
 def log_input(val):
@@ -183,9 +183,9 @@ class FormFieldTests(SimpleTestCase):
 
         # TEST: invalid input (values the FormField considers invalid)
         invalid_vals = ['0', 1, datetime.datetime.now(), 'blah', {'blah'}, ['blah']]
-        expected_error = "({'name': [ValidationError(['Invalid value'])]}, None, None)"
+        expected_error = "['Invalid value']"
         for invalid_val in invalid_vals:
-            with self.assertRaisesMessage(ValidationError, "['Invalid value']"):
+            with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(invalid_val)
                 form_field.clean(invalid_val)
 
@@ -418,7 +418,7 @@ class DictionaryFieldTests(SimpleTestCase):
         # TEST: invalid value (type of dict values DO NOT match DictionaryField)
         test_input = {"created_at": "blah"}
         with self.assertRaisesMessage(
-            RequestValidationError, "({'created_at': ValidationError(['Enter a valid date/time.'])}, None, None)"
+            ValidationError, "{'created_at': ['Enter a valid date/time.']}"
         ):
             dict_field.clean(test_input)
 
@@ -509,14 +509,13 @@ class NonRequiredTestCase(SimpleTestCase):
 class FileFieldTests(SimpleTestCase):
     def setUp(self) -> None:
         with open(f"{settings.BASE_DIR}/data/kitten.txt") as f:
-            self._payload = f.read()
+            self._payload = f.read().strip('\n')
         pass
 
     def test_simple(self):
         file_field = FileField()
         django_file = file_field.clean(self._payload)
 
-        self.assertWarns(DeprecationWarning, lambda: file_field.clean(self._payload))
         self.assertIsInstance(django_file, File)
         self.assertEqual(django_file.size, 12412)
 
@@ -547,9 +546,9 @@ class FileFieldTests(SimpleTestCase):
         file_field = FileField(mime=('image/jpeg', 'image/gif'))
 
         with open(f"{settings.BASE_DIR}/data/kitten_missing.txt") as f:
-            kitten = f.read()
+            kitten = f.read().strip('\n')
 
-        expected_error = FileField.default_error_messages['invalid_mime']
+        expected_error = FileField.default_error_messages['invalid_uri']
         expected_error = expected_error.format('image/png, image/gif', 'image/jpeg')
         with self.assertRaisesMessage(ValidationError, expected_error):
             log_input(kitten)
@@ -559,7 +558,7 @@ class FileFieldTests(SimpleTestCase):
         file_field = FileField(required=False)
 
         with open(f"{settings.BASE_DIR}/data/valid_pdf.txt") as f:
-            content = f.read()
+            content = f.read().strip('\n')
 
         result = file_field.clean(content)
 
@@ -569,8 +568,8 @@ class FileFieldTests(SimpleTestCase):
     def test_valid_data_uri(self):
         file_field = FileField()
 
-        with self.assertRaises(ValidationError):
-            file_field.clean(self._payload)
+        django_file = file_field.clean(self._payload)
+        self.assertIsInstance(django_file, File)
 
         # Simple values
         django_file = file_field.clean("data:;base64;sdfgsdfgsdfasdfa=s,UEsDBBQAAAAI")
@@ -606,14 +605,13 @@ class FileFieldTests(SimpleTestCase):
 class ImageFieldTests(SimpleTestCase):
     def setUp(self) -> None:
         with open(f"{settings.BASE_DIR}/data/kitten.txt") as f:
-            self._payload = f.read()
+            self._payload = f.read().strip('\n')
         pass
 
     def test_simple(self):
         image_field = ImageField()
         django_image = image_field.clean(self._payload)
 
-        self.assertWarns(DeprecationWarning, lambda: image_field.clean(self._payload))
         self.assertIsInstance(django_image, File)
         self.assertEqual(django_image.size, 12412)
         self.assertEqual(django_image.content_type, 'image/jpeg')
@@ -623,7 +621,7 @@ class ImageFieldTests(SimpleTestCase):
         file_field = ImageField(mime=('image/png', 'image/gif'))
 
         with open(f"{settings.BASE_DIR}/data/kitten_mismatch.txt") as f:
-            kitten = f.read()
+            kitten = f.read().strip('\n')
 
         expected_error = FileField.default_error_messages['invalid_mime']
         expected_error = expected_error.format('image/png, image/gif', 'image/jpeg')
@@ -644,9 +642,6 @@ class ImageFieldTests(SimpleTestCase):
     @mock.patch("django_api_forms.fields.version", "1.0.0")
     def test_valid_data_uri(self):
         file_field = FileField()
-
-        with self.assertRaises(ValidationError):
-            file_field.clean(self._payload)
 
         # Simple values
         django_file = file_field.clean("data:;base64;sdfgsdfgsdfasdfa=s,UEsDBBQAAAAI")

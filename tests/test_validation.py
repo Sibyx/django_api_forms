@@ -3,7 +3,6 @@ import datetime
 from django.conf import settings
 from django.test import RequestFactory, TestCase
 
-from django_api_forms.exceptions import build
 from tests.testapp.forms import AlbumForm
 from tests.testapp.models import Album
 
@@ -12,55 +11,7 @@ class ValidationTests(TestCase):
     def test_invalid(self):
         rf = RequestFactory()
 
-        # e = {
-        #     "errors": [
-        #         {
-        #             "code": "required",
-        #             "message": "This field is required.",
-        #             "path": [
-        #                 "artist",
-        #                 "name"
-        #             ]
-        #         },
-        #         {
-        #             "code": "required",
-        #             "message": "This field is required.",
-        #             "path": [
-        #                 "artist",
-        #                 "members"
-        #             ]
-        #         },
-        #         {
-        #             "code": "required",
-        #             "message": "This field is required.",
-        #             "path": [
-        #                 "songs",
-        #                 0,
-        #                 "title"
-        #             ]
-        #         },
-        #         {
-        #             "code": "required",
-        #             "message": "This field is required.",
-        #             "path": [
-        #                 "songs",
-        #                 0,
-        #                 "duration"
-        #             ]
-        #         },
-        #         {
-        #             "code": "required",
-        #             "message": "This field is required.",
-        #             "path": [
-        #                 "songs",
-        #                 1,
-        #                 "title"
-        #             ]
-        #         }
-        #     ]
-        # }
-
-        new_err = {
+        expected = {
             "errors": [
                 {
                     "code": "required",
@@ -90,6 +41,14 @@ class ValidationTests(TestCase):
                     ]
                 },
                 {
+                    "code": "invalid",
+                    "message": "Enter a valid date/time.",
+                    "path": [
+                        "metadata",
+                        "error_at"
+                    ]
+                },
+                {
                     "code": "time-traveling",
                     "message": "Sounds like a bullshit",
                     "path": [
@@ -105,7 +64,10 @@ class ValidationTests(TestCase):
         form = AlbumForm.create_from_request(request)
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(build(form), new_err)
+        error = {
+            'errors': [item.to_dict() for item in form._errors]
+        }
+        self.assertEqual(error, expected)
 
     def test_valid(self):
         rf = RequestFactory()

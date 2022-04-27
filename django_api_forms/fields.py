@@ -73,13 +73,6 @@ class FieldList(Field):
         result = []
         errors = []
 
-        # for item in value:
-        #     try:
-        #         self._field.clean(item)
-        #         result.append(self._field.to_python(item))
-        #     except ValidationError as e:
-        #         errors.append(e)
-
         for position, item in enumerate(value):
             try:
                 self._field.clean(item)
@@ -210,7 +203,7 @@ class DictionaryField(Field):
             try:
                 result[key] = self._value_field.clean(item)
             except ValidationError as e:
-                errors[key] = DetailValidationError(e, key)
+                errors[key] = DetailValidationError(e, (key, ))
 
         if errors:
             raise ValidationError(errors)
