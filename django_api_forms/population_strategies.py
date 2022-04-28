@@ -11,7 +11,7 @@ class IgnoreStrategy(BaseStrategy):
 class ModelChoiceFieldStrategy(BaseStrategy):
 
     """
-    We need to changes key postfix if there is ModelChoiceField (because of _id etc.)
+    We need to change key postfix if there is a ModelChoiceField (because of _id etc.)
     We always try to assign whole object instance, for example:
     artis_id is normalized as Artist model, but it have to be assigned to artist model property
     because artist_id in model has different type (for example int if your are using int primary keys)

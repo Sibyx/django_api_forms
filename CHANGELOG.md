@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 : TBD
+## 1.0.0-rc.1 : 28.04.2022
 
 This release has been inspired by [Problem Details for HTTP APIs - RFC7807](https://tools.ietf.org/html/rfc7807) and
 blog post [Structuring validation errors in REST APIs](https://medium.com/engineering-brainly/structuring-validation-errors-in-rest-apis-40c15fbb7bc3)
