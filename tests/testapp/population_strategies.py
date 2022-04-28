@@ -1,4 +1,5 @@
 from django_api_forms.population_strategies import BaseStrategy
+from tests.testapp.models import Artist
 
 
 class BooleanField(BaseStrategy):
@@ -17,3 +18,14 @@ class FormedStrategy(BaseStrategy):
             value = 2000
 
         setattr(obj, key, value)
+
+
+class PopulateArtistStrategy(BaseStrategy):
+    def __call__(self, field, obj, key: str, value):
+        artist = Artist(
+            name=value.get('name'),
+            genres=value.get('genres'),
+            members=value.get('members')
+        )
+
+        setattr(obj, key, artist)

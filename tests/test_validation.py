@@ -1,7 +1,6 @@
 import datetime
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.test import RequestFactory, TestCase
 
 from tests.testapp.forms import AlbumForm
@@ -11,17 +10,52 @@ from tests.testapp.models import Album
 class ValidationTests(TestCase):
     def test_invalid(self):
         rf = RequestFactory()
+
         expected = {
-            'songs': [
+            "errors": [
                 {
-                    'title': [
-                        ValidationError("This field is required.", code='required')
+                    "code": "required",
+                    "message": "This field is required.",
+                    "path": [
+                        "songs",
+                        0,
+                        "title"
+                    ]
+                },
+                {
+                    "code": "required",
+                    "message": "This field is required.",
+                    "path": [
+                        "songs",
+                        0,
+                        "duration"
+                    ]
+                },
+                {
+                    "code": "required",
+                    "message": "This field is required.",
+                    "path": [
+                        "songs",
+                        1,
+                        "title"
+                    ]
+                },
+                {
+                    "code": "invalid",
+                    "message": "Enter a valid date/time.",
+                    "path": [
+                        "metadata",
+                        "error_at"
+                    ]
+                },
+                {
+                    "code": "time-traveling",
+                    "message": "Sounds like a bullshit",
+                    "path": [
+                        "$body"
                     ]
                 }
-            ],
-            '__all__': [
-                ValidationError("Sounds like a bullshit", code='time-travelling')
-            ],
+            ]
         }
 
         with open(f"{settings.BASE_DIR}/data/invalid.json") as f:
@@ -30,7 +64,10 @@ class ValidationTests(TestCase):
         form = AlbumForm.create_from_request(request)
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors.__repr__(), expected.__repr__())
+        error = {
+            'errors': [item.to_dict() for item in form._errors]
+        }
+        self.assertEqual(error, expected)
 
     def test_valid(self):
         rf = RequestFactory()

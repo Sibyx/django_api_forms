@@ -14,11 +14,16 @@ class ArtistForm(Form):
 
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
-    duration = fields.DurationField(required=False)
+    duration = fields.DurationField(required=True)
     metadata = AnyField(required=False)
 
 
 class AlbumForm(Form):
+    class Meta:
+        field_strategy = {
+            'artist': 'tests.testapp.population_strategies.PopulateArtistStrategy'
+        }
+
     title = fields.CharField(max_length=100)
     year = fields.IntegerField()
     artist = FormField(form=ArtistForm)
@@ -32,16 +37,10 @@ class AlbumForm(Form):
         return self.cleaned_data['year']
 
     def clean(self):
-        if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
+        if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['members'] == 4):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
-        return self.cleaned_data
-
-    def fill_artist(self, obj, value: dict):
-        return Artist(
-            name=value.get('name'),
-            genres=value.get('genres'),
-            members=value.get('members')
-        )
+        else:
+            return self.cleaned_data
 
 
 class ArtistModelForm(ModelForm):
@@ -52,11 +51,11 @@ class ArtistModelForm(ModelForm):
 class BandForm(Form):
     class Meta:
         field_type_strategy = {
-            'django_api_forms.fields.BooleanField': 'tests.population_strategies.BooleanField'
+            'django_api_forms.fields.BooleanField': 'tests.testapp.population_strategies.BooleanField'
         }
 
         field_strategy = {
-            'formed': 'tests.population_strategies.FormedStrategy'
+            'formed': 'tests.testapp.population_strategies.FormedStrategy'
         }
 
     name = fields.CharField(max_length=100)

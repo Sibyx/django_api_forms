@@ -1,243 +1,259 @@
 # Changelog
 
+## 1.0.0-rc.1 : 28.04.2022
+
+This release has been inspired by [Problem Details for HTTP APIs - RFC7807](https://tools.ietf.org/html/rfc7807) and
+blog post [Structuring validation errors in REST APIs](https://medium.com/engineering-brainly/structuring-validation-errors-in-rest-apis-40c15fbb7bc3)
+ written by [@k3nn7](https://github.com/k3nn7).
+
+The main idea has been to simplify validation process on the client side by flattening errors output. To achieve such
+a goal, the whole validation process has been rewritten (and luckily for us, much simplified).
+
+- **Changed**: Positional validation errors for lists
+- **Changed**: `ImageField` and `FileField` requires [Data URI](https://datatracker.ietf.org/doc/html/rfc2397)
+  (issue [Raise ValidationError in invalid Data URI by default](https://github.com/Sibyx/django_api_forms/issues/22))
+- **Removed**: `Form.fill()` method replaced by `Form.populate()`
+- **Removed**: `fill_` methods replaced by population strategies
+
 ## 0.21.1 : 14.02.2022
 
-- **Change**: Raw base64 payload in `FileField` and `ImageField` fires `DeprecationWarning`. Use Data URI instead.
+- **Changed**: Raw base64 payload in `FileField` and `ImageField` fires `DeprecationWarning`. Use Data URI instead.
 
 ## 0.21.0 : 03.02.2022
 
-- **Feature**: Introduced `mapping`
-- **Feature**: Override strategies using `field_type_strategy` and `field_strategy`
+- **Added**: Introduced `mapping`
+- **Added**: Override strategies using `field_type_strategy` and `field_strategy`
 
 ## 0.20.1 : 13.1.2022
 
-- **Fix**: `DictionaryField` was unable to raise validation errors for keys
+- **Fixed**: `DictionaryField` was unable to raise validation errors for keys
 
 ## 0.20.0 : 14.10.2021
 
 Anniversary release 🥳
 
-- **Feature**: Population strategies introduced
-- **Feature**: `fill` method is deprecated and replaced by `populate`
-- **Feature**: `Settings` object introduced (`form.settings`)
-- **Feature**: Pluggable content-type parsers using `DJANGO_API_FORMS_PARSERS` setting
+- **Added**: Population strategies introduced
+- **Added**: `fill` method is deprecated and replaced by `populate`
+- **Added**: `Settings` object introduced (`form.settings`)
+- **Added**: Pluggable content-type parsers using `DJANGO_API_FORMS_PARSERS` setting
 
 ## 0.19.1 : 17.09.2021
 
-- **Typing**: `mime` argument in `FileField` is supposed to be a `tuple`
+- **Changed**: `mime` argument in `FileField` is supposed to be a `tuple`
 
 ## 0.19.0 : 12.07.2021
 
-- **Feature**: `FieldList` and `FormFieldList` now supports optional min/max constrains using `min_length`/`max_length`
+- **Added**: `FieldList` and `FormFieldList` now supports optional min/max constrains using `min_length`/`max_length`
 
 ## 0.18.0 : 16.04.2021
 
-- **Feature**: `ModelForm` class introduced (experimental, initial support - not recommended for production)
+- **Added**: `ModelForm` class introduced (experimental, initial support - not recommended for production)
 
 ## 0.17.0 : 24.02.2021
 
-- **Feature**: `fill_method` introduced
+- **Added**: `fill_method` introduced
 
 ## 0.16.4 : 20.12.2020
 
-- **Fix**: Pillow image object have to be reopened after `Image.verify()` call in `ImageField::to_python`
+- **Fixed**: Pillow image object have to be reopened after `Image.verify()` call in `ImageField::to_python`
 
 ## 0.16.3 : 13.11.2020
 
-- **Fix**: `ApiFormException('No clean data provided! Try to call is_valid() first.')` was incorrectly raised if
+- **Fixed**: `ApiFormException('No clean data provided! Try to call is_valid() first.')` was incorrectly raised if
 request payload was empty during `Form::fill` method call
-- **Change**: `clean_data` property is by default `None` instead of empty dictionary
+- **Changed**: `clean_data` property is by default `None` instead of empty dictionary
 
 ## 0.16.2 : 06.11.2020
 
-- **Fix**: Fixed issue with `clean_` methods returning values resolved as False (`False`, `None`, `''`)
+- **Fixed**: Fixed issue with `clean_` methods returning values resolved as False (`False`, `None`, `''`)
 
 ## 0.16.1 : 29.10.2020
 
-- **Fix**: Ignore `ModelMultipleChoiceField` in `Form::fill()`
+- **Fixed**: Ignore `ModelMultipleChoiceField` in `Form::fill()`
 
 ## 0.16.0 : 14.09.2020
 
-- **Change**: Correctly resolve key postfix if `ModelChoiceField` is used in `Form::fill()`
-- **Change**: `DjangoApiFormsConfig` is created
-- **Note**: One more step to get rid of `pytest` in project (we don't need it)
+One more step to get rid of `pytest` in project (we don't need it)
+
+- **Changed**: Correctly resolve key postfix if `ModelChoiceField` is used in `Form::fill()`
+- **Changed**: `DjangoApiFormsConfig` is created
 
 ## 0.15.1 : 29.08.2020
 
-- **Feature**: `FileField.content_type` introduced (contains mime)
+- **Added**: `FileField.content_type` introduced (contains mime)
 
 ## 0.15.0 : 23.08.2020
 
-- **Feature**: `FileField` and `ImageField` introduced
-- **Note**: Defined extras in `setup.py` for optional `Pillow` and `msgpack` dependencies
-- **Feature**: Working `Form::fill()` method for primitive data types. Introduced `IgnoreFillMixin`
+- **Added**: `FileField` and `ImageField` introduced
+- **Added**: Defined extras in `setup.py` for optional `Pillow` and `msgpack` dependencies
+- **Added**: Working `Form::fill()` method for primitive data types. Introduced `IgnoreFillMixin`
 
 ## 0.14.0 : 07.08.2020
 
-- **Feature**: `BaseForm._request` property introduced (now it's possible to use request in `clean_` methods)
+- **Added**: `BaseForm._request` property introduced (now it's possible to use request in `clean_` methods)
 
 ## 0.13.0 : 09.07.2020
 
-- **Fix**: Fixed `Content-Type` handling if `charset` or `boundary` is present
+- **Fixed**: Fixed `Content-Type` handling if `charset` or `boundary` is present
 
 ## 0.12.0 : 11.06.2020
 
-- **Fix**: Do not call resolvers methods, if property is not required and not present in request
+- **Fixed**: Do not call resolvers methods, if property is not required and not present in request
 
 ## 0.11.0 : 10.06.2020
 
-- **Change**: Non specified non-required fields will no longer be available in the cleaned_data form attribute.
+- **Changed**: Non specified non-required fields will no longer be available in the cleaned_data form attribute.
 
 ## 0.10.0 : 01.06.2020
 
-- **Change**: All package exceptions inherits from `ApiFormException`.
-- **Fix**: Specifying encoding while opening files in `setup.py` (failing on Windows OS).
+- **Changed**: All package exceptions inherits from `ApiFormException`.
+- **Fixed**: Specifying encoding while opening files in `setup.py` (failing on Windows OS).
 
 ## 0.9.0 : 11.05.2020
 
-- **Change**: Moved field error messages to default_error_messages for easier overriding and testing.
-- **Fix**: Fix KeyError when invalid values are sent to FieldList.
-- **Fix**: Removed unnecessary error checking in FieldList.
+- **Changed**: Moved field error messages to default_error_messages for easier overriding and testing.
+- **Fixed**: Fix KeyError when invalid values are sent to FieldList.
+- **Fixed**: Removed unnecessary error checking in FieldList.
 
 ## 0.8.0 : 05.05.2020
 
-- **Maintenance**: Add tests for fields
-- **Change**: Remove DeclarativeFieldsMetaclass and import from Django instead.
-- **Change**: Msgpack dependency is no longer required.
-- **Change**: Empty values passed into a FormField now return {} rather than None.
-- **Fix**: Throw a more user friendly error when passing non-Enums or invalid values to EnumField.
+- **Added**: Tests for fields
+- **Changed**: Remove DeclarativeFieldsMetaclass and import from Django instead.
+- **Changed**: Msgpack dependency is no longer required.
+- **Changed**: Empty values passed into a FormField now return {} rather than None.
+- **Fixed**: Throw a more user friendly error when passing non-Enums or invalid values to EnumField.
 
 ## 0.7.1 : 13.04.2020
 
-- **Change** Use [poetry](https://python-poetry.org/) instead of [pipenv](https://github.com/pypa/pipenv)
-- **Change**: Library renamed from `django_api_forms` to `django-api-forms` (cosmetic change without effect)
+- **Changed** Use [poetry](https://python-poetry.org/) instead of [pipenv](https://github.com/pypa/pipenv)
+- **Changed**: Library renamed from `django_api_forms` to `django-api-forms` (cosmetic change without effect)
 
 ## 0.7.0 : 03.03.2020
 
-- **Change**: Library renamed from `django_request_formatter` to `django_api_forms`
-- **Change**: Imports in main module `django_api_forms`
+- **Changed**: Library renamed from `django_request_formatter` to `django_api_forms`
+- **Changed**: Imports in main module `django_api_forms`
 
 ## 0.6.0 : 18.02.2020
 
-- **Feature**: `BooleanField` introduced
+- **Added**: `BooleanField` introduced
 
 ## 0.5.8 : 07.01.2020
 
-- **Fix**: Pass `Invalid value` as `ValidationError` not as a `string`
+- **Fixed**: Pass `Invalid value` as `ValidationError` not as a `string`
 
 ## 0.5.7 : 07.01.2020
 
-- **Fix**: Introduced generic `Invalid value` error message, if there is `AttributeError`, `TypeError`, `ValueError`
+- **Fixed**: Introduced generic `Invalid value` error message, if there is `AttributeError`, `TypeError`, `ValueError`
 
 ## 0.5.6 : 01.01.2020
 
-- **Fix**: Fixing issue from version `0.5.5` but this time for real
-- **Change**: Renamed version file from `__version__.py` to `version.py`
+- **Fixed**: Fixing issue from version `0.5.5` but this time for real
+- **Changed**: Renamed version file from `__version__.py` to `version.py`
 
 ## 0.5.5 : 01.01.2020
 
-- **Fix**: Check instance only if there is a value in `FieldList` and `FormFieldList`
+- **Fixed**: Check instance only if there is a value in `FieldList` and `FormFieldList`
 
 ## 0.5.4 : 24.12.2019
 
-- **Fix**: Added missing `msgpack`` dependency to `setup.py`
+- **Fixed**: Added missing `msgpack`` dependency to `setup.py`
 
 ## 0.5.3 : 20.12.2019
 
-- **Feature**: Introduced generic `AnyField`
+- **Added**: Introduced generic `AnyField`
 
 ## 0.5.2 : 19.12.2019
 
-- **Fix**: Skip processing of the `FormField` if value is not required and empty
+- **Fixed**: Skip processing of the `FormField` if value is not required and empty
 
 ## 0.5.1 : 19.12.2019
 
-- **Fix**: Process `EnumField` even if it's not marked as required
+- **Fixed**: Process `EnumField` even if it's not marked as required
 
 ## 0.5.0 : 16.12.2019
 
-- **Change**: Use native `django.form.fields` if possible
-- **Change**: Removed `kwargs` propagation from release `0.3.0`
-- **Change**: Changed syntax back to `django.forms` compatible (e.g. `form.validate_{key}()` -> `form.clean_{key}()`)
-- **Change**: `FieldList` raises `ValidationError` instead of `RuntimeException` if there is a type  in validation
-- **Change**: Use private properties for internal data in field objects
+- **Changed**: Use native `django.form.fields` if possible
+- **Changed**: Removed `kwargs` propagation from release `0.3.0`
+- **Changed**: Changed syntax back to `django.forms` compatible (e.g. `form.validate_{key}()` -> `form.clean_{key}()`)
+- **Changed**: `FieldList` raises `ValidationError` instead of `RuntimeException` if there is a type  in validation
+- **Changed**: Use private properties for internal data in field objects
 - **Fixed**: `FieldList` returns values instead of `None`
-- **Fix**: Fixed validation in `DictionaryField`
-- **Maintenance**: Basic unit tests
+- **Fixed**: Fixed validation in `DictionaryField`
+- **Added**: Basic unit tests
 
 ## 0.4.3 : 29.11.2019
 
-- **Fix**: Fixed `Form` has no attribute `self._data`
+- **Fixed**: Fixed `Form` has no attribute `self._data`
 
 ## 0.4.2 : 29.11.2019
 
-- **Fix**: If payload is empty, create empty dictionary to avoid `NoneType` error
+- **Fixed**: If payload is empty, create empty dictionary to avoid `NoneType` error
 
 ## 0.4.1 : 14.11.2019
 
-- **Feature**: Introduced `UUIDField`
+- **Added**: Introduced `UUIDField`
 
 ## 0.4.0 : 13.11.2019
 
-- **Feature**: Introduced `DictionaryField`
+- **Added**: Introduced `DictionaryField`
 
 ## 0.3.0 : 11.11.2019
 
-- **Feature**: Propagate `kwargs` from `Form.is_valid()` to `Form.validate()` and `Form.validate_{key}()` methods
+- **Added**: Propagate `kwargs` from `Form.is_valid()` to `Form.validate()` and `Form.validate_{key}()` methods
 
 ## 0.2.1 : 4.11.2019
 
-- **Fix**: Fixed `to_python()` in FormFieldList
+- **Fixed**: Fixed `to_python()` in FormFieldList
 
 ## 0.2.0 : 31.10.2019
 
-- **Change**: `Form.validate()` replaced by `Form.is_valid()`
-- **Feature**: `Form.validate()` is now used as a last step of form validation and it's aimed to be overwritten if
+- **Changed**: `Form.validate()` replaced by `Form.is_valid()`
+- **Added**: `Form.validate()` is now used as a last step of form validation and it's aimed to be overwritten if
 needed
-- **Note**: Unit tests initialization
+- **Added**: Unit tests initialization
 
 ## 0.1.6 : 24.10.2019
 
-- **Fix**: Non-required EnumField is now working
-- **Feature**: WIP: Initial method for filling objects `Form::fill()`
+- **Fixed**: Non-required EnumField is now working
+- **Added**: WIP: Initial method for filling objects `Form::fill()`
 
 ## 0.1.5 : 23.10.2019
 
-- **Fix**: Assign errors to form before raising `ValidationError`
+- **Fixed**: Assign errors to form before raising `ValidationError`
 
 ## 0.1.4 : 23.10.2019
 
-- **Fix**: Do not return empty error records in `Form:errors`
+- **Fixed**: Do not return empty error records in `Form:errors`
 
 ## 0.1.3 : 23.10.2019
 
-- **Fix**: Use custom `DeclarativeFieldsMetaclass` because of custom `Field` class
-- **Fix**: Do not return untouched fields in `Form::payload`
-- **Fix**: Fix for None `default_validators` in `Field`
+- **Fixed**: Use custom `DeclarativeFieldsMetaclass` because of custom `Field` class
+- **Fixed**: Do not return untouched fields in `Form::payload`
+- **Fixed**: Fix for None `default_validators` in `Field`
 
 ## 0.1.2 : 22:10.2019
 
-- **Feature**: Support for `validation_{field}` methods in `Form` (initial support)
+- **Added**: Support for `validation_{field}` methods in `Form` (initial support)
 
 ## 0.1.1 : 22.10.2019
 
-- **Feature**: `EnumField`
+- **Added**: `EnumField`
 
 ## 0.1.0 : 22.10.2019
 
-- **Feature**: First version of `Form` class
-- **Feature**: `CharField`
-- **Feature**: `IntegerField`
-- **Feature**: `FloatField`
-- **Feature**: `DecimalField`
-- **Feature**: `DateField`
-- **Feature**: `TimeField`
-- **Feature**: `DateTimeField`
-- **Feature**: `DurationField`
-- **Feature**: `RegexField`
-- **Feature**: `EmailField`
-- **Feature**: `BooleanField`
-- **Feature**: `RegexField`
-- **Feature**: `FieldList`
-- **Feature**: `FormField`
-- **Feature**: `FormFieldList`
+- **Added**: First version of `Form` class
+- **Added**: `CharField`
+- **Added**: `IntegerField`
+- **Added**: `FloatField`
+- **Added**: `DecimalField`
+- **Added**: `DateField`
+- **Added**: `TimeField`
+- **Added**: `DateTimeField`
+- **Added**: `DurationField`
+- **Added**: `RegexField`
+- **Added**: `EmailField`
+- **Added**: `BooleanField`
+- **Added**: `RegexField`
+- **Added**: `FieldList`
+- **Added**: `FormField`
+- **Added**: `FormFieldList`

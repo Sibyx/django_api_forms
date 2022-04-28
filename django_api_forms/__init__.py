@@ -1,4 +1,4 @@
-from .exceptions import RequestValidationError
+from .exceptions import DetailValidationError
 from .fields import BooleanField
 from .fields import FieldList
 from .fields import FormField
@@ -13,7 +13,7 @@ from .forms import ModelForm
 from .version import __version__
 
 __all__ = [
-    'RequestValidationError',
+    'DetailValidationError',
     'BooleanField',
     'FieldList',
     'FormField',
