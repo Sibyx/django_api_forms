@@ -1,4 +1,4 @@
-from typing import Union, Tuple
+from typing import Tuple
 
 from django.core.exceptions import ValidationError
 
@@ -14,10 +14,8 @@ class UnsupportedMediaType(ApiFormException):
 
 
 class DetailValidationError(ValidationError):
-    def __init__(self, error: ValidationError, path: Union[Tuple, str]):
+    def __init__(self, error: ValidationError, path: Tuple):
         super().__init__(error.message, error.code, error.params)
-        if isinstance(path[0], Tuple):
-            path = path[0]
         self._path = path
 
     @property

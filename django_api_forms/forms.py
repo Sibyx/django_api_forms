@@ -109,7 +109,7 @@ class BaseForm(object):
                     self.add_error(item.path, item)
         else:
             self._errors.append(
-                DetailValidationError(errors, (field,))
+                DetailValidationError(errors, (field,) if isinstance(field, str) else field)
             )
 
             if field in self.cleaned_data:
