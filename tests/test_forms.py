@@ -7,7 +7,29 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django_api_forms import Form, BooleanField
 from django_api_forms.exceptions import UnsupportedMediaType
-from tests.testapp.models import Band
+from tests.testapp.models import Band, Album
+
+from django.conf import settings
+
+from tests.testapp.forms import ReleasesForm
+
+
+class TestOfficeForm(TestCase):
+
+    fixtures = ['fixtures/artists.json', 'fixtures/albums.json']
+
+    def test_create_from_request(self):
+        rf = RequestFactory()
+
+        with open(f"{settings.BASE_DIR}/data/album.json") as f:
+            request = rf.post('/foo/bar', data=f.read(), content_type='application/json')
+
+        albums = Album.objects.all()
+
+        form = ReleasesForm.create_from_request(request)
+
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.cleaned_data, {})
 
 
 class FormTests(TestCase):

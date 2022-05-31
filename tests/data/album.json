@@ -1,0 +1,20 @@
+{
+  "albums":[
+    {
+      "album_id": "1",
+      "scheduled_at": "2022-04-15"
+    },
+    {
+      "album_id": "1",
+      "scheduled_at": "2022-03-24"
+    },
+    {
+      "album_id": "1",
+      "scheduled_at": "2022-12-22"
+    },
+    {
+      "album_id": "1",
+      "scheduled_at": "2022-03-12"
+    }
+  ]
+}

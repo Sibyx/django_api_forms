@@ -1,0 +1,11 @@
+[
+  {
+    "model": "testapp.artist",
+    "pk": "1",
+    "fields": {
+      "name": "Song 1",
+      "genres": "2001",
+      "members": "1"
+    }
+  }
+]

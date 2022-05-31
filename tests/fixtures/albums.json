@@ -1,0 +1,42 @@
+[
+  {
+    "model": "testapp.album",
+    "pk": "1",
+    "fields": {
+      "title": "Song 1",
+      "year": "2001",
+      "artist": "1",
+      "type":"cd"
+    }
+  },
+  {
+    "model": "testapp.album",
+    "pk": "2",
+    "fields": {
+      "title": "Song 2",
+      "year": "2002",
+      "artist": "1",
+      "type":"vinyl"
+    }
+  },
+  {
+    "model": "testapp.album",
+    "pk": "3",
+    "fields": {
+      "title": "Song 3",
+      "year": "2003",
+      "artist": "1",
+      "type":"cd"
+    }
+  },
+  {
+    "model": "testapp.album",
+    "pk": "4",
+    "fields": {
+      "title": "Song 4",
+      "year": "2004",
+      "artist": "1",
+      "type": "cd"
+    }
+  }
+]
