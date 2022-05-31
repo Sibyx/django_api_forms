@@ -75,8 +75,7 @@ class FieldList(Field):
 
         for position, item in enumerate(value):
             try:
-                self._field.clean(item)
-                result.append(self._field.to_python(item))
+                result.append(self._field.clean(item))
             except ValidationError as e:
                 errors.append(DetailValidationError(e, (position,)))
 

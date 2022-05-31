@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.2 : 31.05.2022
+
+- **Fixed**: Fixed "weird" behaviour with missing `clean_data` values if using `ListField`
+
 ## 1.0.0-rc.1 : 28.04.2022
 
 This release has been inspired by [Problem Details for HTTP APIs - RFC7807](https://tools.ietf.org/html/rfc7807) and
