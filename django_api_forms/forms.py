@@ -124,9 +124,9 @@ class BaseForm(object):
 
         for key, field in self.fields.items():
             try:
-                validated_form_item = field.clean(self._data.get(key, None))
+                if key in self.dirty or field.required:
+                    validated_form_item = field.clean(self._data.get(key, None))
 
-                if key in self.dirty:
                     self.cleaned_data[key] = validated_form_item
 
                     if hasattr(self, f"clean_{key}"):

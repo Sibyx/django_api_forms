@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.2 : 04.09.2022
+
+- **Fixed**: Removed validation of non-required fields if they are not present in the request
+
 ## 1.0.0-rc.2 : 31.05.2022
 
 - **Fixed**: Fixed "weird" behaviour with missing `clean_data` values if using `ListField`
