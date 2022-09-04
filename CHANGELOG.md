@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-rc.2 : 04.09.2022
+## 1.0.0-rc.3 : 04.09.2022
 
 - **Fixed**: Removed validation of non-required fields if they are not present in the request
 
