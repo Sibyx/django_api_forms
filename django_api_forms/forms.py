@@ -97,16 +97,20 @@ class BaseForm(object):
 
     def add_error(self, field: Union[str, Tuple], errors: ValidationError):
         if hasattr(errors, 'error_dict'):
-            for item in errors.error_dict.values():
-                for error in item:
+            for items in errors.error_dict.values():
+                for error in items:
                     if isinstance(error, DetailValidationError):
                         error.prepend(field)
                         self.add_error(error.path, error)
+                    elif isinstance(error, ValidationError):
+                        self.add_error(field, error)
         elif not hasattr(errors, 'message') and isinstance(errors.error_list, list):
             for item in errors.error_list:
                 if isinstance(item, DetailValidationError):
                     item.prepend(field)
                     self.add_error(item.path, item)
+                elif isinstance(item, ValidationError):
+                    self.add_error(field, item)
         else:
             self._errors.append(
                 DetailValidationError(errors, (field,) if isinstance(field, str) else field)

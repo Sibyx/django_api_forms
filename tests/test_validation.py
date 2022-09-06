@@ -2,6 +2,9 @@ import datetime
 
 from django.conf import settings
 from django.test import RequestFactory, TestCase
+from django.forms import fields
+
+from django_api_forms import Form, DictionaryField
 
 from tests.testapp.forms import AlbumForm
 from tests.testapp.models import Album
@@ -119,3 +122,48 @@ class ValidationTests(TestCase):
 
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data, expected)
+
+    def test_validation_error(self):
+        rf = RequestFactory()
+
+        expected = {
+            "errors": [
+                {
+                    "code": "invalid",
+                    "message": "Enter a valid email address.",
+                    "path": [
+                        "email"
+                    ]
+                },
+                {
+                    "code": "invalid",
+                    "message": "Enter a valid email address.",
+                    "path": [
+                        "metadata",
+                        "username"
+                    ]
+                }
+            ]
+        }
+
+        data = {
+            'email': 'not email',
+            'metadata': {
+                'login': 'valid_email@email.com',
+                'username': 'invalid email'
+            }
+        }
+
+        class ValidationErrorForm(Form):
+            email = fields.EmailField()
+            metadata = DictionaryField(fields.EmailField())
+
+        request = rf.post('/foo/bar', data=data, content_type='application/json')
+
+        form = ValidationErrorForm.create_from_request(request)
+
+        self.assertFalse(form.is_valid())
+        error = {
+            'errors': [item.to_dict() for item in form._errors]
+        }
+        self.assertEqual(error, expected)

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.4 : 06.09.2022
+
+- **Fixed**: Fixed exception handling in DictionaryField
+
 ## 1.0.0-rc.3 : 04.09.2022
 
 - **Fixed**: Removed validation of non-required fields if they are not present in the request
