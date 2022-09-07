@@ -15,7 +15,11 @@ class UnsupportedMediaType(ApiFormException):
 
 class DetailValidationError(ValidationError):
     def __init__(self, error: ValidationError, path: Tuple):
-        super().__init__(error.message, error.code, error.params)
+        if not hasattr(error, 'message') and isinstance(error.error_list, list):
+            for item in error.error_list:
+                item.path = path
+
+        super().__init__(error)
         self._path = path
 
     @property

@@ -202,8 +202,7 @@ class DictionaryField(Field):
             try:
                 result[key] = self._value_field.clean(item)
             except ValidationError as e:
-                for error in e.error_list:
-                    errors[key] = DetailValidationError(error, (key, ))
+                errors[key] = DetailValidationError(e, (key, ))
 
         if errors:
             raise ValidationError(errors)

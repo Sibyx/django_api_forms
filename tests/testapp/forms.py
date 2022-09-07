@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.forms import fields
+from django.forms import fields, ModelChoiceField
 
 from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField, \
     ModelForm, BooleanField
@@ -61,3 +61,22 @@ class BandForm(Form):
     name = fields.CharField(max_length=100)
     formed = fields.IntegerField()
     has_award = BooleanField()
+    emails = DictionaryField(fields.EmailField(max_length=14), required=False)
+    albums = FormFieldList(form=AlbumForm, required=False)
+
+
+class ConcertForm(Form):
+    class Meta:
+        field_type_strategy = {
+            'django_api_forms.fields.BooleanField': 'tests.testapp.population_strategies.BooleanField'
+        }
+
+        field_strategy = {
+            'artist': 'tests.testapp.population_strategies.PopulateArtistStrategy',
+            'formed': 'tests.testapp.population_strategies.FormedStrategy'
+        }
+
+    place = fields.CharField(max_length=15)
+    bands = FormFieldList(form=BandForm)
+    organizer_id = ModelChoiceField(queryset=Artist.objects.all())
+    emails = FieldList(fields.EmailField(max_length=14))

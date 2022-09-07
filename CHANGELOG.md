@@ -2,7 +2,7 @@
 
 ## 1.0.0-rc.4 : 06.09.2022
 
-- **Fixed**: Fixed exception handling in DictionaryField
+- **Fixed**: Fixed missing validation errors
 
 ## 1.0.0-rc.3 : 04.09.2022
 
