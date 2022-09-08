@@ -2,9 +2,6 @@ import datetime
 
 from django.conf import settings
 from django.test import RequestFactory, TestCase
-from django.forms import fields
-
-from django_api_forms import Form, DictionaryField
 
 from tests.testapp.forms import AlbumForm
 from tests.testapp.models import Album
