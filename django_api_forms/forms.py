@@ -1,5 +1,5 @@
 import copy
-from typing import Union, List, Tuple
+from typing import List, Tuple
 
 from django.core.exceptions import ValidationError
 from django.forms import fields_for_model
@@ -95,18 +95,25 @@ class BaseForm(object):
     def is_valid(self) -> bool:
         return not self.errors
 
-    def add_error(self, field: Union[str, Tuple], errors: ValidationError):
+    def add_error(self, field: Tuple, errors: ValidationError):
         if hasattr(errors, 'error_dict'):
-            for item in errors.error_dict.values():
-                for error in item:
+            for key, items in errors.error_dict.items():
+                for error in items:
                     if isinstance(error, DetailValidationError):
                         error.prepend(field)
                         self.add_error(error.path, error)
+                    elif isinstance(error, ValidationError):
+                        self.add_error(field + (key, ), error)
         elif not hasattr(errors, 'message') and isinstance(errors.error_list, list):
             for item in errors.error_list:
                 if isinstance(item, DetailValidationError):
                     item.prepend(field)
                     self.add_error(item.path, item)
+                elif isinstance(item, ValidationError):
+                    path = field
+                    if hasattr(item, 'path'):
+                        path = field + item.path
+                    self.add_error(path, item)
         else:
             self._errors.append(
                 DetailValidationError(errors, (field,) if isinstance(field, str) else field)
@@ -132,13 +139,13 @@ class BaseForm(object):
                     if hasattr(self, f"clean_{key}"):
                         self.cleaned_data[key] = getattr(self, f"clean_{key}")()
             except ValidationError as e:
-                self.add_error(key, e)
+                self.add_error((key, ), e)
             except (AttributeError, TypeError, ValueError):
-                self.add_error(key, ValidationError(_("Invalid value")))
+                self.add_error((key, ), ValidationError(_("Invalid value")))
         try:
             cleaned_data = self.clean()
         except ValidationError as e:
-            self.add_error('$body', e)
+            self.add_error(('$body', ), e)
         else:
             if cleaned_data is not None:
                 self.cleaned_data = cleaned_data

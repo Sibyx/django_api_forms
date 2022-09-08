@@ -142,7 +142,7 @@ class FormFieldList(FormField):
                 result.append(form.cleaned_data)
             else:
                 for error in form.errors:
-                    error.prepend(position)
+                    error.prepend((position, ))
                     errors.append(error)
 
         if errors:
