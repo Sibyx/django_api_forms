@@ -1,0 +1,100 @@
+{
+  "place": "Bratislava",
+  "emails": [
+    "em@il.com",
+    "v@lid.com"
+  ],
+  "organizer_id": 1,
+  "bands":[
+    {
+      "name": "Queen",
+      "formed": 1970,
+      "has_award": false,
+      "emails": {
+        "0": "em@il.com",
+        "1": "v@lid.com"
+      },
+      "albums": [
+        {
+          "title": "Unknown Pleasures",
+          "year": 1979,
+          "type": "vinyl",
+          "artist": {
+            "name": "Joy Division",
+            "genres": [
+              "rock",
+              "punk"
+            ],
+            "members": 4
+          },
+          "songs": [
+            {
+              "title": "Disorder",
+              "duration": "3:29"
+            },
+            {
+              "title": "Day of the Lords",
+              "duration": "4:48",
+              "metadata": {
+                "_section": {
+                  "type": "ID3v2",
+                  "offset": 0,
+                  "byteLength": 2048
+                }
+              }
+            }
+          ],
+          "metadata": {
+            "created_at": "2019-10-21T18:57:03+0100",
+            "updated_at": "2019-10-21T18:57:03+0100"
+          }
+        }
+      ]
+    },
+    {
+      "name": "The Beatles",
+      "formed": 1960,
+      "has_award": true,
+      "albums": [
+        {
+          "title": "Unknown Pleasures",
+          "type": "vinyl",
+          "artist": {
+            "name": "Nirvana",
+            "genres": [
+              "rock",
+              "punk"
+            ],
+            "members": 4
+          },
+          "year": 1997,
+          "songs": [
+            {
+              "title": "Hey jude",
+              "duration": "2:20"
+            },
+            {
+              "title": "Let it be",
+              "duration": "2:51"
+            },
+            {
+              "title": "Day of the Lords",
+              "duration": "4:48",
+              "metadata": {
+                "_section": {
+                  "type": "ID3v2",
+                  "offset": 0,
+                  "byteLength": 2048
+                }
+              }
+            }
+          ],
+          "metadata": {
+            "created_at": "2019-10-21T18:57:03+0100",
+            "updated_at": "2019-10-21T18:57:03+0100"
+          }
+        }
+      ]
+    }
+  ]
+}
