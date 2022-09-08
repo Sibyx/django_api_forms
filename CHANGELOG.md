@@ -3,6 +3,7 @@
 ## 1.0.0-rc.4 : 06.09.2022
 
 - **Fixed**: Fixed missing validation errors
+- **Changed**: `Form.add_error()` now takes only `Tuple` as a `field` argument
 
 ## 1.0.0-rc.3 : 04.09.2022
 

@@ -26,8 +26,8 @@ class DetailValidationError(ValidationError):
     def path(self) -> Tuple:
         return self._path
 
-    def prepend(self, key: str):
-        self._path = (key, ) + self._path
+    def prepend(self, key: Tuple):
+        self._path = key + self._path
 
     def to_list(self) -> list:
         return list(self.path)

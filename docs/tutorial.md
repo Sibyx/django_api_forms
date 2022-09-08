@@ -81,7 +81,7 @@ This process is much more simple than in classic Django form. It consists of:
 1. Iterating over form attributes:
     - calling `Field.clean(value)` method
     - calling `Form.clean_<field_name>` method
-    - calling `Form.add_error(field_name, error)` in case of failures in clean methods
+    - calling `Form.add_error((field_name, ), error)` in case of failures in clean methods
     - if field is marked as dirty, normalized attribute is saved to `Form.clean_data` property
 2. Calling `Form.clean` method which returns final normalized values which will be presented in `Form.clean_data`
 (feel free to override it, by default does nothing, useful for conditional validation, you can still add errors u
@@ -95,7 +95,7 @@ Validation errors are presented for each field in `Form.errors: List[ValidationE
 As was mentioned above, you can extend property validation or normalisation by creating form method like
 `clean_<property_name>`. You can add additional
 [ValidationError](https://docs.djangoproject.com/en/3.1/ref/forms/validation/#raising-validationerror)
-objects using `Form.add_error(field: Union[str, Tuple], error: ValidationError)` method. Result is final normalised
+objects using `Form.add_error(field: Tuple, error: ValidationError)` method. Result is final normalised
 value of the attribute.
 
 ```python
@@ -109,7 +109,7 @@ class BookForm(Form):
 
     def clean_title(self):
         if self.cleaned_data['title'] == "The Hitchhiker's Guide to the Galaxy":
-            self.add_error('title', ValidationError("Too cool!", code='too-cool'))
+            self.add_error(('title', ), ValidationError("Too cool!", code='too-cool'))
         return self.cleaned_data['title'].upper()
 
     def clean(self):
