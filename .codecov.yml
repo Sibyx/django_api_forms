@@ -16,5 +16,4 @@ ignore:
   - "docs/**"
   - ".github/**"
   - "tests/**"
-  - "setup.py"
   - "runtests.py"

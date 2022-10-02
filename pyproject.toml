@@ -1,13 +1,51 @@
 [tool.poetry]
 name = "django-api-forms"
 version = "1.0.0-rc.4"
-description = "Declarative Django request validation"
+description = "Declarative Django request validation for RESTful APIs"
 authors = [
     "Jakub Dubec <jakub.dubec@gmail.com>",
     "Paul Brown <paul90brown+github@gmail.com>",
     "Erik Belák <erik.belak@backbone.sk>"
 ]
 license = "MIT"
+keywords = [
+    "django",
+    "forms",
+    "request",
+    "validation",
+    "rest",
+    "json",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Framework :: Django :: 2.0",
+    "Framework :: Django :: 2.1",
+    "Framework :: Django :: 2.2",
+    "Framework :: Django :: 3.0",
+    "Framework :: Django :: 3.1",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Environment :: Web Environment",
+]
+
+[project.urls]
+Homepage = "https://github.com/Sibyx/django_api_forms"
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -26,8 +64,7 @@ coverage = {version = "^6.4", extras = ["toml"]}
 
 [tool.coverage.run]
 omit = [
-    '*/tests/*', 'docs/', 'venv/*', 'build/', 'dist/', '.github/', 'django_api_forms.egg-info/', 'setup.py',
-    'runtests.py'
+    '*/tests/*', 'docs/', 'venv/*', 'build/', 'dist/', '.github/', 'django_api_forms.egg-info/', 'runtests.py'
 ]
 
 [build-system]
