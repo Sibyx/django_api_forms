@@ -13,8 +13,8 @@ peotry add django-api-forms
 # Using pipenv
 pipenv install django-api-forms
 
-# Using setup.py
-python setup.py install
+# Local installation
+python -m pip install .
 ```
 
 ## Extra functionality
