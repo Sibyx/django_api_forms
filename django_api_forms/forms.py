@@ -12,7 +12,7 @@ from .settings import Settings
 from .utils import resolve_from_path
 
 
-class BaseForm(object):
+class BaseForm:
     def __init__(self, data=None, request=None, settings: Settings = None):
         if data is None:
             self._data = {}
@@ -44,7 +44,7 @@ class BaseForm(object):
             field = self.fields[name]
         except KeyError:
             raise KeyError(
-                "Key '%s' not found in '%s'. Choices are: %s." % (
+                "Key '{}' not found in '{}'. Choices are: {}.".format(
                     name,
                     self.__class__.__name__,
                     ', '.join(sorted(self.fields)),
