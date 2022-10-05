@@ -267,7 +267,7 @@ class ImageField(FileField):
     }
 
     def to_python(self, value) -> typing.Optional[File]:
-        f = super(ImageField, self).to_python(value)
+        f = super().to_python(value)
 
         if f is None:
             return None
