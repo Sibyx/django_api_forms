@@ -10,7 +10,7 @@ without HTML front-end.
 ## Motivation
 
 The main idea was to create a simple and declarative way to specify the format of expecting requests with the ability
-to validate them. Firstly, I tried to use [Django Forms](https://docs.djangoproject.com/en/3.0/topics/forms/) to
+to validate them. Firstly, I tried to use [Django Forms](https://docs.djangoproject.com/en/3.2/topics/forms/) to
 validate my API requests (I use pure Django in my APIs). I have encountered a problem with nesting my requests without
 a huge boilerplate. Also, the whole HTML thing was pretty useless in my RESTful APIs.
 
@@ -206,7 +206,7 @@ def create_album(request):
 If you want example with whole Django project, check out repository created by [pawl](https://github.com/pawl)
 [django_api_forms_modelchoicefield_example](https://github.com/pawl/django_api_forms_modelchoicefield_example), where
 he uses library with
-[ModelChoiceField](https://docs.djangoproject.com/en/3.0/ref/forms/fields/#django.forms.ModelChoiceField).
+[ModelChoiceField](https://docs.djangoproject.com/en/3.2/ref/forms/fields/#django.forms.ModelChoiceField).
 
 
 ## Running Tests
