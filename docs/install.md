@@ -31,7 +31,7 @@ inside your environment.
 ### Pillow
 
 Library provides `FileField` and `ImageField`, which are pretty similar to
-[Django native implementation](https://docs.djangoproject.com/en/3.1/ref/models/fields/#filefield). There fields
+[Django native implementation](https://docs.djangoproject.com/en/4.1/ref/models/fields/#filefield). There fields
 require [Pillow](https://pypi.org/project/Pillow/) to be installed inside of your environment.
 
 - `pip install django-api-forms[Pillow]`
