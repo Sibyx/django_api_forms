@@ -7,7 +7,7 @@ images/files, nesting).
 `django_api_forms.Form` defines the format of the request and help you with:
 
 - payload parsing (according to the `Content-Type` HTTP header)
-- data validation and normalisation (using [Django validators](https://docs.djangoproject.com/en/3.2/ref/validators/)
+- data validation and normalisation (using [Django validators](https://docs.djangoproject.com/en/4.1/ref/validators/)
 or custom `clean_` method)
 - BASE64 file/image upload
 - construction of the basic validation response
@@ -94,7 +94,7 @@ Validation errors are presented for each field in `Form.errors: List[ValidationE
 
 As was mentioned above, you can extend property validation or normalisation by creating form method like
 `clean_<property_name>`. You can add additional
-[ValidationError](https://docs.djangoproject.com/en/3.1/ref/forms/validation/#raising-validationerror)
+[ValidationError](https://docs.djangoproject.com/en/4.1/ref/forms/validation/#raising-validationerror)
 objects using `Form.add_error(field: Tuple, error: ValidationError)` method. Result is final normalised
 value of the attribute.
 
