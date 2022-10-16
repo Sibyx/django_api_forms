@@ -6,29 +6,29 @@ explain our intentions and describe their usage.
 
 To sum up:
 
-- You can use [Django Form Fields](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#module-django.forms.fields):
-    - [CharField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#charfield)
-    - [ChoiceField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#choicefield)
-    - [TypedChoiceField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#typedchoicefield)
-    - [DateField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#datefield)
-    - [DateTimeField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#datetimefield)
-    - [DecimalField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#decimalfield)
-    - [DurationField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#durationfield)
-    - [EmailField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#emailfield)
-    - [FilePathField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#filepathfield)
-    - [FloatField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#floatfield)
-    - [IntegerField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#integerfield)
-    - [GenericIPAddressField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#genericipaddressfield)
-    - [MultipleChoiceField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#multiplechoicefield)
-    - [TypedMultipleChoiceField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#typedmultiplechoicefield)
-    - [RegexField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#regexfield)
-    - [SlugField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#slugfield)
-    - [TimeField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#timefield)
-    - [URLField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#urlfield)
-    - [UUIDField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#uuidfield)
-    - [ModelChoiceField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#modelchoicefield)
-    - [ModelMultipleChoiceField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#modelmultiplechoicefield)
-- You can use [Django Validators](https://docs.djangoproject.com/en/3.1/ref/validators/).
+- You can use [Django Form Fields](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#module-django.forms.fields):
+    - [CharField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#charfield)
+    - [ChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#choicefield)
+    - [TypedChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedchoicefield)
+    - [DateField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datefield)
+    - [DateTimeField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datetimefield)
+    - [DecimalField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#decimalfield)
+    - [DurationField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#durationfield)
+    - [EmailField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#emailfield)
+    - [FilePathField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#filepathfield)
+    - [FloatField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#floatfield)
+    - [IntegerField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#integerfield)
+    - [GenericIPAddressField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#genericipaddressfield)
+    - [MultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#multiplechoicefield)
+    - [TypedMultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedmultiplechoicefield)
+    - [RegexField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#regexfield)
+    - [SlugField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#slugfield)
+    - [TimeField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#timefield)
+    - [URLField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#urlfield)
+    - [UUIDField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#uuidfield)
+    - [ModelChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelchoicefield)
+    - [ModelMultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelmultiplechoicefield)
+- You can use [Django Validators](https://docs.djangoproject.com/en/4.1/ref/validators/).
 
 Fields that are not in the list above were not been tested or been replaced with our customized implementation
 (or it just doesn't make sense to use them in RESTful APIs).
@@ -37,13 +37,13 @@ Fields that are not in the list above were not been tested or been replaced with
 
 - Normalizes to: A Python **True** or **False** value (or **None** if it's not required)
 
-[Django BooleanField](https://docs.djangoproject.com/en/3.1/ref/forms/fields/#booleanfield)
+[Django BooleanField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#booleanfield)
 [checks only for False](https://github.com/django/django/blob/master/django/forms/fields.py#L712) (`false`, `0`)
 values and everything else is suppose to be **True**.
 
 In my point of view this kind of behaviour it's little bit weird, so we decided to check explicitly for **True** and
 **False** values. If field is required
-[ValidationError](https://docs.djangoproject.com/en/3.1/ref/exceptions/#django.core.exceptions.ValidationError) is
+[ValidationError](https://docs.djangoproject.com/en/4.1/ref/exceptions/#django.core.exceptions.ValidationError) is
 raised or value is normalized as **None**.
 
 Checked values:
@@ -180,7 +180,7 @@ class FestivalForm(Form):
 ## EnumField
 
 **Tip**: Django has pretty cool implementation of the
-[enumeration types](https://docs.djangoproject.com/en/3.1/ref/models/fields/#enumeration-types).
+[enumeration types](https://docs.djangoproject.com/en/4.1/ref/models/fields/#enumeration-types).
 
 - Normalizes to: A Python `Enum` object
 - Error message keys: `not_enum`, `invalid`
@@ -280,7 +280,7 @@ class BandForm(Form):
 
 This field contains [BASE64](https://tools.ietf.org/html/rfc4648) encoded file.
 
-- Normalizes to: A Django [File](https://docs.djangoproject.com/en/3.1/ref/files/file/) object
+- Normalizes to: A Django [File](https://docs.djangoproject.com/en/4.1/ref/files/file/) object
 - Error message keys: `max_length`, `invalid_uri`, `invalid_mime`
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
@@ -319,7 +319,7 @@ This field contains [BASE64](https://tools.ietf.org/html/rfc4648) encoded image.
 image validation [Image.verify()](https://pillow.readthedocs.io/en/stable/reference/Image.html#PIL.Image.Image.verify)
 is called.
 
-- Normalizes to: A Django [File](https://docs.djangoproject.com/en/3.1/ref/files/file/) object
+- Normalizes to: A Django [File](https://docs.djangoproject.com/en/4.1/ref/files/file/) object
 - Error message keys: `max_length`, `invalid_uri`, `invalid_mime`, `invalid_image` (if Image.verify() failed)
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
