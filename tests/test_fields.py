@@ -392,7 +392,6 @@ class EnumFieldTests(SimpleTestCase):
 class DictionaryFieldTests(SimpleTestCase):
     def test_dictionaryfield_init(self):
         # TEST: initialize DictionaryField with an instance of Field
-        DictionaryField(fields.IntegerField())
         DictionaryField(value_field=fields.IntegerField())
 
         # TEST: initialize DictionaryField with non-Field - throws an error
@@ -400,10 +399,10 @@ class DictionaryFieldTests(SimpleTestCase):
         for non_field in [1, 'blah']:
             with self.assertRaisesMessage(ApiFormException, str(expected_error)):
                 log_input(non_field)
-                DictionaryField(non_field)
+                DictionaryField(value_field=non_field)
 
     def test_dictionaryfield_required(self):
-        dict_field = DictionaryField(fields.DateTimeField())
+        dict_field = DictionaryField(value_field=fields.DateTimeField())
 
         # TEST: valid value (type of dict values match DictionaryField)
         now = datetime.datetime(2020, 5, 2, 22, 31, 32, tzinfo=datetime.timezone.utc)
@@ -438,7 +437,7 @@ class DictionaryFieldTests(SimpleTestCase):
             dict_field.clean({})
 
     def test_dictionaryfield_required_false(self):
-        dict_field = DictionaryField(fields.IntegerField(), required=False)
+        dict_field = DictionaryField(value_field=fields.IntegerField(), required=False)
 
         # TEST: valid dict value (type of dict values match DictionaryField)
         test_val = {"foo": 1}

@@ -217,6 +217,7 @@ class AlbumForm(Form):
 ## DictionaryField
 
 Field created for containing typed value pairs.
+Due to inverted key, value parameters in `__init__` method, `value_field` is forced keyword arguments.
 
 - Normalizes to: A Python dictionary
 - Error message keys: `not_dict`, `not_field`

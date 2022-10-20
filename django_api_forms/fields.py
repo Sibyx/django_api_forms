@@ -182,7 +182,7 @@ class DictionaryField(Field):
         'not_dict': _('Invalid value passed to DictionaryField (got {}, expected dict)'),
     }
 
-    def __init__(self, value_field, key_field=None, **kwargs):
+    def __init__(self, *, value_field, key_field=None, **kwargs):
         super().__init__(**kwargs)
 
         if not isinstance(value_field, Field):
