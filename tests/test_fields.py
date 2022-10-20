@@ -471,11 +471,9 @@ class DictionaryFieldTests(SimpleTestCase):
             dict_field.clean(invalid_dict)
 
     def test_dictionaryfield_init_not_field(self):
-        valid_dict = {'41aaf965-8417-448d-bd1f-c2578a933dad': 1}
         expected_error = DictionaryField.default_error_messages['not_field']
-        expected_error = expected_error.format(type(valid_dict))
-        with self.assertRaisesMessage(ApiFormException, expected_error):
-            DictionaryField(value_field=int, key_field=Decimal)
+        with self.assertRaisesMessage(ApiFormException, str(expected_error)):
+            DictionaryField(value_field=fields.IntegerField() , key_field=Decimal)
 
 
 class AnyFieldTests(SimpleTestCase):

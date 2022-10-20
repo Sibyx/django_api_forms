@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
+
+from django_api_forms.exceptions import ApiFormException
 from tests import settings
 from tests.testapp.forms import AlbumForm, BandForm
 from tests.testapp.models import Album, Artist, Band
@@ -55,3 +57,19 @@ class PopulationTests(TestCase):
         self.assertEqual(band.name, form.cleaned_data['name'])
         self.assertEqual(band.formed, 2000)
         self.assertEqual(band.has_award, True)
+
+    def test_invalid_populate(self):
+        # Create form from request
+        with open(f"{settings.BASE_DIR}/data/valid.json") as f:
+            payload = f.read()
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test/',
+            data=payload,
+            content_type='application/json'
+        )
+        form = AlbumForm.create_from_request(request)
+
+        album = Album()
+        with self.assertRaisesMessage(ApiFormException, str('No clean data provided! Try to call is_valid() first.')):
+            form.populate(album)
