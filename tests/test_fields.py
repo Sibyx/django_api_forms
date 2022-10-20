@@ -473,7 +473,7 @@ class DictionaryFieldTests(SimpleTestCase):
     def test_dictionaryfield_init_not_field(self):
         expected_error = DictionaryField.default_error_messages['not_field']
         with self.assertRaisesMessage(ApiFormException, str(expected_error)):
-            DictionaryField(value_field=fields.IntegerField() , key_field=Decimal)
+            DictionaryField(value_field=fields.IntegerField(), key_field=Decimal)
 
 
 class AnyFieldTests(SimpleTestCase):
