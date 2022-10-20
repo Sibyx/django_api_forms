@@ -11,7 +11,7 @@ from django.core.files import File
 from django.forms import Field
 from django.utils.translation import gettext_lazy as _
 
-from .exceptions import DetailValidationError
+from .exceptions import DetailValidationError, ApiFormException
 from .version import __version__ as version
 
 DATA_URI_PATTERN = r"data:((?:\w+\/(?:(?!;).)+)?)((?:;[\w=]*[^;])*),(.+)"
@@ -49,7 +49,7 @@ class FieldList(Field):
         super().__init__(**kwargs)
 
         if not isinstance(field, Field):
-            raise RuntimeError(self.error_messages['not_field'])
+            raise ApiFormException(self.error_messages['not_field'])
 
         self._min_length = min_length
         self._max_length = max_length
@@ -163,7 +163,7 @@ class EnumField(Field):
         # isinstance(enum, type) prevents "TypeError: issubclass() arg 1 must be a class"
         # based on: https://github.com/samuelcolvin/pydantic/blob/v0.32.x/pydantic/utils.py#L260-L261
         if not (isinstance(enum, type) and issubclass(enum, Enum)):
-            raise RuntimeError(self.error_messages['not_enum'])
+            raise ApiFormException(self.error_messages['not_enum'])
 
         self.enum = enum
 
@@ -186,10 +186,10 @@ class DictionaryField(Field):
         super().__init__(**kwargs)
 
         if not isinstance(value_field, Field):
-            raise RuntimeError(self.error_messages['not_field'])
+            raise ApiFormException(self.error_messages['not_field'])
 
         if key_field and not isinstance(key_field, Field):
-            raise RuntimeError(self.error_messages['not_field'])
+            raise ApiFormException(self.error_messages['not_field'])
 
         self._value_field = value_field
         self._key_field = key_field

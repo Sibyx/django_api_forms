@@ -4,6 +4,7 @@ https://github.com/django/django/tree/stable/3.0.x/tests/forms_tests/field_tests
 """
 import datetime
 import logging
+from decimal import Decimal
 from enum import Enum
 
 from unittest import mock
@@ -14,8 +15,9 @@ from django.core.files import File
 from django.core.validators import EMPTY_VALUES
 from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
-from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
-                              FormFieldList, FileField, ImageField)
+from django_api_forms import AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField, \
+    FormFieldList, FileField, ImageField
+from django_api_forms.exceptions import ApiFormException
 
 
 def log_input(val):
@@ -97,7 +99,7 @@ class FieldListTests(SimpleTestCase):
         # TEST: initialize FieldList with non-Fields - throws an error
         expected_error = FieldList.default_error_messages['not_field']
         for non_field in [1, 'blah'] + list(EMPTY_VALUES):
-            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
+            with self.assertRaisesMessage(ApiFormException, str(expected_error)):
                 log_input(non_field)
                 FieldList(field=non_field)
 
@@ -338,7 +340,7 @@ class EnumFieldTests(SimpleTestCase):
         # TEST: initialize EnumField with non-Enum - throws an error
         expected_error = EnumField.default_error_messages['not_enum']
         for non_enum in [1, 'blah'] + list(EMPTY_VALUES):
-            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
+            with self.assertRaisesMessage(ApiFormException, str(expected_error)):
                 log_input(non_enum)
                 EnumField(enum=non_enum)
 
@@ -396,7 +398,7 @@ class DictionaryFieldTests(SimpleTestCase):
         # TEST: initialize DictionaryField with non-Field - throws an error
         expected_error = DictionaryField.default_error_messages['not_field']
         for non_field in [1, 'blah']:
-            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
+            with self.assertRaisesMessage(ApiFormException, str(expected_error)):
                 log_input(non_field)
                 DictionaryField(non_field)
 
@@ -467,6 +469,13 @@ class DictionaryFieldTests(SimpleTestCase):
         with self.assertRaisesMessage(ValidationError, expected_error):
             log_input(expected_error)
             dict_field.clean(invalid_dict)
+
+    def test_dictionaryfield_init_not_field(self):
+        valid_dict = {'41aaf965-8417-448d-bd1f-c2578a933dad': 1}
+        expected_error = DictionaryField.default_error_messages['not_field']
+        expected_error = expected_error.format(type(valid_dict))
+        with self.assertRaisesMessage(ApiFormException, expected_error):
+            DictionaryField(value_field=int, key_field=Decimal)
 
 
 class AnyFieldTests(SimpleTestCase):
