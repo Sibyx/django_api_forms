@@ -7,6 +7,7 @@ import logging
 from enum import Enum
 
 from unittest import mock
+from uuid import UUID
 
 from django.conf import settings
 from django.core.files import File
@@ -451,6 +452,21 @@ class DictionaryFieldTests(SimpleTestCase):
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
                 dict_field.clean(empty_val)
+
+    def test_dictionaryfield_key_field(self):
+        dict_field = DictionaryField(value_field=fields.IntegerField(), key_field=fields.UUIDField())
+
+        # TEST: valid dict value and key
+        valid_dict = {'41aaf965-8417-448d-bd1f-c2578a933dad': 1}
+        expected_result = {UUID('41aaf965-8417-448d-bd1f-c2578a933dad'): 1}
+        self.assertEqual(expected_result, dict_field.clean(valid_dict))
+
+        invalid_dict = {'41aaf965-8417-448d-bd1f-': '1'}
+        expected_error = fields.UUIDField.default_error_messages['invalid']
+        expected_error = expected_error.format(type(invalid_dict))
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            log_input(expected_error)
+            dict_field.clean(invalid_dict)
 
 
 class AnyFieldTests(SimpleTestCase):

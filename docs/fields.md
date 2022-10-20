@@ -216,13 +216,14 @@ class AlbumForm(Form):
 
 ## DictionaryField
 
-Field created for containing typed value pairs (currently library supports only value validation, see
-[Key validation in DictionaryField](https://github.com/Sibyx/django_api_forms/issues/21)).
+Field created for containing typed value pairs.
 
 - Normalizes to: A Python dictionary
-- Error message keys: `not_dict`
+- Error message keys: `not_dict`, `not_field`
 - Required arguments:
     - `value_field`: Type of a nested form
+- Optional arguments:
+    - `key_field`: Type of a nested form
 
 **JSON example**
 
@@ -243,7 +244,7 @@ from django.forms import fields
 
 
 class DictionaryForm(Form):
-    my_typed_dict = DictionaryField(value_field=fields.DecimalField())
+    my_typed_dict = DictionaryField(value_field=fields.DecimalField(), key_field=fields.UUIDField())
 ```
 
 ## AnyField
