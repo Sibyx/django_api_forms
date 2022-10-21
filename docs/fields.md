@@ -70,7 +70,16 @@ check `FormFieldList`.
 
 ```json
 {
-  "numbers": [0, 1, 1, 2, 3, 5, 8, 13]
+    "numbers": [
+        0,
+        1,
+        1,
+        2,
+        3,
+        5,
+        8,
+        13
+    ]
 }
 ```
 
@@ -79,6 +88,7 @@ check `FormFieldList`.
 ```python
 from django_api_forms import Form, FieldList
 from django.forms import fields
+
 
 class FibonacciForm(Form):
     numbers = FieldList(field=fields.IntegerField())
@@ -96,16 +106,16 @@ Field used for embedded objects represented as another API form.
 
 ```json
 {
-  "title": "Unknown Pleasures",
-  "year": 1979,
-  "artist": {
-    "name": "Joy Division",
-    "genres": [
-      "rock",
-      "punk"
-    ],
-    "members": 4
-  }
+    "title": "Unknown Pleasures",
+    "year": 1979,
+    "artist": {
+        "name": "Joy Division",
+        "genres": [
+            "rock",
+            "punk"
+        ],
+        "members": 4
+    }
 }
 ```
 
@@ -144,17 +154,17 @@ Field used for embedded objects represented as another API form.
 
 ```json
 {
-  "title": "Rock For People",
-  "artists": [
-    {
-      "name": "Joy Division",
-      "genres": [
-        "rock",
-        "punk"
-      ],
-      "members": 4
-    }
-  ]
+    "title": "Rock For People",
+    "artists": [
+        {
+            "name": "Joy Division",
+            "genres": [
+                "rock",
+                "punk"
+            ],
+            "members": 4
+        }
+    ]
 }
 ```
 
@@ -191,8 +201,8 @@ class FestivalForm(Form):
 
 ```json
 {
-  "title": "Rock For People",
-  "type": "vinyl"
+    "title": "Rock For People",
+    "type": "vinyl"
 }
 ```
 
@@ -230,10 +240,10 @@ Due to inverted key, value parameters in `__init__` method, `value_field` is for
 
 ```json
 {
-  "my_dict": {
-    "b061bb03-1eaa-47d0-948f-3ce1f15bf3bb": 2.718,
-    "0a8912f0-6c10-4505-bc27-bbb099d2e395": 42
-  }
+    "my_dict": {
+        "b061bb03-1eaa-47d0-948f-3ce1f15bf3bb": 2.718,
+        "0a8912f0-6c10-4505-bc27-bbb099d2e395": 42
+    }
 }
 ```
 
@@ -253,18 +263,18 @@ class DictionaryForm(Form):
 Field without default validators.
 
 - Normalizes to: Type according to the
-[chosen request payload parser](https://github.com/Sibyx/django_api_forms/blob/master/django_api_forms/forms.py#L19)
+  [chosen request payload parser](https://github.com/Sibyx/django_api_forms/blob/master/django_api_forms/forms.py#L19)
 
 **JSON example**
 
 ```json
 {
-  "singer": {
-    "name": "Johnny",
-    "surname": "Rotten",
-    "age": 64,
-    "born_at": "1956-01-31"
-  }
+    "singer": {
+        "name": "Johnny",
+        "surname": "Rotten",
+        "age": 64,
+        "born_at": "1956-01-31"
+    }
 }
 ```
 
@@ -287,17 +297,17 @@ This field contains [BASE64](https://tools.ietf.org/html/rfc4648) encoded file.
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
     - `mime`: Tuple of allowed mime types (optional - if present, value must be in form of
-    [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
+      [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
 - Extra normalised attributes:
     - `file_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
-    unable to detect - if payload is not in DATA URI format)
+      unable to detect - if payload is not in DATA URI format)
 
 **JSON example**
 
 ```json
 {
-  "title": "Disorder",
-  "type": "data:audio/mpeg;base64,SGVsbG8sIFdvcmxkIQ=="
+    "title": "Disorder",
+    "type": "data:audio/mpeg;base64,SGVsbG8sIFdvcmxkIQ=="
 }
 ```
 
@@ -311,7 +321,7 @@ from django.forms import fields
 
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
-    audio = FileField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('audio/mpeg', ))
+    audio = FileField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('audio/mpeg',))
 ```
 
 ## ImageField
@@ -326,20 +336,20 @@ is called.
 - Arguments:
     - `max_length`: Maximum files size in bytes (optional)
     - `mime`: Tuple of allowed mime types (optional, value must be in
-    [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
+      [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
 - Extra normalised attributes:
     - `image_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
-    unable to detect - if payload is not in DATA URI format). Value is filled using Pillow
-    `Image.MIME.get(image.format)`)
+      unable to detect - if payload is not in DATA URI format). Value is filled using Pillow
+      `Image.MIME.get(image.format)`)
     - `image_field.clean(payload).image`: A Pillow
-    [Image](https://pillow.readthedocs.io/en/stable/reference/Image.html) object instance
+      [Image](https://pillow.readthedocs.io/en/stable/reference/Image.html) object instance
 
 **JSON example**
 
 ```json
 {
-  "title": "Unknown pleasures",
-  "cover": "data:image/png;base64,SGVsbG8sIFdvcmxkIQ=="
+    "title": "Unknown pleasures",
+    "cover": "data:image/png;base64,SGVsbG8sIFdvcmxkIQ=="
 }
 ```
 
@@ -353,5 +363,5 @@ from django.forms import fields
 
 class AlbumForm(Form):
     title = fields.CharField(required=True, max_length=100)
-    cover = ImageField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('image/png', ))
+    cover = ImageField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('image/png',))
 ```
