@@ -4,17 +4,20 @@ https://github.com/django/django/tree/stable/3.0.x/tests/forms_tests/field_tests
 """
 import datetime
 import logging
+from decimal import Decimal
 from enum import Enum
 
 from unittest import mock
+from uuid import UUID
 
 from django.conf import settings
 from django.core.files import File
 from django.core.validators import EMPTY_VALUES
 from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
-from django_api_forms import (AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField,
-                              FormFieldList, FileField, ImageField)
+from django_api_forms import AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField, \
+    FormFieldList, FileField, ImageField
+from django_api_forms.exceptions import ApiFormException
 
 
 def log_input(val):
@@ -96,7 +99,7 @@ class FieldListTests(SimpleTestCase):
         # TEST: initialize FieldList with non-Fields - throws an error
         expected_error = FieldList.default_error_messages['not_field']
         for non_field in [1, 'blah'] + list(EMPTY_VALUES):
-            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
+            with self.assertRaisesMessage(ApiFormException, str(expected_error)):
                 log_input(non_field)
                 FieldList(field=non_field)
 
@@ -337,7 +340,7 @@ class EnumFieldTests(SimpleTestCase):
         # TEST: initialize EnumField with non-Enum - throws an error
         expected_error = EnumField.default_error_messages['not_enum']
         for non_enum in [1, 'blah'] + list(EMPTY_VALUES):
-            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
+            with self.assertRaisesMessage(ApiFormException, str(expected_error)):
                 log_input(non_enum)
                 EnumField(enum=non_enum)
 
@@ -389,18 +392,17 @@ class EnumFieldTests(SimpleTestCase):
 class DictionaryFieldTests(SimpleTestCase):
     def test_dictionaryfield_init(self):
         # TEST: initialize DictionaryField with an instance of Field
-        DictionaryField(fields.IntegerField())
         DictionaryField(value_field=fields.IntegerField())
 
         # TEST: initialize DictionaryField with non-Field - throws an error
         expected_error = DictionaryField.default_error_messages['not_field']
         for non_field in [1, 'blah']:
-            with self.assertRaisesMessage(RuntimeError, str(expected_error)):
+            with self.assertRaisesMessage(ApiFormException, str(expected_error)):
                 log_input(non_field)
-                DictionaryField(non_field)
+                DictionaryField(value_field=non_field)
 
     def test_dictionaryfield_required(self):
-        dict_field = DictionaryField(fields.DateTimeField())
+        dict_field = DictionaryField(value_field=fields.DateTimeField())
 
         # TEST: valid value (type of dict values match DictionaryField)
         now = datetime.datetime(2020, 5, 2, 22, 31, 32, tzinfo=datetime.timezone.utc)
@@ -435,7 +437,7 @@ class DictionaryFieldTests(SimpleTestCase):
             dict_field.clean({})
 
     def test_dictionaryfield_required_false(self):
-        dict_field = DictionaryField(fields.IntegerField(), required=False)
+        dict_field = DictionaryField(value_field=fields.IntegerField(), required=False)
 
         # TEST: valid dict value (type of dict values match DictionaryField)
         test_val = {"foo": 1}
@@ -451,6 +453,26 @@ class DictionaryFieldTests(SimpleTestCase):
             with self.assertRaisesMessage(ValidationError, expected_error):
                 log_input(empty_val)
                 dict_field.clean(empty_val)
+
+    def test_dictionaryfield_key_field(self):
+        dict_field = DictionaryField(value_field=fields.IntegerField(), key_field=fields.UUIDField())
+
+        # TEST: valid dict value and key
+        valid_dict = {'41aaf965-8417-448d-bd1f-c2578a933dad': 1}
+        expected_result = {UUID('41aaf965-8417-448d-bd1f-c2578a933dad'): 1}
+        self.assertEqual(expected_result, dict_field.clean(valid_dict))
+
+        invalid_dict = {'41aaf965-8417-448d-bd1f-': '1'}
+        expected_error = fields.UUIDField.default_error_messages['invalid']
+        expected_error = expected_error.format(type(invalid_dict))
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            log_input(expected_error)
+            dict_field.clean(invalid_dict)
+
+    def test_dictionaryfield_init_not_field(self):
+        expected_error = DictionaryField.default_error_messages['not_field']
+        with self.assertRaisesMessage(ApiFormException, str(expected_error)):
+            DictionaryField(value_field=fields.IntegerField(), key_field=Decimal)
 
 
 class AnyFieldTests(SimpleTestCase):

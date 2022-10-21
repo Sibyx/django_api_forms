@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0-rc.5 : 20.10.2022
+
+- **Added**: Introduced defining a form field for the dictionary key in `DictionaryField`
+- **Changed**: `value_field` in `DictionaryField` is forced keyword arguments
+- **Changed**: Replaced `RuntimeError` with `ApiFormException`
+
 ## 1.0.0-rc.4 : 09.09.2022
 
 - **Fixed**: Fixed missing validation errors

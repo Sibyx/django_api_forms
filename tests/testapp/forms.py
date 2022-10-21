@@ -29,7 +29,7 @@ class AlbumForm(Form):
     artist = FormField(form=ArtistForm)
     songs = FormFieldList(form=SongForm)
     type = EnumField(enum=Album.AlbumType, required=True)
-    metadata = DictionaryField(fields.DateTimeField())
+    metadata = DictionaryField(value_field=fields.DateTimeField())
 
     def clean_year(self):
         if self.cleaned_data['year'] == 1992:
@@ -61,7 +61,7 @@ class BandForm(Form):
     name = fields.CharField(max_length=100)
     formed = fields.IntegerField()
     has_award = BooleanField()
-    emails = DictionaryField(fields.EmailField(max_length=14), required=False)
+    emails = DictionaryField(value_field=fields.EmailField(max_length=14), required=False)
     albums = FormFieldList(form=AlbumForm, required=False)
 
 

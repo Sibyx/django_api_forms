@@ -108,7 +108,7 @@ class AlbumForm(Form):
     artist = FormField(form=ArtistForm)
     songs = FormFieldList(form=SongForm)
     type = EnumField(enum=AlbumType, required=True)
-    metadata = DictionaryField(fields.DateTimeField())
+    metadata = DictionaryField(value_field=fields.DateTimeField())
 
     def clean_year(self):
         if self.cleaned_data['year'] == 1992:

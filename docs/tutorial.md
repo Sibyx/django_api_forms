@@ -268,7 +268,7 @@ class AlbumForm(Form):
     year = fields.IntegerField()
     artist = FormField(form=ArtistForm)
     type = EnumField(enum=Album.AlbumType, required=True)
-    metadata = DictionaryField(fields.DateTimeField())
+    metadata = DictionaryField(value_field=fields.DateTimeField())
 
     def populate_year(self, obj, value: int) -> int:
         return 2020
