@@ -712,5 +712,5 @@ class RRuleFieldTests(SimpleTestCase):
         rrule_field = RRuleField()
 
         invalid_rrule_str = 'START:20120201T023000Z\nRRULE:FREQ=MONTHLY;COUNT=5'
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             rrule_field.clean(invalid_rrule_str)
