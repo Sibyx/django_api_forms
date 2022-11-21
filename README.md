@@ -38,7 +38,7 @@ So I have decided to create a simple Python package to cover all my expectations
 pip install django-api-forms
 
 # Using poetry
-peotry add django-api-forms
+poetry add django-api-forms
 
 # Local installation
 python -m pip install .
@@ -47,10 +47,10 @@ python -m pip install .
 Optional:
 ```shell script
 # msgpack support (for requests with Content-Type: application/x-msgpack)
-peotry add msgpack
+poetry add msgpack
 
 # ImageField support
-peotry add Pillow
+poetry add Pillow
 ```
 
 Install application in your Django project by adding `django_api_forms` to yours `INSTALLED_APPS`:
