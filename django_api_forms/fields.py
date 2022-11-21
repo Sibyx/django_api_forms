@@ -307,11 +307,11 @@ class RRuleField(Field):
     default_error_messages = {
         'not_rrule': _('This field needs to be a rrule object!')
     }
+
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-    
-    def to_python(self, value: str) -> typing.Optional["rrule"]:
+    def to_python(self, value: str):
         # Dateutil is required for RRuleField
         from dateutil.rrule import rrulestr
 

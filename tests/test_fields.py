@@ -701,7 +701,7 @@ class RRuleFieldTests(SimpleTestCase):
     def test_simple(self):
         """Normalizes a RRule string to a RRule object"""
         from dateutil.rrule import rrule
-        
+
         rrule_field = RRuleField()
 
         rrule_str = 'DTSTART:20120201T023000Z\nRRULE:FREQ=MONTHLY;COUNT=5'
