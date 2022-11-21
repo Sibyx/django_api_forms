@@ -16,7 +16,7 @@ from django.core.validators import EMPTY_VALUES
 from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField, \
-    FormFieldList, FileField, ImageField
+    FormFieldList, FileField, ImageField, RRuleField
 from django_api_forms.exceptions import ApiFormException
 
 
@@ -694,3 +694,23 @@ class ImageFieldTests(SimpleTestCase):
         django_file = file_field.clean("data:,UEsDBBQAAAAI")
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 9)
+
+
+class RRuleFieldTests(SimpleTestCase):
+
+    def test_simple(self):
+        """Normalizes a RRule string to a RRule object"""
+        from dateutil.rrule import rrule
+        
+        rrule_field = RRuleField()
+
+        rrule_str = 'DTSTART:20120201T023000Z\nRRULE:FREQ=MONTHLY;COUNT=5'
+        self.assertIsInstance(rrule_field.clean(rrule_str), rrule)
+
+    def test_invalid(self):
+        """Normalizes a invalid RRule string, expecting a ValueError"""
+        rrule_field = RRuleField()
+
+        invalid_rrule_str = 'START:20120201T023000Z\nRRULE:FREQ=MONTHLY;COUNT=5'
+        with self.assertRaises(ValueError):
+            rrule_field.clean(invalid_rrule_str)
