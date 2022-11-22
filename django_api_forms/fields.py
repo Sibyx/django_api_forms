@@ -319,7 +319,7 @@ class RRuleField(Field):
             result = rrulestr(value)
         except Exception:
             raise ValidationError(
-                self.error_messages['invalid_rrule']
+                self.error_messages['invalid_rrule'], code='invalid_rrule'
             )
 
         return result
