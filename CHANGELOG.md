@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.0-rc.6 : 22.11.2022
+- **Added**: Introduced `RRuleField` to represent Recurrence Rule objects
+
 ## 1.0.0-rc.5 : 20.10.2022
 
 - **Added**: Introduced defining a form field for the dictionary key in `DictionaryField`

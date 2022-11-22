@@ -301,3 +301,25 @@ class ImageField(FileField):
         f.seek(0)  # Return to start of the file
 
         return f
+
+
+class RRuleField(Field):
+    default_error_messages = {
+        'invalid_rrule': _('This given RRule String is not in a valid RRule syntax.'),
+    }
+
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+
+    def to_python(self, value: str):
+        # Dateutil is required for RRuleField
+        from dateutil.rrule import rrulestr
+
+        try:
+            result = rrulestr(value)
+        except Exception:
+            raise ValidationError(
+                self.error_messages['invalid_rrule'], code='invalid_rrule'
+            )
+
+        return result

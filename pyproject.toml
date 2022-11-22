@@ -52,6 +52,7 @@ python = "^3.8"
 Django = ">=2.0"
 Pillow = ">=2.1"
 msgpack = "*"
+python-dateutil = {version = "^2.8.2", optional = true}
 
 [tool.poetry.dev-dependencies]
 setuptools = "*"

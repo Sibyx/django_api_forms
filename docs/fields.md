@@ -365,3 +365,18 @@ class AlbumForm(Form):
     title = fields.CharField(required=True, max_length=100)
     cover = ImageField(max_length=settings.DATA_UPLOAD_MAX_MEMORY_SIZE, mime=('image/png',))
 ```
+
+## RRule Field
+
+This fields contains [RRule](https://dateutil.readthedocs.io/en/stable/rrule.html) object.
+
+- Normalizes to a Dateutil [RRule](https://dateutil.readthedocs.io/en/stable/rrule.html) object.
+- Error message keys: `not_rrule`
+
+**Python representation**
+```python
+from django_api_forms import Form, RRuleField
+
+
+class VacationForm(Form):
+    rrule = fields.RRuleField(required=True)

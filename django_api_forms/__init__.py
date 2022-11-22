@@ -8,6 +8,7 @@ from .fields import DictionaryField
 from .fields import AnyField
 from .fields import FileField
 from .fields import ImageField
+from .fields import RRuleField
 from .forms import Form
 from .forms import ModelForm
 from .version import __version__
@@ -23,6 +24,7 @@ __all__ = [
     'AnyField',
     'FileField',
     'ImageField',
+    'RRuleField',
     'Form',
     'ModelForm',
     '__version__'
