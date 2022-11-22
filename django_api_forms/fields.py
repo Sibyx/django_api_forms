@@ -305,7 +305,6 @@ class ImageField(FileField):
 
 class RRuleField(Field):
     default_error_messages = {
-        'not_rrule': _('This field needs to be a rrule object!'),
         'invalid_rrule': _('This given RRule String is not in a valid RRule syntax.'),
     }
 
