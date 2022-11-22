@@ -322,5 +322,5 @@ class RRuleField(Field):
             raise ValidationError(
                 self.error_messages['invalid_rrule']
             )
-        
+
         return result
