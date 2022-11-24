@@ -43,7 +43,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Environment :: Web Environment",
 ]
-readme = ['README.md', 'CHANGELOG.md']
+readme = 'README.md'
 
 [tool.poetry.urls]
 Repository = "https://github.com/Sibyx/django_api_forms"
