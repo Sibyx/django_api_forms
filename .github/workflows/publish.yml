@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build and publish to Python package repository
-        uses: JRubics/poetry-publish@v1.13
+        uses: JRubics/poetry-publish@v1.15
         with:
           repository_name: "django_api_forms"
           repository_url: "https://github.com/Sibyx/django_api_forms"
