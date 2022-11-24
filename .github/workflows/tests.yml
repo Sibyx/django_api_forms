@@ -27,6 +27,9 @@ jobs:
     - name: Test with Django test
       run: |
         poetry run python runtests.py
+    - name: Test release process
+      run: |
+        poetry publish --build --dry-run
     - name: Coverage with pytest
       run: |
         poetry run coverage run runtests.py
