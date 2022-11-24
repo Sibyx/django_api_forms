@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-api-forms"
-version = "1.0.0-rc.5"
+version = "1.0.0-rc.6"
 description = "Declarative Django request validation for RESTful APIs"
 authors = [
     "Jakub Dubec <jakub.dubec@gmail.com>",
@@ -43,24 +43,31 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Environment :: Web Environment",
 ]
+readme = ['README.md', 'CHANGELOG.md']
 
-[project.urls]
-Homepage = "https://github.com/Sibyx/django_api_forms"
+[tool.poetry.urls]
+Repository = "https://github.com/Sibyx/django_api_forms"
+Issues = "https://github.com/Sibyx/django_api_forms/issues"
+Documentation = "https://sibyx.github.io/django_api_forms/"
+Changelog = "https://github.com/Sibyx/django_api_forms/blob/master/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
 Django = ">=2.0"
-Pillow = ">=2.1"
-msgpack = "*"
+Pillow = {version = ">=2.1", optional = true}
+msgpack = {version = "*", optional = true}
 python-dateutil = {version = "^2.8.2", optional = true}
 
 [tool.poetry.dev-dependencies]
-setuptools = "*"
-wheel = "^0.37.1"
 flake8 = "^4.0"
 mkdocs-material = "^8.5"
 toml = "^0.10.2"
-coverage = {version = "^6.4", extras = ["toml"]}
+coverage = {version = "^6.5", extras = ["toml"]}
+
+[tool.poetry.extras]
+Pillow = ["Pillow"]
+msgpack = ["msgpack"]
+rrule = ["python-dateutil"]
 
 [tool.coverage.run]
 omit = [

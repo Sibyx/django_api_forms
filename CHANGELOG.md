@@ -1,7 +1,10 @@
 # Changelog
 
 ## 1.0.0-rc.6 : 22.11.2022
-- **Added**: Introduced `RRuleField` to represent Recurrence Rule objects
+
+Release by [@paimvictor](https://github.com/paimvictor)
+
+- **Added**: Introduced `RRuleField` to represent [Recurrence Rule objects](https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html)
 
 ## 1.0.0-rc.5 : 20.10.2022
 
