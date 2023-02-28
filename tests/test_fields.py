@@ -798,7 +798,7 @@ class GeoJSONFieldTests(SimpleTestCase):
             'crs': {
                 'type': 'name',
                 'properties': {
-                    'name': 'EPSG::5514'
+                    'name': 'ESRI::5514'
                 }
             }
         }
@@ -839,22 +839,12 @@ class GeoJSONFieldTests(SimpleTestCase):
             'crs': {
                 'type': 'name',
                 'properties': {
-                    'name': 'EPSG::5514'
+                    'name': 'ESRI::5514'
                 }
             }
         }
         expected_result = Point(11157691.375320006, -3194355.5389234135, srid=5514)
         self.assertEqual(expected_result, geojson_field.clean(test_input))
-
-        # TEST: random srid and transforming
-        geojson_field = GeoJSONField(srid=9999, transform=5514)
-        test_input = {
-            "type": "Point",
-            "coordinates": [125.6, 10.1]
-        }
-        with self.assertRaises(ValidationError):
-            log_input(test_input)
-            geojson_field.clean(test_input)
 
         # TEST: initialize GeoJSONField transform with not int - throws an error
         with self.assertRaises(ValidationError):

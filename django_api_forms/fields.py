@@ -362,7 +362,7 @@ class GeoJSONField(Field):
                 value['crs'] = {
                     "type": "name",
                     "properties": {
-                        "name": f"EPSG::{self._srid}"
+                        "name": f"ESRI::{self._srid}"
                     }
                 }
             result = GEOSGeometry(f'{value}', srid=self._srid)
