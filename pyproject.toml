@@ -59,10 +59,10 @@ msgpack = {version = "*", optional = true}
 python-dateutil = {version = "^2.8.2", optional = true}
 
 [tool.poetry.dev-dependencies]
-flake8 = "^4.0"
+flake8 = "^5.0"
 mkdocs-material = "^8.5"
 toml = "^0.10.2"
-coverage = {version = "^6.5", extras = ["toml"]}
+coverage = {version = "^7.2", extras = ["toml"]}
 
 [tool.poetry.extras]
 Pillow = ["Pillow"]

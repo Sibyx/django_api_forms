@@ -368,7 +368,7 @@ class AlbumForm(Form):
 
 ## RRule Field
 
-This fields contains [RRule](https://dateutil.readthedocs.io/en/stable/rrule.html) object.
+This field contains [RRule](https://dateutil.readthedocs.io/en/stable/rrule.html) object.
 
 - Normalizes to a Dateutil [RRule](https://dateutil.readthedocs.io/en/stable/rrule.html) object.
 - Error message keys: `not_rrule`
@@ -379,4 +379,37 @@ from django_api_forms import Form, RRuleField
 
 
 class VacationForm(Form):
-    rrule = fields.RRuleField(required=True)
+    rrule = RRuleField(required=True)
+```
+
+## GeoJSON Field
+
+
+This field contains [GEOSGeometry](https://docs.djangoproject.com/en/4.1/ref/contrib/gis/geos/#geosgeometry)
+django GEOS object. Translates [GeoJSON format](https://datatracker.ietf.org/doc/html/rfc7946.html) into
+[geodjango](https://docs.djangoproject.com/en/4.1/ref/contrib/gis/model-api/#spatial-field-types) fields.
+
+- Error message keys: `not_dict`, `not_geojson`, `not_int`, `transform_error`
+- Arguments:
+    - `srid`: spatial reference identifier (optional - default 4326)
+    - `transform`: transform to different spatial reference identifier (optional)
+
+**GeoJSON example**
+```json
+{
+    "geometry": {
+         "type": "Point",
+         "coordinates": [90.0, 40.0]
+     }
+}
+```
+
+**Python representation**
+```python
+
+from django_api_forms import Form, GeoJSONField
+
+
+class VacationForm(Form):
+    geometry = GeoJSONField(required=True, srid=4326, transform=5514)
+```
