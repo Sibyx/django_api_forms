@@ -384,15 +384,14 @@ class VacationForm(Form):
 
 ## GeoJSON Field
 
-
 This field contains [GEOSGeometry](https://docs.djangoproject.com/en/4.1/ref/contrib/gis/geos/#geosgeometry)
 django GEOS object. Translates [GeoJSON format](https://datatracker.ietf.org/doc/html/rfc7946.html) into
 [geodjango](https://docs.djangoproject.com/en/4.1/ref/contrib/gis/model-api/#spatial-field-types) fields.
 
 - Error message keys: `not_dict`, `not_geojson`, `not_int`, `transform_error`
 - Arguments:
-    - `srid`: spatial reference identifier (optional - default 4326)
-    - `transform`: transform to different spatial reference identifier (optional)
+  - `srid`: spatial reference identifier (optional - default 4326)
+  - `transform`: transform to different spatial reference identifier (optional)
 
 **GeoJSON example**
 ```json
