@@ -142,13 +142,12 @@ class BaseForm:
                 self.add_error((key, ), e)
             except (AttributeError, TypeError, ValueError):
                 self.add_error((key, ), ValidationError(_("Invalid value")))
-        try:
-            cleaned_data = self.clean()
-        except ValidationError as e:
-            self.add_error(('$body', ), e)
-        else:
-            if cleaned_data is not None:
-                self.cleaned_data = cleaned_data
+
+        if not self._errors:
+            try:
+                self.cleaned_data = self.clean()
+            except ValidationError as e:
+                self.add_error(('$body',), e)
 
     def clean(self):
         """

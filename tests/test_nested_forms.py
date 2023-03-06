@@ -56,11 +56,6 @@ class NestedFormsTests(TestCase):
                     "path": ["bands", 1, "albums", 0, "metadata", "error_at"]
                 },
                 {
-                    "code": "time-traveling",
-                    "message": "Sounds like a bullshit",
-                    "path": ["bands", 1, "albums", 0, "$body"]
-                },
-                {
                     "code": "invalid",
                     "message": "Enter a valid email address.",
                     "path": ["emails", 0]
