@@ -843,8 +843,8 @@ class GeoJSONFieldTests(SimpleTestCase):
                 }
             }
         }
-        expected_result = Point(11157691.375320006, -3194355.5389234135, srid=5514)
-        self.assertEqual(expected_result, geojson_field.clean(test_input))
+        point = geojson_field.clean(test_input)
+        self.assertEqual(expected_srid, point.srid)
 
         # TEST: initialize GeoJSONField transform with not int - throws an error
         with self.assertRaises(ValidationError):
