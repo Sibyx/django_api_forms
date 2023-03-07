@@ -222,19 +222,6 @@ poetry run flake8 .
 poetry run python runtests.py
 ```
 
-## Sponsorship
-
-<img height="200" src="docs/navicat.png" align="left" alt="Navicat Premium">
-
-[Navicat Premium](https://www.navicat.com/en/products/navicat-premium) is a super awesome database development tool for
-cool kids in the neighborhood that allows you to simultaneously connect to MySQL, MariaDB, MongoDB, SQL Server, Oracle,
-PostgreSQL, and SQLite databases from a single application. Compatible with cloud databases like Amazon RDS, Amazon
-Aurora, Amazon Redshift, Microsoft Azure, Oracle Cloud, Google Cloud and MongoDB Atlas. You can quickly and easily
-build, manage and maintain your databases.
-
-Especially, I have to recommend their database design tool. Many thanks [Navicat](https://www.navicat.com/en/) for
-supporting Open Source projects 🌈.
-
 ---
 Made with ❤️ and ☕️ by Jakub Dubec, [BACKBONE s.r.o.](https://www.backbone.sk/en/) &
 [contributors](https://github.com/Sibyx/django_api_forms/graphs/contributors).
