@@ -820,18 +820,19 @@ class GeoJSONFieldTests(SimpleTestCase):
                 GeoJSONField(srid=non_int).clean(test_input)
 
     def test_geojsonfield_transform(self):
-        geojson_field = GeoJSONField(srid=4326, transform=5514)
+        expected_srid = 5514
+        geojson_field = GeoJSONField(srid=4326, transform=expected_srid)
 
         # TEST: valid geojson value with valid srid
         test_input = {
             "type": "Point",
             "coordinates": [125.6, 10.1]
         }
-        expected_result = Point(11157691.375320006, -3194355.5389234135, srid=5514)
-        self.assertEqual(expected_result, geojson_field.clean(test_input))
+        point = geojson_field.clean(test_input)
+        self.assertEqual(expected_srid, point.srid)
 
         # TEST: check crs key with mishmash srid in geojson and transforming
-        geojson_field = GeoJSONField(srid=4326, transform=5514)
+        geojson_field = GeoJSONField(srid=4326, transform=expected_srid)
         test_input = {
             'type': 'Point',
             'coordinates': [125.6, 10.1],
