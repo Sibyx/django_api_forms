@@ -84,8 +84,8 @@ This process is much more simple than in classic Django form. It consists of:
     - calling `Form.add_error((field_name, ), error)` in case of failures in clean methods
     - if field is marked as dirty, normalized attribute is saved to `Form.clean_data` property
 2. Calling `Form.clean` method which returns final normalized values which will be presented in `Form.clean_data`
-(feel free to override it, by default does nothing, useful for conditional validation, you can still add errors u
-sing `Form.add_error()`)
+(feel free to override it, by default does nothing, useful for conditional validation, you can still add errors
+using `Form.add_error()`). `Form.clean` is only called when there are no errors from previous section.
 
 Normalized data are available in `Form.clean_data` property (keys suppose to correspond with values from `Form.dirty`).
 
@@ -284,5 +284,3 @@ class AlbumForm(Form):
 ```
 
 ## File uploads
-
-
