@@ -533,7 +533,6 @@ class FileFieldTests(SimpleTestCase):
     def setUp(self) -> None:
         with open(f"{settings.BASE_DIR}/data/kitten.txt") as f:
             self._payload = f.read().strip('\n')
-        pass
 
     def test_simple(self):
         file_field = FileField()

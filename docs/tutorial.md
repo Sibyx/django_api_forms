@@ -79,10 +79,10 @@ class BandForm(Form):
 This process is much more simple than in classic Django form. It consists of:
 
 1. Iterating over form attributes:
-    - calling `Field.clean(value)` method
-    - calling `Form.clean_<field_name>` method
-    - calling `Form.add_error((field_name, ), error)` in case of failures in clean methods
-    - if field is marked as dirty, normalized attribute is saved to `Form.clean_data` property
+   - calling `Field.clean(value)` method
+   - calling `Form.clean_<field_name>` method
+   - calling `Form.add_error((field_name, ), error)` in case of failures in clean methods
+   - if field is marked as dirty, normalized attribute is saved to `Form.clean_data` property
 2. Calling `Form.clean` method which returns final normalized values which will be presented in `Form.clean_data`
 (feel free to override it, by default does nothing, useful for conditional validation, you can still add errors u
 sing `Form.add_error()`)
@@ -284,5 +284,3 @@ class AlbumForm(Form):
 ```
 
 ## File uploads
-
-

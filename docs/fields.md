@@ -7,27 +7,27 @@ explain our intentions and describe their usage.
 To sum up:
 
 - You can use [Django Form Fields](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#module-django.forms.fields):
-    - [CharField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#charfield)
-    - [ChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#choicefield)
-    - [TypedChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedchoicefield)
-    - [DateField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datefield)
-    - [DateTimeField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datetimefield)
-    - [DecimalField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#decimalfield)
-    - [DurationField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#durationfield)
-    - [EmailField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#emailfield)
-    - [FilePathField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#filepathfield)
-    - [FloatField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#floatfield)
-    - [IntegerField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#integerfield)
-    - [GenericIPAddressField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#genericipaddressfield)
-    - [MultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#multiplechoicefield)
-    - [TypedMultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedmultiplechoicefield)
-    - [RegexField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#regexfield)
-    - [SlugField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#slugfield)
-    - [TimeField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#timefield)
-    - [URLField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#urlfield)
-    - [UUIDField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#uuidfield)
-    - [ModelChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelchoicefield)
-    - [ModelMultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelmultiplechoicefield)
+  - [CharField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#charfield)
+  - [ChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#choicefield)
+  - [TypedChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedchoicefield)
+  - [DateField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datefield)
+  - [DateTimeField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datetimefield)
+  - [DecimalField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#decimalfield)
+  - [DurationField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#durationfield)
+  - [EmailField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#emailfield)
+  - [FilePathField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#filepathfield)
+  - [FloatField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#floatfield)
+  - [IntegerField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#integerfield)
+  - [GenericIPAddressField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#genericipaddressfield)
+  - [MultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#multiplechoicefield)
+  - [TypedMultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedmultiplechoicefield)
+  - [RegexField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#regexfield)
+  - [SlugField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#slugfield)
+  - [TimeField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#timefield)
+  - [URLField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#urlfield)
+  - [UUIDField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#uuidfield)
+  - [ModelChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelchoicefield)
+  - [ModelMultipleChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelmultiplechoicefield)
 - You can use [Django Validators](https://docs.djangoproject.com/en/4.1/ref/validators/).
 
 Fields that are not in the list above were not been tested or been replaced with our customized implementation
@@ -61,10 +61,10 @@ check `FormFieldList`.
 - Normalizes to: A Python list
 - Error message keys: `not_field`, `not_list`, `min_length`, `max_length`
 - Required arguments:
-    - `field`: Instance of a form field representing children
+  - `field`: Instance of a form field representing children
 - Optional arguments:
-    - `min_length`: Minimum length of field size as integer
-    - `max_length`: Maximum length of field size as integer
+  - `min_length`: Minimum length of field size as integer
+  - `max_length`: Maximum length of field size as integer
 
 **JSON example**
 
@@ -100,7 +100,7 @@ Field used for embedded objects represented as another API form.
 
 - Normalizes to: A Python dictionary
 - Required arguments:
-    - `form`: Type of a nested form
+  - `form`: Type of a nested form
 
 **JSON example**
 
@@ -145,10 +145,10 @@ Field used for embedded objects represented as another API form.
 - Normalizes to: A Python list of dictionaries
 - Error message keys: `not_list`, `min_length`, `max_length`
 - Required arguments:
-    - `form`: Type of a nested form
+  - `form`: Type of a nested form
 - Optional arguments:
-    - `min_length`: Minimum length of field size as integer
-    - `max_length`: Maximum length of field size as integer
+  - `min_length`: Minimum length of field size as integer
+  - `max_length`: Maximum length of field size as integer
 
 **JSON example**
 
@@ -195,7 +195,7 @@ class FestivalForm(Form):
 - Normalizes to: A Python `Enum` object
 - Error message keys: `not_enum`, `invalid`
 - Required arguments:
-    - `enum`: Enum class
+  - `enum`: Enum class
 
 **JSON example**
 
@@ -232,9 +232,9 @@ Due to inverted key, value parameters in `__init__` method, `value_field` is for
 - Normalizes to: A Python dictionary
 - Error message keys: `not_dict`, `not_field`
 - Required arguments:
-    - `value_field`: Type of a nested form
+  - `value_field`: Type of a nested form
 - Optional arguments:
-    - `key_field`: Type of a nested form
+  - `key_field`: Type of a nested form
 
 **JSON example**
 
@@ -295,12 +295,12 @@ This field contains [BASE64](https://tools.ietf.org/html/rfc4648) encoded file.
 - Normalizes to: A Django [File](https://docs.djangoproject.com/en/4.1/ref/files/file/) object
 - Error message keys: `max_length`, `invalid_uri`, `invalid_mime`
 - Arguments:
-    - `max_length`: Maximum files size in bytes (optional)
-    - `mime`: Tuple of allowed mime types (optional - if present, value must be in form of
-      [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
+  - `max_length`: Maximum files size in bytes (optional)
+  - `mime`: Tuple of allowed mime types (optional - if present, value must be in form of
+    [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
 - Extra normalised attributes:
-    - `file_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
-      unable to detect - if payload is not in DATA URI format)
+  - `file_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
+    unable to detect - if payload is not in DATA URI format)
 
 **JSON example**
 
@@ -334,15 +334,15 @@ is called.
 - Normalizes to: A Django [File](https://docs.djangoproject.com/en/4.1/ref/files/file/) object
 - Error message keys: `max_length`, `invalid_uri`, `invalid_mime`, `invalid_image` (if Image.verify() failed)
 - Arguments:
-    - `max_length`: Maximum files size in bytes (optional)
-    - `mime`: Tuple of allowed mime types (optional, value must be in
-      [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
+  - `max_length`: Maximum files size in bytes (optional)
+  - `mime`: Tuple of allowed mime types (optional, value must be in
+    [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs))
 - Extra normalised attributes:
-    - `image_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
-      unable to detect - if payload is not in DATA URI format). Value is filled using Pillow
-      `Image.MIME.get(image.format)`)
-    - `image_field.clean(payload).image`: A Pillow
-      [Image](https://pillow.readthedocs.io/en/stable/reference/Image.html) object instance
+  - `image_field.clean(payload).content_type`: Mime type (`str` - e.g. `audio/mpeg`) of containing file (`None` if
+    unable to detect - if payload is not in DATA URI format). Value is filled using Pillow
+    `Image.MIME.get(image.format)`)
+  - `image_field.clean(payload).image`: A Pillow
+    [Image](https://pillow.readthedocs.io/en/stable/reference/Image.html) object instance
 
 **JSON example**
 

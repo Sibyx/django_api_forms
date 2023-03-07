@@ -208,7 +208,6 @@ If you want example with whole Django project, check out repository created by [
 he uses library with
 [ModelChoiceField](https://docs.djangoproject.com/en/4.1/ref/forms/fields/#django.forms.ModelChoiceField).
 
-
 ## Running Tests
 
 ```shell script

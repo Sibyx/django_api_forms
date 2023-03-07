@@ -5,12 +5,10 @@ from django.core.exceptions import ValidationError
 
 class ApiFormException(Exception):
     """Generic Django API Form exception"""
-    pass
 
 
 class UnsupportedMediaType(ApiFormException):
     """Unable to parse the request (based on the Content-Type)"""
-    pass
 
 
 class DetailValidationError(ValidationError):
