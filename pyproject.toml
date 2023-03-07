@@ -52,17 +52,17 @@ Documentation = "https://sibyx.github.io/django_api_forms/"
 Changelog = "https://github.com/Sibyx/django_api_forms/blob/master/CHANGELOG.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 Django = ">=2.0"
 Pillow = {version = ">=2.1", optional = true}
 msgpack = {version = "*", optional = true}
 python-dateutil = {version = "^2.8.2", optional = true}
 
 [tool.poetry.dev-dependencies]
-flake8 = "^4.0"
-mkdocs-material = "^8.5"
+flake8 = "^6.0"
+mkdocs-material = "^9"
 toml = "^0.10.2"
-coverage = {version = "^6.5", extras = ["toml"]}
+coverage = {version = "^7", extras = ["toml"]}
 
 [tool.poetry.extras]
 Pillow = ["Pillow"]
