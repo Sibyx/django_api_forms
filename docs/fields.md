@@ -387,6 +387,8 @@ class VacationForm(Form):
 This field contains [GEOSGeometry](https://docs.djangoproject.com/en/4.1/ref/contrib/gis/geos/#geosgeometry)
 django GEOS object. Translates [GeoJSON format](https://datatracker.ietf.org/doc/html/rfc7946.html) into
 [geodjango](https://docs.djangoproject.com/en/4.1/ref/contrib/gis/model-api/#spatial-field-types) fields.
+Depends on [gdal](https://pypi.org/project/GDAL/) because of spatial reference system (SRS) which is specified
+in this library.
 
 - Error message keys: `not_dict`, `not_geojson`, `not_int`, `transform_error`
 - Arguments:
