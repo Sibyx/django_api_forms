@@ -21,6 +21,8 @@ jobs:
         sudo apt install libgdal-dev -y
         python -m pip install --upgrade pip
         python -m pip install poetry setuptools
+        export CPLUS_INCLUDE_PATH=/usr/include/gdal
+        export C_INCLUDE_PATH=/usr/include/gdal
         poetry install --all-extras
     - name: Lint with flake8
       run: |
