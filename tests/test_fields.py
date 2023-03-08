@@ -849,3 +849,7 @@ class GeoJSONFieldTests(SimpleTestCase):
         # TEST: initialize GeoJSONField transform with not int - throws an error
         with self.assertRaises(ValidationError):
             GeoJSONField(transform=123.3).clean(test_input)
+
+        # TEST: initialize GeoJSONField transform with not int - throws an error
+        with self.assertRaises(ValidationError):
+            GeoJSONField(transform=123).clean(test_input)
