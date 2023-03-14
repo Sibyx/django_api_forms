@@ -47,13 +47,6 @@ class ValidationTests(TestCase):
                         "metadata",
                         "error_at"
                     ]
-                },
-                {
-                    "code": "time-traveling",
-                    "message": "Sounds like a bullshit",
-                    "path": [
-                        "$body"
-                    ]
                 }
             ]
         }
@@ -119,3 +112,72 @@ class ValidationTests(TestCase):
 
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data, expected)
+
+    def test_default_clean(self):
+        data = {
+            "title": "Unknown Pleasures",
+            "type": "vinyl",
+            "artist": {
+                "name": "Joy Division",
+                "genres": [
+                    "rock",
+                    "punk"
+                ],
+                "members": 4
+            },
+            "year": 1998,
+            "songs": [
+                {
+                    "title": "Disorder",
+                    "duration": "3:29"
+                },
+                {
+                    "title": "Day of the Lords",
+                    "duration": "4:48",
+                    "metadata": {
+                        "_section": {
+                            "type": "ID3v2",
+                            "offset": 0,
+                            "byteLength": 2048
+                        },
+                        "header": {
+                            "majorVersion": 3,
+                            "minorRevision": 0,
+                            "flagsOctet": 0,
+                            "unsynchronisationFlag": False,
+                            "extendedHeaderFlag": False,
+                            "experimentalIndicatorFlag": False,
+                            "size": 2038
+                        }
+                    }
+                }
+            ],
+            "metadata": {
+                "created_at": "2019-10-21T18:57:03+0100",
+                "updated_at": "2019-10-21T18:57:03+0100"
+            }
+        }
+
+        rf = RequestFactory()
+
+        expected = {
+            "errors": [
+                {
+                    "code": "time-traveling",
+                    "message": "Sounds like a bullshit",
+                    "path": [
+                        "$body"
+                    ]
+                }
+            ]
+        }
+
+        request = rf.post('/foo/bar', data=data, content_type='application/json')
+
+        form = AlbumForm.create_from_request(request)
+
+        self.assertFalse(form.is_valid())
+        error = {
+            'errors': [item.to_dict() for item in form._errors]
+        }
+        self.assertEqual(error, expected)

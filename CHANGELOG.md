@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.8 : 07.03.2023
+
+- **Changed**: Default clean method `Form.clean` is only called when there are no errors.
+
 ## 1.0.0-rc.7 : 24.11.2022
 
 CI/CD fixies and project settings. There was no application change.
