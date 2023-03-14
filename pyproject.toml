@@ -57,10 +57,11 @@ Django = ">=2.0"
 Pillow = {version = ">=2.1", optional = true}
 msgpack = {version = "*", optional = true}
 python-dateutil = {version = "^2.8.2", optional = true}
+gdal = {version = "^3.6.2", optional = true}
 
 [tool.poetry.dev-dependencies]
 flake8 = "^6.0"
-mkdocs-material = "^9"
+mkdocs-material = "^9.1"
 toml = "^0.10.2"
 coverage = {version = "^7", extras = ["toml"]}
 
@@ -68,6 +69,7 @@ coverage = {version = "^7", extras = ["toml"]}
 Pillow = ["Pillow"]
 msgpack = ["msgpack"]
 rrule = ["python-dateutil"]
+gdal = ["gdal"]
 
 [tool.coverage.run]
 omit = [

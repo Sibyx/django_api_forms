@@ -17,7 +17,7 @@ Feel free to open pull requests but please keep in mind this checklist:
 We use [poetry](https://python-poetry.org/) for dependency management. Please write your source code according to the
 [PEP8](https://www.python.org/dev/peps/pep-0008/) code-style. [flake8](https://github.com/pycqa/flake8) is used for
 code-style and code-quality checks. Please, be sure that your IDE is following settings according to `.editorconfig`
-file.
+file. Use `poetry install --all-extras` to install all dependencies for development.
 
 We use[Django-style tests](https://docs.djangoproject.com/en/3.1/topics/testing/overview/).
 

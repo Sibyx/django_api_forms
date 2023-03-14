@@ -11,12 +11,13 @@ from unittest import mock
 from uuid import UUID
 
 from django.conf import settings
+from django.contrib.gis.geos import Point
 from django.core.files import File
 from django.core.validators import EMPTY_VALUES
 from django.forms import ValidationError, fields
 from django.test import SimpleTestCase
 from django_api_forms import AnyField, BooleanField, DictionaryField, EnumField, FieldList, Form, FormField, \
-    FormFieldList, FileField, ImageField, RRuleField
+    FormFieldList, FileField, ImageField, RRuleField, GeoJSONField
 from django_api_forms.exceptions import ApiFormException
 
 
@@ -532,7 +533,6 @@ class FileFieldTests(SimpleTestCase):
     def setUp(self) -> None:
         with open(f"{settings.BASE_DIR}/data/kitten.txt") as f:
             self._payload = f.read().strip('\n')
-        pass
 
     def test_simple(self):
         file_field = FileField()
@@ -542,14 +542,14 @@ class FileFieldTests(SimpleTestCase):
         self.assertEqual(django_file.size, 12412)
 
     def test_mime(self):
-        file_field = FileField(mime=('image/jpeg', ))
+        file_field = FileField(mime=('image/jpeg',))
         django_file = file_field.clean(self._payload)
 
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 12412)
 
     def test_max_length(self):
-        file_field = FileField(mime=('image/jpeg', ), max_length=1000)
+        file_field = FileField(mime=('image/jpeg',), max_length=1000)
 
         with self.assertRaises(ValidationError):
             log_input(self._payload)
@@ -598,8 +598,10 @@ class FileFieldTests(SimpleTestCase):
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 9)
 
-        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHE"
-                                       "lEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
+        django_file = file_field.clean(
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHE"
+            "lEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+        )
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 85)
 
@@ -670,8 +672,10 @@ class ImageFieldTests(SimpleTestCase):
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 9)
 
-        django_file = file_field.clean("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHE"
-                                       "lEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==")
+        django_file = file_field.clean(
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHE"
+            "lEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+        )
         self.assertTrue(isinstance(django_file, File))
         self.assertEqual(django_file.size, 85)
 
@@ -714,3 +718,138 @@ class RRuleFieldTests(SimpleTestCase):
         invalid_rrule_str = 'START:20120201T023000Z\nRRULE:FREQ=MONTHLY;COUNT=5'
         with self.assertRaises(ValidationError):
             rrule_field.clean(invalid_rrule_str)
+
+
+class GeoJSONFieldTests(SimpleTestCase):
+    def test_geojsonfield_required(self):
+        geojson_field = GeoJSONField()
+
+        # TEST: valid value
+        test_input = {
+            "type": "Point",
+            "coordinates": [125.6, 10.1]
+        }
+        expected_result = Point(125.6, 10.1, srid=4326)
+        self.assertEqual(expected_result, geojson_field.clean(test_input))
+
+        # TEST: invalid value (type of geojson values DO NOT match GeoJSONField)
+        test_input = {"geojson": "blah"}
+        expected_error = GeoJSONField.default_error_messages['not_geojson']
+        with self.assertRaisesMessage(ValidationError, str(expected_error)):
+            log_input(test_input)
+            geojson_field.clean(test_input)
+
+        # TEST: required=True - all empty non-dict values throw an error
+        for empty_val in [None, '', [], ()]:
+            expected_error = GeoJSONField.default_error_messages['not_dict']
+            expected_error = expected_error.format(type(empty_val))
+            with self.assertRaisesMessage(ValidationError, expected_error):
+                log_input(empty_val)
+                geojson_field.clean(empty_val)
+
+        # TEST: required=True - {} throws error
+        expected_error = GeoJSONField.default_error_messages['not_geojson']
+        with self.assertRaisesMessage(ValidationError, str(expected_error)):
+            log_input(test_input)
+            geojson_field.clean({})
+
+    def test_geojsonfield_required_false(self):
+        geojson_field = GeoJSONField(required=False)
+
+        # TEST: valid geojson value
+        test_input = {
+            "type": "Point",
+            "coordinates": [125.6, 10.1]
+        }
+        expected_result = Point(125.6, 10.1, srid=4326)
+        self.assertEqual(expected_result, geojson_field.clean(test_input))
+
+        # TEST: required=False - {} not allowed
+        expected_error = GeoJSONField.default_error_messages['not_geojson']
+        with self.assertRaisesMessage(ValidationError, str(expected_error)):
+            log_input(test_input)
+            geojson_field.clean({})
+
+        # TEST: empty values throw an error
+        for empty_val in [None, '', [], ()]:
+            expected_error = GeoJSONField.default_error_messages['not_dict']
+            expected_error = expected_error.format(type(empty_val))
+            with self.assertRaisesMessage(ValidationError, expected_error):
+                log_input(empty_val)
+                geojson_field.clean(empty_val)
+
+    def test_geojsonfield_srid(self):
+        geojson_field = GeoJSONField(srid=4326)
+
+        # TEST: valid geojson value with valid srid
+        test_input = {
+            "type": "Point",
+            "coordinates": [125.6, 10.1]
+        }
+        expected_result = Point(125.6, 10.1, srid=4326)
+        self.assertEqual(expected_result, geojson_field.clean(test_input))
+
+        # TEST: check crs key with mishmash srid in geojson
+        geojson_field = GeoJSONField(srid=4326)
+        test_input = {
+            'type': 'Point',
+            'coordinates': [125.6, 10.1],
+            'crs': {
+                'type': 'name',
+                'properties': {
+                    'name': 'ESRI::5514'
+                }
+            }
+        }
+        expected_result = Point(125.6, 10.1, srid=4326)
+        self.assertEqual(expected_result, geojson_field.clean(test_input))
+
+        # TEST: random srid
+        geojson_field = GeoJSONField(srid=9999)
+        test_input = {
+            "type": "Point",
+            "coordinates": [125.6, 10.1]
+        }
+        expected_result = Point(125.6, 10.1, srid=9999)
+        self.assertEqual(expected_result, geojson_field.clean(test_input))
+
+        # TEST: initialize GeoJSONField srid with not int  - throws an error
+        for non_int in [{}, [], 'blah', 123.3]:
+            with self.assertRaises(ValidationError):
+                log_input(non_int)
+                GeoJSONField(srid=non_int).clean(test_input)
+
+    def test_geojsonfield_transform(self):
+        expected_srid = 5514
+        geojson_field = GeoJSONField(srid=4326, transform=expected_srid)
+
+        # TEST: valid geojson value with valid srid
+        test_input = {
+            "type": "Point",
+            "coordinates": [125.6, 10.1]
+        }
+        point = geojson_field.clean(test_input)
+        self.assertEqual(expected_srid, point.srid)
+
+        # TEST: check crs key with mishmash srid in geojson and transforming
+        geojson_field = GeoJSONField(srid=4326, transform=expected_srid)
+        test_input = {
+            'type': 'Point',
+            'coordinates': [125.6, 10.1],
+            'crs': {
+                'type': 'name',
+                'properties': {
+                    'name': 'ESRI::5514'
+                }
+            }
+        }
+        point = geojson_field.clean(test_input)
+        self.assertEqual(expected_srid, point.srid)
+
+        # TEST: initialize GeoJSONField transform with not int - throws an error
+        with self.assertRaises(ValidationError):
+            GeoJSONField(transform=123.3).clean(test_input)
+
+        # TEST: initialize GeoJSONField transform with not int - throws an error
+        with self.assertRaises(ValidationError):
+            GeoJSONField(transform=123).clean(test_input)

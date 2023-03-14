@@ -323,3 +323,56 @@ class RRuleField(Field):
             )
 
         return result
+
+
+class GeoJSONField(Field):
+    default_error_messages = {
+        'not_dict': _('Invalid value passed to GeoJSONField (got {}, expected dict)'),
+        'not_geojson': _('Invalid value passed to GeoJSONField'),
+        'not_int': _('Value must be integer'),
+        'transform_error': _('Error at transform')
+    }
+
+    def __init__(self, srid=4326, transform=None, **kwargs):
+        super().__init__(**kwargs)
+
+        self._srid = srid
+        self._transform = transform
+
+    def to_python(self, value):
+        if not self._srid or not isinstance(self._srid, int):
+            params = {'srid': self._srid}
+            raise ValidationError(self.error_messages['not_int'], code='not_int', params=params)
+
+        if self._transform and not isinstance(self._transform, int):
+            params = {'transform': self._transform}
+            raise ValidationError(self.error_messages['not_int'], code='not_int', params=params)
+
+        if not isinstance(value, dict):
+            msg = self.error_messages['not_dict'].format(type(value))
+            raise ValidationError(msg)
+
+        if value == {}:
+            raise ValidationError(self.error_messages['not_geojson'], code='not_geojson')
+
+        from django.contrib.gis.gdal import GDALException
+        from django.contrib.gis.geos import GEOSGeometry
+        try:
+            if 'crs' not in value.keys():
+                value['crs'] = {
+                    "type": "name",
+                    "properties": {
+                        "name": f"ESRI::{self._srid}"
+                    }
+                }
+            result = GEOSGeometry(f'{value}', srid=self._srid)
+        except GDALException:
+            raise ValidationError(self.error_messages['not_geojson'], code='not_geojson')
+
+        if self._transform:
+            try:
+                result.transform(self._transform)
+            except GDALException:
+                raise ValidationError(self.error_messages['transform_error'], code='transform_error')
+
+        return result
