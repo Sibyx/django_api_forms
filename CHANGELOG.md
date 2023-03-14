@@ -1,7 +1,8 @@
 # Changelog
 
-## 1.0.0-rc.8 : 07.03.2023
+## 1.0.0-rc.8 : 14.03.2023
 
+- **Added**: `GeoJSON` field introduced
 - **Changed**: Default clean method `Form.clean` is only called when there are no errors.
 
 ## 1.0.0-rc.7 : 24.11.2022

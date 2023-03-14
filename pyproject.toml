@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-api-forms"
-version = "1.0.0-rc.7"
+version = "1.0.0-rc.8"
 description = "Declarative Django request validation for RESTful APIs"
 authors = [
     "Jakub Dubec <jakub.dubec@gmail.com>",
@@ -21,11 +21,11 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Framework :: Django :: 2.0",
     "Framework :: Django :: 2.1",
