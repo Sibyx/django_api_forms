@@ -17,7 +17,7 @@ a huge boilerplate. Also, the whole HTML thing was pretty useless in my RESTful 
 I wanted to:
 
 - define my requests as object (`Form`),
-- pass the request to my defined object (`form = Form.create_from_request(request)`),
+- pass the request with optional arguments from request GET params to my defined object (`form = Form.create_from_request(request, param=request.GET.get('param))`),
 - validate my request `form.is_valid()`,
 - extract data `form.clean_data` property.
 
@@ -178,6 +178,10 @@ class AlbumForm(Form):
     def clean_year(self):
         if self.cleaned_data['year'] == 1992:
             raise ValidationError("Year 1992 is forbidden!", 'forbidden-value')
+        if 'param' not in self.extras:
+            self.add_error(
+                ('param', ), ValidationError("You can use request GET params in form validation!", code='param-where')
+            )
         return self.cleaned_data['year']
 
     def clean(self):
@@ -185,6 +189,8 @@ class AlbumForm(Form):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         if not self._request.user.is_authenticated():
             raise ValidationError("You can use request in form validation!")
+        if 'param' not in self.extras:
+            raise ValidationError("You can use request GET params in form validation!")
         return self.cleaned_data
 
 
@@ -193,7 +199,7 @@ class AlbumForm(Form):
 Django view example
 """
 def create_album(request):
-    form = AlbumForm.create_from_request(request)
+    form = AlbumForm.create_from_request(request, param=request.GET.get('param'))
     if not form.is_valid():
         # Process your validation error
         print(form.errors)

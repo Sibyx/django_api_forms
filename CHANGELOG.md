@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.9 : 22.03.2023
+
+- **Added**: Introduced optional arguments from request GET params when creating `From` instance
+
 ## 1.0.0-rc.8 : 14.03.2023
 
 - **Added**: `GeoJSON` field introduced

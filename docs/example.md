@@ -111,6 +111,9 @@ class AlbumForm(Form):
     metadata = DictionaryField(value_field=fields.DateTimeField())
 
     def clean_year(self):
+        if 'param' not in self.extras:
+            raise ValidationError("You can use request GET params in form validation!")
+
         if self.cleaned_data['year'] == 1992:
             raise ValidationError("Year 1992 is forbidden!", 'forbidden-value')
         return self.cleaned_data['year']
@@ -118,6 +121,10 @@ class AlbumForm(Form):
     def clean(self):
         if (self.cleaned_data['year'] == 1998) and (self.cleaned_data['artist']['name'] == "Nirvana"):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
+        if 'param' not in self.extras:
+            self.add_error(
+                ('param', ), ValidationError("You can use request GET params in form validation!", code='param-where')
+            )
         return self.cleaned_data
 
 
@@ -125,7 +132,7 @@ class AlbumForm(Form):
 Django view example
 """
 def create_album(request):
-    form = AlbumForm.create_from_request(request)
+    form = AlbumForm.create_from_request(request, param=request.GET.get('param'))
     if not form.is_valid():
         # Process your validation error
         print(form.errors)

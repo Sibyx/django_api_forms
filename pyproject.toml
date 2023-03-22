@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-api-forms"
-version = "1.0.0-rc.8"
+version = "1.0.0-rc.9"
 description = "Declarative Django request validation for RESTful APIs"
 authors = [
     "Jakub Dubec <jakub.dubec@gmail.com>",
@@ -57,7 +57,7 @@ Django = ">=2.0"
 Pillow = {version = ">=2.1", optional = true}
 msgpack = {version = "*", optional = true}
 python-dateutil = {version = "^2.8.2", optional = true}
-gdal = {version = "^3.6.2", optional = true}
+gdal = {version = "^3.6.3", optional = true}
 
 [tool.poetry.dev-dependencies]
 flake8 = "^6.0"
