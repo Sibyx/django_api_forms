@@ -254,6 +254,7 @@ class FormTests(TestCase):
 
         # TEST: extras in clean method
         valid_test_extras = {'param1': 'param3', 'param2': 'param4'}
+
         class FunnyForm(Form):
             title = fields.CharField(required=True)
             code = fields.CharField(required=True)
