@@ -19,7 +19,7 @@ models)
 You can create form objects using class method `Form.create_from_request(request: Request) -> Form` which creates form
 instance from Django requests using appropriate parser from
 [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) HTTP header. You can also pass
-GET parameters from request into `Form.create_from_request(request, param=request.GET.get('param')) -> Form`
+any extra argument into `Form.create_from_request(request, param1=request.GET.get('param'), param2=param2) -> Form`
 
 ```python
 from tests.testapp.forms import AlbumForm
@@ -89,8 +89,8 @@ This process is much more simple than in classic Django form. It consists of:
 using `Form.add_error()`). `Form.clean` is only called when there are no errors from previous section.
 
 Normalized data are available in `Form.clean_data` property (keys suppose to correspond with values from `Form.dirty`).
-Data passed from request GET params are available in `Form.extras` property (keys suppose to correspond with values
-from `AlbumForm.create_from_request(request=request, param=request.GET.get('param'))`)
+Extra optional arguments are available in `Form.extras` property (keys suppose to correspond with values
+from `Form` initialization)
 
 Validation errors are presented for each field in `Form.errors: List[ValidationError]` property after
 `Form.is_valid()` method is called.
@@ -115,7 +115,7 @@ class BookForm(Form):
             self.add_error(('title', ), ValidationError("Too cool!", code='too-cool'))
 
         if 'param' not in self.extras:
-            raise ValidationError("You can use request GET params in form validation!")
+            raise ValidationError("You can use extra optional arguments in form validation!")
         return self.cleaned_data['title'].upper()
 
     def clean(self):
@@ -125,7 +125,8 @@ class BookForm(Form):
 
         if 'param' not in self.extras:
             self.add_error(
-                ('param', ), ValidationError("You can use request GET params in form validation!", code='param-where')
+                ('param', ),
+                ValidationError("You can use extra optional arguments in form validation!", code='param-where')
             )
         # The last chance to do some touchy touchy with the self.clean_data
 

@@ -123,7 +123,8 @@ class AlbumForm(Form):
             raise ValidationError("Sounds like a bullshit", code='time-traveling')
         if 'param' not in self.extras:
             self.add_error(
-                ('param', ), ValidationError("You can use request GET params in form validation!", code='param-where')
+                ('param', ),
+                ValidationError("You can use extra optional arguments in form validation!", code='param-where')
             )
         return self.cleaned_data
 

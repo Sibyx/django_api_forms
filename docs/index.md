@@ -14,8 +14,8 @@ a huge boilerplate. Also, the whole HTML thing was pretty useless in my RESTful 
 I wanted to:
 
 - define my requests as object (`Form`),
-- pass the request to my defined object (`form = Form.create_from_request(request, param=request.GET.get('param'))`),
-  - you can also pass request GET parameters as optional arguments
+- pass the request to my defined object (`form = Form.create_from_request(request, param=param))`),
+  - you can also pass any extra optional arguments
 - validate my request `form.is_valid()`,
 - extract data `form.clean_data` property.
 

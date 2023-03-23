@@ -253,7 +253,7 @@ class FormTests(TestCase):
         self.assertEqual(form.extras, valid_test_extras)
 
         # TEST: extras in clean method
-        valid_test_extras = {'param1': 'param3', 'param2': 'param4'}
+        valid_test_extras = {'param1': 'param3', 'param2': 'param4', 'param3': 'test'}
 
         class FunnyForm(Form):
             title = fields.CharField(required=True)
@@ -299,7 +299,7 @@ class FormTests(TestCase):
             content_type='application/json'
         )
         form = FunnyForm.create_from_request(
-            request, param1=request.GET.get('param1'), param2=request.GET.get('param2')
+            request, param1=request.GET.get('param1'), param2=request.GET.get('param2'), param3='test'
         )
         self.assertTrue(form.is_valid())
         self.assertTrue(len(form.cleaned_data.keys()) == 3)
