@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-rc.9 : 22.03.2023
+## 1.0.0-rc.9 : 24.03.2023
 
 - **Added**: Introduced extra optional arguments when creating `From` instance
 
