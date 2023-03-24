@@ -13,7 +13,7 @@ from .utils import resolve_from_path
 
 
 class BaseForm:
-    def __init__(self, data=None, request=None, settings: Settings = None):
+    def __init__(self, data=None, request=None, settings: Settings = None, **kwargs):
         if data is None:
             self._data = {}
         else:
@@ -24,6 +24,7 @@ class BaseForm:
         self.cleaned_data = None
         self._request = request
         self.settings = settings or Settings()
+        self.extras = kwargs
 
         if isinstance(self.Meta, type):
             if hasattr(self.Meta, 'field_type_strategy'):
@@ -57,7 +58,7 @@ class BaseForm:
             yield self[name]
 
     @classmethod
-    def create_from_request(cls, request):
+    def create_from_request(cls, request, **kwargs):
         """
         :rtype: BaseForm
         """
@@ -80,7 +81,7 @@ class BaseForm:
         parser = resolve_from_path(settings.PARSERS[content_type])
         data = parser(request.body)
 
-        return cls(data, request, settings)
+        return cls(data, request, settings, **kwargs)
 
     @property
     def dirty(self) -> List:

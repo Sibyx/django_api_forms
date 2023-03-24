@@ -2,6 +2,7 @@ import json
 from typing import Optional
 
 import msgpack
+from django.core.exceptions import ValidationError
 from django.forms import fields
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -235,3 +236,72 @@ class FormTests(TestCase):
 
         self.assertTrue(form.is_valid())
         form.populate(my_object)
+
+    def test_create_from_request_kwargs(self):
+        # TEST: Form.create_from_request valid kwargs from request GET parameters
+        request_factory = RequestFactory()
+        valid_test_data = {'message': ['turned', 'into', 'json']}
+        valid_test_extras = {'param1': 'param1', 'param2': 'param2'}
+        request = request_factory.post(
+            '/test/?param1=param1&param2=param2',
+            data=valid_test_data,
+            content_type='application/json'
+        )
+
+        form = Form.create_from_request(request, param1=request.GET.get('param1'), param2=request.GET.get('param2'))
+        self.assertEqual(form._data, valid_test_data)
+        self.assertEqual(form.extras, valid_test_extras)
+
+        # TEST: extras in clean method
+        valid_test_extras = {'param1': 'param3', 'param2': 'param4', 'param3': 'test'}
+
+        class FunnyForm(Form):
+            title = fields.CharField(required=True)
+            code = fields.CharField(required=True)
+            url = fields.CharField(required=False)
+            description = fields.CharField(required=False)
+
+            @classmethod
+            def _normalize_url(cls, url: str) -> Optional[str]:
+                if not url:
+                    return None
+                if url.startswith('http://'):
+                    url = url.replace('http://', '')
+
+                if not url.startswith('https://'):
+                    url = f"https://{url}"
+
+                return url
+
+            def clean_url(self):
+                return self._normalize_url(self.cleaned_data['url'])
+
+            def clean_title(self):
+                if 'param1' in self.extras and 'param2' in self.extras:
+                    self.extras['param1'] = 'param3'
+                    return self.cleaned_data['title']
+
+            def clean(self):
+                if 'param1' in self.extras and 'param2' in self.extras:
+                    self.extras['param2'] = 'param4'
+                    return self.cleaned_data
+                else:
+                    raise ValidationError("Missing params!", code='missing-params')
+
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test?param1=param1&param2=param2',
+            data={
+                'title': "The Question",
+                'code': 'the-question',
+                'url': ''
+            },
+            content_type='application/json'
+        )
+        form = FunnyForm.create_from_request(
+            request, param1=request.GET.get('param1'), param2=request.GET.get('param2'), param3='test'
+        )
+        self.assertTrue(form.is_valid())
+        self.assertTrue(len(form.cleaned_data.keys()) == 3)
+        self.assertIsNone(form.cleaned_data['url'])
+        self.assertEqual(form.extras, valid_test_extras)
