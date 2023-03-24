@@ -1,0 +1,921 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Declarative Django request validation for APIs">
+      
+      
+        <meta name="author" content="Jakub Dubec">
+      
+      
+        <link rel="canonical" href="https://sibyx.github.io/django_api_forms/tutorial/">
+      
+      
+        <link rel="prev" href="../install/">
+      
+      
+        <link rel="next" href="../fields/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>Tutorial - Django API Forms</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.jakubdubec.me/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '4']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tutorial" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Django API Forms" class="md-header__button md-logo" aria-label="Django API Forms" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Django API Forms
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Sibyx/django_api_forms" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sibyx/django_api_forms
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Django API Forms" class="md-nav__button md-logo" aria-label="Django API Forms" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Django API Forms
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Sibyx/django_api_forms" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sibyx/django_api_forms
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Tutorial
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Tutorial
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#construction" class="md-nav__link">
+    Construction
+  </a>
+  
+    <nav class="md-nav" aria-label="Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapping" class="md-nav__link">
+    Mapping
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-and-normalisation" class="md-nav__link">
+    Validation and normalisation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nesting" class="md-nav__link">
+    Nesting
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-relationships" class="md-nav__link">
+    Database relationships
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#populate-objects" class="md-nav__link">
+    Populate objects
+  </a>
+  
+    <nav class="md-nav" aria-label="Populate objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#population-strategies" class="md-nav__link">
+    Population strategies
+  </a>
+  
+    <nav class="md-nav" aria-label="Population strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basestrategy" class="md-nav__link">
+    BaseStrategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignorestrategy" class="md-nav__link">
+    IgnoreStrategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modelchoicefield" class="md-nav__link">
+    ModelChoiceField
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customization" class="md-nav__link">
+    Customization
+  </a>
+  
+    <nav class="md-nav" aria-label="Customization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-custom-strategy" class="md-nav__link">
+    Creating custom strategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#override-strategy" class="md-nav__link">
+    Override strategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-populate_-method" class="md-nav__link">
+    Using populate_ method
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-uploads" class="md-nav__link">
+    File uploads
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fields/" class="md-nav__link">
+        Fields
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../example/" class="md-nav__link">
+        Example
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#construction" class="md-nav__link">
+    Construction
+  </a>
+  
+    <nav class="md-nav" aria-label="Construction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mapping" class="md-nav__link">
+    Mapping
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-and-normalisation" class="md-nav__link">
+    Validation and normalisation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nesting" class="md-nav__link">
+    Nesting
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-relationships" class="md-nav__link">
+    Database relationships
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#populate-objects" class="md-nav__link">
+    Populate objects
+  </a>
+  
+    <nav class="md-nav" aria-label="Populate objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#population-strategies" class="md-nav__link">
+    Population strategies
+  </a>
+  
+    <nav class="md-nav" aria-label="Population strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basestrategy" class="md-nav__link">
+    BaseStrategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignorestrategy" class="md-nav__link">
+    IgnoreStrategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modelchoicefield" class="md-nav__link">
+    ModelChoiceField
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customization" class="md-nav__link">
+    Customization
+  </a>
+  
+    <nav class="md-nav" aria-label="Customization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-custom-strategy" class="md-nav__link">
+    Creating custom strategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#override-strategy" class="md-nav__link">
+    Override strategy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-populate_-method" class="md-nav__link">
+    Using populate_ method
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-uploads" class="md-nav__link">
+    File uploads
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="tutorial">Tutorial<a class="headerlink" href="#tutorial" title="Permanent link">&para;</a></h1>
+<p>This library helps you to handle basic RESTful API use-cases with Django Forms fashion. Library kinda replaces
+<code>django.forms.Form</code> with <code>django_api_forms.Form</code> and introduces few extra fields (boolean handling, BASE64
+images/files, nesting).</p>
+<p><code>django_api_forms.Form</code> defines the format of the request and help you with:</p>
+<ul>
+<li>payload parsing (according to the <code>Content-Type</code> HTTP header)</li>
+<li>data validation and normalisation (using <a href="https://docs.djangoproject.com/en/4.1/ref/validators/">Django validators</a>
+or custom <code>clean_</code> method)</li>
+<li>BASE64 file/image upload</li>
+<li>construction of the basic validation response</li>
+<li>filling objects attributes (if possible, see exceptions) using <code>setattr</code> function (super handy for Django database
+models)</li>
+</ul>
+<h2 id="construction">Construction<a class="headerlink" href="#construction" title="Permanent link">&para;</a></h2>
+<p>You can create form objects using class method <code>Form.create_from_request(request: Request) -&gt; Form</code> which creates form
+instance from Django requests using appropriate parser from
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type">Content-Type</a> HTTP header. You can also pass
+any extra argument into <code>Form.create_from_request(request, param1=request.GET.get('param'), param2=param2) -&gt; Form</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">tests.testapp.forms</span> <span class="kn">import</span> <span class="n">AlbumForm</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">form</span> <span class="o">=</span> <span class="n">AlbumForm</span><span class="o">.</span><span class="n">create_from_request</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;param&#39;</span><span class="p">))</span>
+</code></pre></div>
+<p>Library by default keeps configuration for handling:</p>
+<ul>
+<li>JSON (using <code>jsong.loads</code>),</li>
+<li><a href="https://msgpack.org/">msgpack</a> (requires <a href="https://pypi.org/project/msgpack/">msgpack</a> package).</li>
+</ul>
+<p>You can extend or override that behavior by setting the <code>DJANGO_API_FORMS_PARSERS</code> variable in your <code>settings.py</code>.
+Default settings for such variables are listed in the
+<a href="https://sibyx.github.io/django_api_forms/example/#settings">Example documentation page</a>.</p>
+<p>During construction <code>Form.dirty: List[str]</code> property is populated with property keys presented in the obtained payload
+(dirty sluts!!).</p>
+<h3 id="mapping">Mapping<a class="headerlink" href="#mapping" title="Permanent link">&para;</a></h3>
+<p>You can use <code>Meta</code> class in specific <code>Form</code> class with optional dictionary type attribute <code>mapping = {}</code> which allows
+you to map JSON attributes to <code>Form</code> attributes:</p>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Queen&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;formed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1970&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">&quot;has_award&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">BooleanField</span><span class="p">,</span> <span class="n">Form</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">class</span> <span class="nc">BandForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="s1">&#39;_name&#39;</span><span class="p">:</span> <span class="s1">&#39;name&#39;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="p">}</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">formed</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">has_award</span> <span class="o">=</span> <span class="n">BooleanField</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="validation-and-normalisation">Validation and normalisation<a class="headerlink" href="#validation-and-normalisation" title="Permanent link">&para;</a></h2>
+<p>This process is much more simple than in classic Django form. It consists of:</p>
+<ol>
+<li>Iterating over form attributes:</li>
+<li>calling <code>Field.clean(value)</code> method</li>
+<li>calling <code>Form.clean_&lt;field_name&gt;</code> method</li>
+<li>calling <code>Form.add_error((field_name, ), error)</code> in case of failures in clean methods</li>
+<li>if field is marked as dirty, normalized attribute is saved to <code>Form.clean_data</code> property</li>
+<li>Calling <code>Form.clean</code> method which returns final normalized values which will be presented in <code>Form.clean_data</code>
+(feel free to override it, by default does nothing, useful for conditional validation, you can still add errors
+using <code>Form.add_error()</code>). <code>Form.clean</code> is only called when there are no errors from previous section.</li>
+</ol>
+<p>Normalized data are available in <code>Form.clean_data</code> property (keys suppose to correspond with values from <code>Form.dirty</code>).
+Extra optional arguments are available in <code>Form.extras</code> property (keys suppose to correspond with values
+from <code>Form</code> initialization)</p>
+<p>Validation errors are presented for each field in <code>Form.errors: List[ValidationError]</code> property after
+<code>Form.is_valid()</code> method is called.</p>
+<p>As was mentioned above, you can extend property validation or normalisation by creating form method like
+<code>clean_&lt;property_name&gt;</code>. You can add additional
+<a href="https://docs.djangoproject.com/en/4.1/ref/forms/validation/#raising-validationerror">ValidationError</a>
+objects using <code>Form.add_error(field: Tuple, error: ValidationError)</code> method. Result is final normalised
+value of the attribute.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">class</span> <span class="nc">BookForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">title</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">year</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="k">def</span> <span class="nf">clean_title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;The Hitchhiker&#39;s Guide to the Galaxy&quot;</span><span class="p">:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">add_error</span><span class="p">((</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="p">),</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Too cool!&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s1">&#39;too-cool&#39;</span><span class="p">))</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="k">if</span> <span class="s1">&#39;param&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extras</span><span class="p">:</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;You can use extra optional arguments in form validation!&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;The Hitchhiker&#39;s Guide to the Galaxy&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1979</span><span class="p">:</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>            <span class="c1"># Non field validation errors are present under key `$body` in Form.errors property</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Is it you Doctor?&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s1">&#39;time-travelling&#39;</span><span class="p">)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="k">if</span> <span class="s1">&#39;param&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">extras</span><span class="p">:</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">add_error</span><span class="p">(</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>                <span class="p">(</span><span class="s1">&#39;param&#39;</span><span class="p">,</span> <span class="p">),</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>                <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;You can use extra optional arguments in form validation!&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s1">&#39;param-where&#39;</span><span class="p">)</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>            <span class="p">)</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>        <span class="c1"># The last chance to do some touchy touchy with the self.clean_data</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span>
+</code></pre></div>
+<h2 id="nesting">Nesting<a class="headerlink" href="#nesting" title="Permanent link">&para;</a></h2>
+<h2 id="database-relationships">Database relationships<a class="headerlink" href="#database-relationships" title="Permanent link">&para;</a></h2>
+<h2 id="populate-objects">Populate objects<a class="headerlink" href="#populate-objects" title="Permanent link">&para;</a></h2>
+<p><strong>IMPORTANT</strong>: Form fields <code>FormField</code>, <code>FormFieldList</code>, <code>FileField</code> and <code>ImageField</code> doesn't support this feature.
+You have to define <code>populate_</code> method, if you want these fields populated.</p>
+<p>Form object method <code>MyForm.populate(obj: Any, exclude: List[str] = None)</code> which fills input <code>obj</code> using <code>setattr</code>
+according to the form fields. Only data present in <code>clean_data</code> property (data from request) will be populated. You
+can use it like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">tests.testapp.forms</span> <span class="kn">import</span> <span class="n">AlbumForm</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span> <span class="nn">tests.testapp.models</span> <span class="kn">import</span> <span class="n">Album</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">def</span> <span class="nf">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">form</span> <span class="o">=</span> <span class="n">AlbumForm</span><span class="o">.</span><span class="n">create_from_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="c1"># Raise validation error</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="k">pass</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">album</span> <span class="o">=</span> <span class="n">Album</span><span class="p">()</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">form</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">album</span><span class="p">)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">album</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="population-strategies">Population strategies<a class="headerlink" href="#population-strategies" title="Permanent link">&para;</a></h3>
+<p>Library provides ability to change population strategy for each field using <code>DJANGO_API_FORMS_POPULATION_STRATEGIES</code>
+setting, or you can access settings directly <code>form.settings.POPULATION_STRATEGIES</code>. If there is no population strategy
+provided for field type, the <code>DJANGO_API_FORMS_DEFAULT_POPULATION_STRATEGY</code> is used. Default values are listed bellow:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">DJANGO_API_FORMS_POPULATION_STRATEGIES</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s1">&#39;django_api_forms.fields.FormFieldList&#39;</span><span class="p">:</span> <span class="s1">&#39;django_api_forms.population_strategies.IgnoreStrategy&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s1">&#39;django_api_forms.fields.FileField&#39;</span><span class="p">:</span> <span class="s1">&#39;django_api_forms.population_strategies.IgnoreStrategy&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s1">&#39;django_api_forms.fields.ImageField&#39;</span><span class="p">:</span> <span class="s1">&#39;django_api_forms.population_strategies.IgnoreStrategy&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s1">&#39;django_api_forms.fields.FormField&#39;</span><span class="p">:</span> <span class="s1">&#39;django_api_forms.population_strategies.IgnoreStrategy&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s1">&#39;django.forms.models.ModelMultipleChoiceField&#39;</span><span class="p">:</span> <span class="s1">&#39;django_api_forms.population_strategies.IgnoreStrategy&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="s1">&#39;django.forms.models.ModelChoiceField&#39;</span><span class="p">:</span> <span class="s1">&#39;django_api_forms.population_strategies.ModelChoiceFieldStrategy&#39;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">}</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">DJANGO_API_FORMS_DEFAULT_POPULATION_STRATEGY</span> <span class="o">=</span> <span class="s1">&#39;django_api_forms.population_strategies.BaseStrategy&#39;</span>
+</code></pre></div>
+<h4 id="basestrategy">BaseStrategy<a class="headerlink" href="#basestrategy" title="Permanent link">&para;</a></h4>
+<p>Object property is populated using <code>1:1</code> mapping and
+<a href="https://docs.python.org/3/library/functions.html#setattr">setattr</a> function.</p>
+<h4 id="ignorestrategy">IgnoreStrategy<a class="headerlink" href="#ignorestrategy" title="Permanent link">&para;</a></h4>
+<p>If this strategy is used, the target object is kept untouched.</p>
+<h4 id="modelchoicefield">ModelChoiceField<a class="headerlink" href="#modelchoicefield" title="Permanent link">&para;</a></h4>
+<p>Field name is expected to have format like this: <code>{field_name}(_{to_field_name})?</code> so library is able to automatically
+resolve payload key postfix according to the <code>to_field_name</code> attribute. If there is no <code>to_field_name</code> provided,
+field name should be <code>{field_name}</code> or <code>{field_name}_id</code>. Normalised data are present in <code>clean_data</code> under key
+<code>{field_name}</code> (e.g. <code>clean_data['{field_name}']</code>).</p>
+<p>Few examples (normalized data are in <code>clean_data['artist']</code> in all use-cases):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">ModelChoiceField</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="kn">from</span> <span class="nn">tests.testapp.models</span> <span class="kn">import</span> <span class="n">Artist</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">class</span> <span class="nc">MyFormNoPostfix</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">artist</span> <span class="o">=</span> <span class="n">ModelChoiceField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">Artist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">class</span> <span class="nc">MyFormFieldName</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">artist_name</span> <span class="o">=</span> <span class="n">ModelChoiceField</span><span class="p">(</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>        <span class="n">queryset</span><span class="o">=</span><span class="n">Artist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">to_field_name</span><span class="o">=</span><span class="s1">&#39;name&#39;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="p">)</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">class</span> <span class="nc">MyFormWithId</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">artist_id</span> <span class="o">=</span> <span class="n">ModelChoiceField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">Artist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+</code></pre></div>
+<h3 id="customization">Customization<a class="headerlink" href="#customization" title="Permanent link">&para;</a></h3>
+<h4 id="creating-custom-strategy">Creating custom strategy<a class="headerlink" href="#creating-custom-strategy" title="Permanent link">&para;</a></h4>
+<p>You can create your own population strategy by inheriting <code>BaseStrategy</code> and overriding it's
+<code>__call__(self, field, obj, key: str, value)</code> method.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span> <span class="nn">django_api_forms.population_strategies</span> <span class="kn">import</span> <span class="n">BaseStrategy</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">class</span> <span class="nc">ExampleStrategy</span><span class="p">(</span><span class="n">BaseStrategy</span><span class="p">):</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="c1"># Do your logic here</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="override-strategy">Override strategy<a class="headerlink" href="#override-strategy" title="Permanent link">&para;</a></h4>
+<p>You can override settings population strategies by creating your own population strategy in specific local <code>From</code> class using
+<code>Meta</code> class with optional attributes <code>field_type_strategy = {}</code> or <code>field_strategy = {}</code>:
+- <code>field_type_strategy</code>: Dictionary for overriding populate strategy on <code>Form</code> type attributes
+- <code>field_strategy</code>: Dictionary for overriding populate strategies on <code>Form</code> attributes</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">BooleanField</span><span class="p">,</span> <span class="n">Form</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">class</span> <span class="nc">BandForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="n">field_type_strategy</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>            <span class="s1">&#39;django_api_forms.fields.BooleanField&#39;</span><span class="p">:</span> <span class="s1">&#39;app.population_strategies.ExampleStrategy1&#39;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="p">}</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        <span class="n">field_strategy</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>            <span class="s1">&#39;formed&#39;</span><span class="p">:</span> <span class="s1">&#39;app.population_strategies.ExampleStrategy2&#39;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        <span class="p">}</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    <span class="n">formed</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    <span class="n">has_award</span> <span class="o">=</span> <span class="n">BooleanField</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="using-populate_-method">Using populate_ method<a class="headerlink" href="#using-populate_-method" title="Permanent link">&para;</a></h4>
+<p>If you want to override population strategy for explicit field, you can define custom <code>populate_{field}</code> method inside
+your form class:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FormField</span><span class="p">,</span> <span class="n">EnumField</span><span class="p">,</span> <span class="n">DictionaryField</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kn">from</span> <span class="nn">tests.testapp.models</span> <span class="kn">import</span> <span class="n">Album</span><span class="p">,</span> <span class="n">Artist</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="kn">from</span> <span class="nn">tests.testapp.forms</span> <span class="kn">import</span> <span class="n">ArtistForm</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">class</span> <span class="nc">AlbumForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">title</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">year</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">artist</span> <span class="o">=</span> <span class="n">FormField</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">ArtistForm</span><span class="p">)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="nb">type</span> <span class="o">=</span> <span class="n">EnumField</span><span class="p">(</span><span class="n">enum</span><span class="o">=</span><span class="n">Album</span><span class="o">.</span><span class="n">AlbumType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">metadata</span> <span class="o">=</span> <span class="n">DictionaryField</span><span class="p">(</span><span class="n">value_field</span><span class="o">=</span><span class="n">fields</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">())</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="k">def</span> <span class="nf">populate_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>        <span class="k">return</span> <span class="mi">2020</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="k">def</span> <span class="nf">populate_artist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Artist</span><span class="p">:</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>        <span class="n">artist</span> <span class="o">=</span> <span class="n">Artist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>            <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>        <span class="p">)</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>        <span class="n">artist</span><span class="o">.</span><span class="n">genres</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;genres&#39;</span><span class="p">]</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>        <span class="n">artist</span><span class="o">.</span><span class="n">members</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;members&#39;</span><span class="p">]</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>        <span class="n">artist</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>        <span class="k">return</span> <span class="n">artist</span>
+</code></pre></div>
+<h2 id="file-uploads">File uploads<a class="headerlink" href="#file-uploads" title="Permanent link">&para;</a></h2>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["instant"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+    
+  </body>
+</html>
