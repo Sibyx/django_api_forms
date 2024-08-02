@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.10 : 02.08.2024
+
+- **Fixed**: Fixed calling population methods when declared in form
+
 ## 1.0.0-rc.9 : 24.03.2023
 
 - **Added**: Introduced extra optional arguments when creating `From` instance
