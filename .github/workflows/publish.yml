@@ -8,9 +8,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build and publish to Python package repository
-        uses: JRubics/poetry-publish@v1.16
+        uses: JRubics/poetry-publish@v2
         with:
           repository_name: "django_api_forms"
           repository_url: "https://github.com/Sibyx/django_api_forms"
