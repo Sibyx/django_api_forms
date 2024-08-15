@@ -20,13 +20,13 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install git cmake gcc
-        git clone https://github.com/OSGeo/GDAL.git /usr/local/src/gdal
-        mkdir /usr/local/src/gdal/build
-        cd /usr/local/src/gdal/build
+        git clone https://github.com/OSGeo/GDAL.git /home/runner/work/django_api_forms/gdal
+        mkdir /home/runner/work/django_api_forms/gdal/build
+        cd /home/runner/work/django_api_forms/gdal/build
         cmake ..
         cmake --build .
         cmake --build . --target install
-        cd /github
+        cd /home/runner/work/django_api_forms/django_api_forms
         python -m pip install --upgrade pip
         python -m pip install poetry setuptools
         poetry install --all-extras
