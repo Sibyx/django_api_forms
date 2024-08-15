@@ -56,7 +56,7 @@ Django = ">=2.0"
 Pillow = {version = ">=2.1", optional = true}
 msgpack = {version = "*", optional = true}
 python-dateutil = {version = "^2.8.2", optional = true}
-gdal = {version = "^3.6.3", optional = true}
+gdal = {version = "3.8.4", optional = true}
 
 [tool.poetry.dev-dependencies]
 flake8 = "^6.0"
