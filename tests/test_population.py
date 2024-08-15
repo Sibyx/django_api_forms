@@ -1,9 +1,11 @@
+from django.forms import fields
 from django.test import TestCase
 from django.test.client import RequestFactory
 
+from django_api_forms import Form, EnumField, FormField
 from django_api_forms.exceptions import ApiFormException
 from tests import settings
-from tests.testapp.forms import AlbumForm, BandForm
+from tests.testapp.forms import AlbumForm, BandForm, ArtistForm
 from tests.testapp.models import Album, Artist, Band
 
 
@@ -73,3 +75,51 @@ class PopulationTests(TestCase):
         album = Album()
         with self.assertRaisesMessage(ApiFormException, str('No clean data provided! Try to call is_valid() first.')):
             form.populate(album)
+
+    def test_form_method_populate(self):
+        class MyAlbumForm(Form):
+            title = fields.CharField(max_length=100)
+            year = fields.IntegerField()
+            artist = FormField(form=ArtistForm)
+            type = EnumField(enum=Album.AlbumType, required=True)
+
+            def populate_year(self, obj, value: int) -> int:
+                return 2020
+
+            def populate_artist(self, obj, value: dict) -> Artist:
+                artist = Artist()
+
+                artist.name = value['name']
+                artist.genres = value['genres']
+                artist.members = value['members']
+
+                obj.artist = artist
+
+                return artist
+
+        request_factory = RequestFactory()
+        data = {
+            'title': 'Unknown Pleasures',
+            'year': 1979,
+            'artist': {
+                "name": "Punk Pineapples",
+                "genres": ["Punk", "Tropical Rock"],
+                "members": 5
+            },
+            'type': 'vinyl'
+        }
+
+        request = request_factory.post(
+            '/test/',
+            data=data,
+            content_type='application/json'
+        )
+
+        my_model = Album()
+        form = MyAlbumForm.create_from_request(request)
+        self.assertTrue(form.is_valid())
+
+        form.populate(my_model)
+        self.assertIsInstance(my_model.artist, Artist)
+        self.assertEqual(my_model.year, 2020)
+        self.assertEqual(my_model.artist.name, 'Punk Pineapples')
