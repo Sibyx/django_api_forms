@@ -3,6 +3,14 @@ class BaseStrategy:
         setattr(obj, key, value)
 
 
+class AliasStrategy(BaseStrategy):
+    def __init__(self, property_name: str):
+        self._property_name = property_name
+
+    def __call__(self, field, obj, key: str, value):
+        setattr(obj, self._property_name, value)
+
+
 class IgnoreStrategy(BaseStrategy):
     def __call__(self, field, obj, key: str, value):
         pass

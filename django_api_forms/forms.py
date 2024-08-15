@@ -8,6 +8,7 @@ from django.forms.models import ModelFormOptions
 from django.utils.translation import gettext as _
 
 from .exceptions import UnsupportedMediaType, ApiFormException, DetailValidationError
+from .population_strategies import BaseStrategy
 from .settings import Settings
 from .utils import resolve_from_path
 
@@ -197,7 +198,10 @@ class BaseForm:
             if hasattr(self, f'populate_{key}'):
                 self.cleaned_data[key] = getattr(self, f'populate_{key}')(obj, self.cleaned_data[key])
 
-            strategy()(field, obj, key, self.cleaned_data[key])
+            if isinstance(strategy, BaseStrategy):
+                strategy(field, obj, key, self.cleaned_data[key])
+            else:
+                strategy()(field, obj, key, self.cleaned_data[key])
 
         return obj
 
