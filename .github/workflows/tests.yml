@@ -18,7 +18,15 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        sudo apt-get install gdal libgdal-dev -y
+        sudo apt-get update
+        sudo apt-get install git cmake gcc
+        git clone https://github.com/OSGeo/GDAL.git /usr/local/src/gdal
+        mkdir /usr/local/src/gdal/build
+        cd /usr/local/src/gdal/build
+        cmake ..
+        cmake --build .
+        cmake --build . --target install
+        cd /github
         python -m pip install --upgrade pip
         python -m pip install poetry setuptools
         poetry install --all-extras
