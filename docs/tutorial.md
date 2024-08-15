@@ -245,6 +245,7 @@ You can override settings population strategies by creating your own population 
 from django.forms import fields
 
 from django_api_forms import BooleanField, Form
+from django_api_forms.population_strategies import AliasStrategy
 
 
 class BandForm(Form):
@@ -254,7 +255,8 @@ class BandForm(Form):
         }
 
         field_strategy = {
-            'formed': 'app.population_strategies.ExampleStrategy2'
+            'formed': 'app.population_strategies.ExampleStrategy2',
+            'has_award': AliasStrategy(property_name='awarded')
         }
 
     name = fields.CharField(max_length=100)
