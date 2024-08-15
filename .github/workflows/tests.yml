@@ -18,16 +18,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
+        sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
         sudo apt-get update
-        sudo apt-get install git cmake gcc proj-bin
-        git clone https://github.com/OSGeo/GDAL.git /home/runner/work/django_api_forms/gdal
-        mkdir /home/runner/work/django_api_forms/gdal/build
-        cd /home/runner/work/django_api_forms/gdal/build
-        cmake ..
-        cmake --build .
-        cmake --build . --target install
-        cd /home/runner/work/django_api_forms/django_api_forms
+        sudo apt-get install gdal-bin libgdal-dev -y
         python -m pip install --upgrade pip
+        python -m pip install poetry
         python -m pip install poetry setuptools
         poetry install --all-extras
     - name: Lint with flake8
