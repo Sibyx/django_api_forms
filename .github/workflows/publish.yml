@@ -21,4 +21,3 @@ jobs:
         run: |
           poetry build
           poetry publish
-        uses: JRubics/poetry-publish@v2.0
