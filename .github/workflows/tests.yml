@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install git cmake gcc
+        sudo apt-get install git cmake gcc proj-bin
         git clone https://github.com/OSGeo/GDAL.git /home/runner/work/django_api_forms/gdal
         mkdir /home/runner/work/django_api_forms/gdal/build
         cd /home/runner/work/django_api_forms/gdal/build
