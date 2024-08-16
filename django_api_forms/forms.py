@@ -191,9 +191,12 @@ class BaseForm:
             if isinstance(self.Meta, type):
                 if hasattr(self.Meta, 'field_strategy'):
                     if key in self.Meta.field_strategy.keys():
-                        strategy = resolve_from_path(
-                            self.Meta.field_strategy[key]
-                        )
+                        if isinstance(self.Meta.field_strategy[key], str):
+                            strategy = resolve_from_path(
+                                self.Meta.field_strategy[key]
+                            )
+                        else:
+                            strategy = self.Meta.field_strategy[key]
 
             if hasattr(self, f'populate_{key}'):
                 self.cleaned_data[key] = getattr(self, f'populate_{key}')(obj, self.cleaned_data[key])
