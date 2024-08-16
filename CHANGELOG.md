@@ -1,6 +1,10 @@
 # Changelog
 
-## 1.0.0-rc.10 : 02.08.2024
+## 1.0.0-rc.11 : 16.08.2024
+
+- **Fixed**: Proper manipulation with `BaseStrategy` instances during population
+
+## 1.0.0-rc.10 : 02.08.2024 (unreleased)
 
 - **Added**: `AliasStrategy` for overriding property name on target object during `setattr()`
 - **Changed**:`field_strategy` now can be also an instance of `BaseStrategy`
