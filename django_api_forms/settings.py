@@ -5,7 +5,7 @@ DEFAULTS = {
         'django_api_forms.fields.FormFieldList': 'django_api_forms.population_strategies.IgnoreStrategy',
         'django_api_forms.fields.FileField': 'django_api_forms.population_strategies.IgnoreStrategy',
         'django_api_forms.fields.ImageField': 'django_api_forms.population_strategies.IgnoreStrategy',
-        'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.IgnoreStrategy',
+        'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.FormFieldStrategy',
         'django.forms.models.ModelMultipleChoiceField': 'django_api_forms.population_strategies.IgnoreStrategy',
         'django.forms.models.ModelChoiceField': 'django_api_forms.population_strategies.ModelChoiceFieldStrategy'
     },

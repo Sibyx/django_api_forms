@@ -7,7 +7,7 @@ DJANGO_API_FORMS_POPULATION_STRATEGIES = {
     'django_api_forms.fields.FormFieldList': 'django_api_forms.population_strategies.IgnoreStrategy',
     'django_api_forms.fields.FileField': 'django_api_forms.population_strategies.IgnoreStrategy',
     'django_api_forms.fields.ImageField': 'django_api_forms.population_strategies.IgnoreStrategy',
-    'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.FormFieldStrategy',
     'django.forms.models.ModelMultipleChoiceField': 'django_api_forms.population_strategies.IgnoreStrategy',
     'django.forms.models.ModelChoiceField': 'django_api_forms.population_strategies.ModelChoiceFieldStrategy'
 }
@@ -78,6 +78,7 @@ from django.core.exceptions import ValidationError
 from django.forms import fields
 
 from django_api_forms import FieldList, FormField, FormFieldList, DictionaryField, EnumField, AnyField, Form
+from tests.testapp.models import Artist, Album
 
 
 class AlbumType(Enum):
@@ -105,7 +106,7 @@ class SongForm(Form):
 class AlbumForm(Form):
     title = fields.CharField(max_length=100)
     year = fields.IntegerField()
-    artist = FormField(form=ArtistForm)
+    artist = FormField(form=ArtistForm, model=Artist)
     songs = FormFieldList(form=SongForm)
     type = EnumField(enum=AlbumType, required=True)
     metadata = DictionaryField(value_field=fields.DateTimeField())
@@ -141,4 +142,13 @@ def create_album(request):
     # Cleaned valid payload
     payload = form.cleaned_data
     print(payload)
+
+    # Populate cleaned data into Django model
+    album = Album()
+    form.populate(album)
+
+    # Save populated objects
+    album.save()
+    album.artist.save()
+
 ```

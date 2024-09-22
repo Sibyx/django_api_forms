@@ -8,11 +8,11 @@ images/files, nesting).
 
 - payload parsing (according to the `Content-Type` HTTP header)
 - data validation and normalisation (using [Django validators](https://docs.djangoproject.com/en/4.1/ref/validators/)
-or custom `clean_` method)
+  or custom `clean_` method)
 - BASE64 file/image upload
 - construction of the basic validation response
 - filling objects attributes (if possible, see exceptions) using `setattr` function (super handy for Django database
-models)
+  models)
 
 ## Construction
 
@@ -23,6 +23,7 @@ any extra argument into `Form.create_from_request(request, param1=request.GET.ge
 
 ```python
 from tests.testapp.forms import AlbumForm
+
 
 def my_view(request):
     form = AlbumForm.create_from_request(request=request, param=request.GET.get('param'))
@@ -80,13 +81,13 @@ class BandForm(Form):
 This process is much more simple than in classic Django form. It consists of:
 
 1. Iterating over form attributes:
-   - calling `Field.clean(value)` method
-   - calling `Form.clean_<field_name>` method
-   - calling `Form.add_error((field_name, ), error)` in case of failures in clean methods
-   - if field is marked as dirty, normalized attribute is saved to `Form.clean_data` property
+    - calling `Field.clean(value)` method
+    - calling `Form.clean_<field_name>` method
+    - calling `Form.add_error((field_name, ), error)` in case of failures in clean methods
+    - if field is marked as dirty, normalized attribute is saved to `Form.clean_data` property
 2. Calling `Form.clean` method which returns final normalized values which will be presented in `Form.clean_data`
-(feel free to override it, by default does nothing, useful for conditional validation, you can still add errors
-using `Form.add_error()`). `Form.clean` is only called when there are no errors from previous section.
+   (feel free to override it, by default does nothing, useful for conditional validation, you can still add errors
+   using `Form.add_error()`). `Form.clean` is only called when there are no errors from previous section.
 
 Normalized data are available in `Form.clean_data` property (keys suppose to correspond with values from `Form.dirty`).
 Extra optional arguments are available in `Form.extras` property (keys suppose to correspond with values
@@ -106,13 +107,14 @@ from django.forms import fields
 from django.core.exceptions import ValidationError
 from django_api_forms import Form
 
+
 class BookForm(Form):
     title = fields.CharField(max_length=100)
     year = fields.IntegerField()
 
     def clean_title(self):
         if self.cleaned_data['title'] == "The Hitchhiker's Guide to the Galaxy":
-            self.add_error(('title', ), ValidationError("Too cool!", code='too-cool'))
+            self.add_error(('title',), ValidationError("Too cool!", code='too-cool'))
 
         if 'param' not in self.extras:
             raise ValidationError("You can use extra optional arguments in form validation!")
@@ -125,7 +127,7 @@ class BookForm(Form):
 
         if 'param' not in self.extras:
             self.add_error(
-                ('param', ),
+                ('param',),
                 ValidationError("You can use extra optional arguments in form validation!", code='param-where')
             )
         # The last chance to do some touchy touchy with the self.clean_data
@@ -150,6 +152,7 @@ can use it like this:
 from tests.testapp.forms import AlbumForm
 from tests.testapp.models import Album
 
+
 def my_view(request):
     form = AlbumForm.create_from_request(request)
 
@@ -173,7 +176,7 @@ DJANGO_API_FORMS_POPULATION_STRATEGIES = {
     'django_api_forms.fields.FormFieldList': 'django_api_forms.population_strategies.IgnoreStrategy',
     'django_api_forms.fields.FileField': 'django_api_forms.population_strategies.IgnoreStrategy',
     'django_api_forms.fields.ImageField': 'django_api_forms.population_strategies.IgnoreStrategy',
-    'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.IgnoreStrategy',
+    'django_api_forms.fields.FormField': 'django_api_forms.population_strategies.FormFieldStrategy',
     'django.forms.models.ModelMultipleChoiceField': 'django_api_forms.population_strategies.IgnoreStrategy',
     'django.forms.models.ModelChoiceField': 'django_api_forms.population_strategies.ModelChoiceFieldStrategy'
 }
@@ -205,16 +208,42 @@ from django_api_forms import Form
 
 from tests.testapp.models import Artist
 
+
 class MyFormNoPostfix(Form):
     artist = ModelChoiceField(queryset=Artist.objects.all())
+
 
 class MyFormFieldName(Form):
     artist_name = ModelChoiceField(
         queryset=Artist.objects.all(), to_field_name='name'
     )
 
+
 class MyFormWithId(Form):
     artist_id = ModelChoiceField(queryset=Artist.objects.all())
+```
+
+#### FormFieldStrategy
+
+If the `model` argument is omitted, the `FormFieldStrategy` will behave same as the `IgnoreStrategy`
+If a `model` argument is provided when declaring a `FormField`, the data from the nested JSON object is used to
+populate an instance of the specified Django model.
+
+```python
+from django.forms import fields
+
+from django_api_forms import FieldList, FormField, Form
+from tests.testapp.models import Artist
+
+
+class ArtistForm(Form):
+    name = fields.CharField(required=True, max_length=100)
+    genres = FieldList(field=fields.CharField(max_length=30))
+    members = fields.IntegerField()
+
+
+class AlbumForm(Form):
+    artist = FormField(form=ArtistForm, model=Artist)
 ```
 
 ### Customization
@@ -236,8 +265,9 @@ class ExampleStrategy(BaseStrategy):
 
 #### Override strategy
 
-You can override settings population strategies by creating your own population strategy in specific local `From` class using
-`Meta` class with optional attributes `field_type_strategy = {}` or `field_strategy = {}`:
+You can override settings population strategies by creating your own population strategy in specific local `From` class
+using `Meta` class with optional attributes `field_type_strategy = {}` or `field_strategy = {}`:
+
 - `field_type_strategy`: Dictionary for overriding populate strategy on `Form` type attributes
 - `field_strategy`: Dictionary for overriding populate strategies on `Form` attributes
 
@@ -275,6 +305,7 @@ from django.forms import fields
 from django_api_forms import Form, FormField, EnumField, DictionaryField
 from tests.testapp.models import Album, Artist
 from tests.testapp.forms import ArtistForm
+
 
 class AlbumForm(Form):
     title = fields.CharField(max_length=100)

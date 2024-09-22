@@ -101,6 +101,8 @@ Field used for embedded objects represented as another API form.
 - Normalizes to: A Python dictionary
 - Required arguments:
   - `form`: Type of a nested form
+- Optional arguments:
+  - `model`: Datastructure(Django model) instance for population
 
 **JSON example**
 
@@ -124,6 +126,7 @@ Field used for embedded objects represented as another API form.
 ```python
 from django_api_forms import Form, FormField, FieldList
 from django.forms import fields
+from tests.testapp.models import Artist
 
 
 class ArtistForm(Form):
@@ -135,7 +138,7 @@ class ArtistForm(Form):
 class AlbumForm(Form):
     title = fields.CharField(max_length=100)
     year = fields.IntegerField()
-    artist = FormField(form=ArtistForm)
+    artist = FormField(form=ArtistForm, model=Artist)
 ```
 
 ## FormFieldList

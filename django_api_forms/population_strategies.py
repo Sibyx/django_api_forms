@@ -1,3 +1,6 @@
+import copy
+
+
 class BaseStrategy:
     def __call__(self, field, obj, key: str, value):
         setattr(obj, key, value)
@@ -34,3 +37,22 @@ class ModelChoiceFieldStrategy(BaseStrategy):
         if key.endswith(postfix_to_remove):
             model_key = key[:-len(postfix_to_remove)]
         setattr(obj, model_key, value)
+
+
+class FormFieldStrategy(BaseStrategy):
+    def __call__(self, field, obj, key: str, value):
+        model = field.model
+        if model:
+            from django_api_forms.settings import Settings
+
+            model = model()
+            form = field.form
+
+            form.cleaned_data = value
+            form.fields = copy.deepcopy(getattr(form, 'base_fields'))
+            form.settings = Settings()
+            form.errors = None
+
+            populated_model = form.populate(form, model)
+
+            setattr(obj, key, populated_model)

@@ -1,10 +1,10 @@
+import re
 import typing
 import warnings
 from base64 import b64decode
 from enum import Enum
 from io import BytesIO
 from mimetypes import guess_type
-import re
 
 from django.core.exceptions import ValidationError
 from django.core.files import File
@@ -86,14 +86,18 @@ class FieldList(Field):
 
 
 class FormField(Field):
-    def __init__(self, form: typing.Type, **kwargs):
+    def __init__(self, form: typing.Type, model=None, **kwargs):
         self._form = form
-
+        self._model = model
         super().__init__(**kwargs)
 
     @property
     def form(self):
         return self._form
+
+    @property
+    def model(self):
+        return self._model
 
     def to_python(self, value) -> typing.Union[typing.Dict, None]:
         if not value:
@@ -142,7 +146,7 @@ class FormFieldList(FormField):
                 result.append(form.cleaned_data)
             else:
                 for error in form.errors:
-                    error.prepend((position, ))
+                    error.prepend((position,))
                     errors.append(error)
 
         if errors:
@@ -208,7 +212,7 @@ class DictionaryField(Field):
                     key = self._key_field.clean(key)
                 result[key] = self._value_field.clean(item)
             except ValidationError as e:
-                errors[key] = DetailValidationError(e, (key, ))
+                errors[key] = DetailValidationError(e, (key,))
 
         if errors:
             raise ValidationError(errors)
