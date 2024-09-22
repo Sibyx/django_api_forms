@@ -214,8 +214,8 @@ def create_album(request):
     form.populate(album)
 
     # Save populated objects
-    album.save()
     album.artist.save()
+    album.save()
 ```
 
 If you want example with whole Django project, check out repository created by [pawl](https://github.com/pawl)

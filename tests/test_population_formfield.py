@@ -58,8 +58,16 @@ class ValidationTests(TestCase):
         song = Song()
         form.populate(song)
 
+        song.album.artist.save()
+        song.album.save()
+        song.save()
+
         self.assertIsInstance(song.album, Album)
         self.assertIsInstance(song.album.artist, Artist)
 
         self.assertEqual(song.album.title, data['album']['title'])
         self.assertEqual(song.album.artist.name, data['album']['artist']['name'])
+
+        self.assertEqual(song.pk, 1)
+        self.assertEqual(song.album.pk, 1)
+        self.assertEqual(song.album.artist.pk, 1)

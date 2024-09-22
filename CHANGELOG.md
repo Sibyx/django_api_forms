@@ -2,7 +2,7 @@
 
 ## 1.0.0-rc.12 : 22.09.2024
 
-- **Added**: FormField model declaration
+- **Added**: `FormField` population strategy
 
 ## 1.0.0-rc.11 : 16.08.2024
 

@@ -148,7 +148,6 @@ def create_album(request):
     form.populate(album)
 
     # Save populated objects
-    album.save()
     album.artist.save()
-
+    album.save()
 ```
