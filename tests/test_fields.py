@@ -91,6 +91,14 @@ class BooleanFieldTests(SimpleTestCase):
             log_input(truthy_val)
             self.assertTrue(bool_field.clean(truthy_val))
 
+    def test_booleanfield_has_changed(self):
+        bool_field = BooleanField(disabled=True)
+        self.assertFalse(bool_field.has_changed(True, False))
+
+        bool_field = BooleanField()
+        self.assertTrue(bool_field.has_changed(True, False))
+        self.assertFalse(bool_field.has_changed(True, True))
+
 
 class FieldListTests(SimpleTestCase):
     def test_fieldlist_init(self):
@@ -541,6 +549,14 @@ class FileFieldTests(SimpleTestCase):
         self.assertIsInstance(django_file, File)
         self.assertEqual(django_file.size, 12412)
 
+    def test_non_value(self):
+        file_field = FileField()
+
+        expected_error = "'This field is required.'"
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            file_field.clean(None)
+
+
     def test_mime(self):
         file_field = FileField(mime=('image/jpeg',))
         django_file = file_field.clean(self._payload)
@@ -632,6 +648,13 @@ class ImageFieldTests(SimpleTestCase):
             self._payload = f.read().strip('\n')
         pass
 
+    def test_non_value(self):
+        file_field = ImageField()
+
+        expected_error = "'This field is required.'"
+        with self.assertRaisesMessage(ValidationError, expected_error):
+            file_field.clean(None)
+
     def test_simple(self):
         image_field = ImageField()
         django_image = image_field.clean(self._payload)
@@ -652,6 +675,22 @@ class ImageFieldTests(SimpleTestCase):
         with self.assertRaisesMessage(ValidationError, expected_error):
             log_input(kitten)
             file_field.clean(kitten)
+
+    def test_invalid_image(self):
+        image_field = ImageField()
+
+        invalid_base64_image = "data:image/jpeg;base64,SGVsbG8gd29ybGQh"
+
+        expected_error_message = image_field.default_error_messages['invalid_image']
+
+        with self.assertRaises(ValidationError) as context:
+            image_field.to_python(invalid_base64_image)
+
+        # Retrieving the error messages list from the ValidationError
+        error_messages = context.exception.messages
+
+        # Verifying that the appropriate message is included
+        self.assertIn(expected_error_message, error_messages)
 
     def test_invalid(self):
         file_field = ImageField()

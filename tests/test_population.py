@@ -5,7 +5,7 @@ from django.test.client import RequestFactory
 from django_api_forms import Form, EnumField, FormField
 from django_api_forms.exceptions import ApiFormException
 from tests import settings
-from tests.testapp.forms import AlbumForm, BandForm, ArtistForm
+from tests.testapp.forms import AlbumForm, BandForm, ArtistForm, ConcertForm
 from tests.testapp.models import Album, Artist, Band
 
 
@@ -123,3 +123,27 @@ class PopulationTests(TestCase):
         self.assertIsInstance(my_model.artist, Artist)
         self.assertEqual(my_model.year, 2020)
         self.assertEqual(my_model.artist.name, 'Punk Pineapples')
+
+    def test_alias_strategy(self):
+        request_factory = RequestFactory()
+        data = {
+            'name': "Frank",
+            'genres': ["Rock", "Alternative"],
+            'members': 4,
+            'has_label': True
+        }
+
+        request = request_factory.post(
+            '/test/',
+            data=data,
+            content_type='application/json'
+        )
+
+        artist = Artist()
+        form = ArtistForm.create_from_request(request)
+        self.assertTrue(form.is_valid())
+
+        form.populate(artist)
+        self.assertIsInstance(artist, Artist)
+        self.assertEqual(artist.has_own_label, data['has_label'])
+        self.assertEqual(artist.name, data['name'])

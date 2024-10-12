@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-rc.12 : 12.10.2024
+
+- **Added**: New unit tests which improve coverage.
+
 ## 1.0.0-rc.11 : 16.08.2024
 
 - **Fixed**: Proper manipulation with `BaseStrategy` instances during population

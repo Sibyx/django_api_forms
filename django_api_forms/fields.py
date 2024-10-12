@@ -288,7 +288,7 @@ class ImageField(FileField):
             image.verify()
             f.image = Image.open(file)  # Image have to be reopened after Image.verify() call
             f.content_type = Image.MIME.get(image.format)
-        except Exception:
+        except Exception as e:
             raise ValidationError(
                 self.error_messages['invalid_image'],
                 code='invalid_image'
