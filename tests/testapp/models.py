@@ -12,7 +12,6 @@ class Artist(models.Model):
     has_own_label = models.BooleanField(default=False)
 
 
-
 class Album(models.Model):
     class Meta:
         db_table = 'albums'

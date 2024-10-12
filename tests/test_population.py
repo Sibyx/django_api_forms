@@ -5,7 +5,7 @@ from django.test.client import RequestFactory
 from django_api_forms import Form, EnumField, FormField
 from django_api_forms.exceptions import ApiFormException
 from tests import settings
-from tests.testapp.forms import AlbumForm, BandForm, ArtistForm, ConcertForm
+from tests.testapp.forms import AlbumForm, BandForm, ArtistForm
 from tests.testapp.models import Album, Artist, Band
 
 

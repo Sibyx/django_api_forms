@@ -18,6 +18,7 @@ class ArtistForm(Form):
     genres = FieldList(field=fields.CharField(max_length=30))
     members = fields.IntegerField()
 
+
 class SongForm(Form):
     title = fields.CharField(required=True, max_length=100)
     duration = fields.DurationField(required=True)

@@ -556,7 +556,6 @@ class FileFieldTests(SimpleTestCase):
         with self.assertRaisesMessage(ValidationError, expected_error):
             file_field.clean(None)
 
-
     def test_mime(self):
         file_field = FileField(mime=('image/jpeg',))
         django_file = file_field.clean(self._payload)
