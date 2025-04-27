@@ -11,6 +11,8 @@ nav:
   - Tutorial: tutorial.md
   - Fields: fields.md
   - Example: example.md
+  - API Reference: api_reference.md
+  - Contributing: contributing.md
 
 # Repository
 repo_name: 'Sibyx/django_api_forms'
