@@ -9,6 +9,7 @@ class Artist(models.Model):
     name = models.CharField(max_length=100, unique=True)
     genres = models.JSONField()
     members = models.PositiveIntegerField()
+    has_own_label = models.BooleanField(default=False)
 
 
 class Album(models.Model):

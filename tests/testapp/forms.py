@@ -3,10 +3,17 @@ from django.forms import fields, ModelChoiceField
 
 from django_api_forms import Form, FieldList, AnyField, FormField, FormFieldList, EnumField, DictionaryField, \
     ModelForm, BooleanField
+from django_api_forms.population_strategies import AliasStrategy
 from tests.testapp.models import Album, Artist
 
 
 class ArtistForm(Form):
+    class Meta:
+        field_strategy = {
+            'has_label': AliasStrategy(property_name='has_own_label'),
+        }
+
+    has_label = BooleanField(required=False)
     name = fields.CharField(required=True, max_length=100)
     genres = FieldList(field=fields.CharField(max_length=30))
     members = fields.IntegerField()

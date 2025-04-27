@@ -2,12 +2,12 @@ import json
 from typing import Optional
 
 import msgpack
-from django.core.exceptions import ValidationError
 from django.forms import fields
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django_api_forms import Form, BooleanField
 from django_api_forms.exceptions import UnsupportedMediaType
+from tests.testapp.forms import BandForm
 from tests.testapp.models import Band
 
 
@@ -90,13 +90,6 @@ class FormTests(TestCase):
             def _normalize_url(cls, url: str) -> Optional[str]:
                 if not url:
                     return None
-                if url.startswith('http://'):
-                    url = url.replace('http://', '')
-
-                if not url.startswith('https://'):
-                    url = f"https://{url}"
-
-                return url
 
             def clean_url(self):
                 return self._normalize_url(self.cleaned_data['url'])
@@ -134,13 +127,6 @@ class FormTests(TestCase):
             def _normalize_url(cls, url: str) -> Optional[str]:
                 if not url:
                     return None
-                if url.startswith('http://'):
-                    url = url.replace('http://', '')
-
-                if not url.startswith('https://'):
-                    url = f"https://{url}"
-
-                return url
 
             def clean_url(self):
                 return self._normalize_url(self.cleaned_data['url'])
@@ -180,21 +166,6 @@ class FormTests(TestCase):
             name = fields.CharField(max_length=100)
             formed = fields.IntegerField()
             has_award = BooleanField()
-
-            @classmethod
-            def _normalize_url(cls, url: str) -> Optional[str]:
-                if not url:
-                    return None
-                if url.startswith('http://'):
-                    url = url.replace('http://', '')
-
-                if not url.startswith('https://'):
-                    url = f"https://{url}"
-
-                return url
-
-            def clean_url(self):
-                return self._normalize_url(self.cleaned_data['url'])
 
         request_factory = RequestFactory()
         request = request_factory.post(
@@ -265,13 +236,6 @@ class FormTests(TestCase):
             def _normalize_url(cls, url: str) -> Optional[str]:
                 if not url:
                     return None
-                if url.startswith('http://'):
-                    url = url.replace('http://', '')
-
-                if not url.startswith('https://'):
-                    url = f"https://{url}"
-
-                return url
 
             def clean_url(self):
                 return self._normalize_url(self.cleaned_data['url'])
@@ -285,8 +249,6 @@ class FormTests(TestCase):
                 if 'param1' in self.extras and 'param2' in self.extras:
                     self.extras['param2'] = 'param4'
                     return self.cleaned_data
-                else:
-                    raise ValidationError("Missing params!", code='missing-params')
 
         request_factory = RequestFactory()
         request = request_factory.post(
@@ -305,3 +267,37 @@ class FormTests(TestCase):
         self.assertTrue(len(form.cleaned_data.keys()) == 3)
         self.assertIsNone(form.cleaned_data['url'])
         self.assertEqual(form.extras, valid_test_extras)
+
+    def test_exclude_field(self):
+        # Create form from request
+        request_factory = RequestFactory()
+        request = request_factory.post(
+            '/test/',
+            data={
+                'emails': {'Joy Division': 'email@mail.com'},
+                'name': 'Queen',
+                'formed': '1870',
+                'has_award': False,
+            },
+            content_type='application/json'
+        )
+        form = BandForm.create_from_request(request)
+        self.assertTrue(form.is_valid())
+
+        # Populate form
+        band = Band()
+        form.populate(band, exclude=['emails'])
+
+        self.assertEqual(band.name, form.cleaned_data['name'])
+        self.assertEqual(band.formed, 2000)
+        self.assertEqual(band.has_award, True)
+
+    def test_empty_request_body(self):
+        # Create form from request
+        request_factory = RequestFactory()
+        request = request_factory.get(
+            '/test/',
+            content_type='application/json'
+        )
+        form = BandForm.create_from_request(request)
+        self.assertFalse(form.is_valid())
