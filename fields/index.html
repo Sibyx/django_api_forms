@@ -1,0 +1,1051 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Declarative Django request validation for APIs">
+      
+      
+        <meta name="author" content="Jakub Dubec">
+      
+      
+        <link rel="canonical" href="https://sibyx.github.io/django_api_forms/fields/">
+      
+      
+        <link rel="prev" href="../tutorial/">
+      
+      
+        <link rel="next" href="../example/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Fields - Django API Forms</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.jakubdubec.me/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '4']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fields" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Django API Forms" class="md-header__button md-logo" aria-label="Django API Forms" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Django API Forms
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Fields
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Sibyx/django_api_forms" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sibyx/django_api_forms
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Django API Forms" class="md-nav__button md-logo" aria-label="Django API Forms" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Django API Forms
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Sibyx/django_api_forms" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Sibyx/django_api_forms
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Fields
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Fields
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#booleanfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      BooleanField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fieldlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      FieldList
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      FormField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formfieldlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      FormFieldList
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enumfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnumField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dictionaryfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      DictionaryField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anyfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      AnyField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filefield" class="md-nav__link">
+    <span class="md-ellipsis">
+      FileField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imagefield" class="md-nav__link">
+    <span class="md-ellipsis">
+      ImageField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rrule-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      RRule Field
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geojson-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      GeoJSON Field
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#booleanfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      BooleanField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fieldlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      FieldList
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      FormField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formfieldlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      FormFieldList
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enumfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnumField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dictionaryfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      DictionaryField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anyfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      AnyField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filefield" class="md-nav__link">
+    <span class="md-ellipsis">
+      FileField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#imagefield" class="md-nav__link">
+    <span class="md-ellipsis">
+      ImageField
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rrule-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      RRule Field
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geojson-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      GeoJSON Field
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="fields">Fields<a class="headerlink" href="#fields" title="Permanent link">&para;</a></h1>
+<p>Even if we tried to keep most of the native Django fields, we had to override some of them to be more fit for RESTful
+applications. Also, we introduced new ones, to cover extra functionality like nested requests. In this section, we will
+explain our intentions and describe their usage.</p>
+<p>To sum up:</p>
+<ul>
+<li>You can use <a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#module-django.forms.fields">Django Form Fields</a>:</li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#charfield">CharField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#choicefield">ChoiceField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedchoicefield">TypedChoiceField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datefield">DateField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#datetimefield">DateTimeField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#decimalfield">DecimalField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#durationfield">DurationField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#emailfield">EmailField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#filepathfield">FilePathField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#floatfield">FloatField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#integerfield">IntegerField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#genericipaddressfield">GenericIPAddressField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#multiplechoicefield">MultipleChoiceField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#typedmultiplechoicefield">TypedMultipleChoiceField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#regexfield">RegexField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#slugfield">SlugField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#timefield">TimeField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#urlfield">URLField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#uuidfield">UUIDField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelchoicefield">ModelChoiceField</a></li>
+<li><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#modelmultiplechoicefield">ModelMultipleChoiceField</a></li>
+<li>You can use <a href="https://docs.djangoproject.com/en/4.1/ref/validators/">Django Validators</a>.</li>
+</ul>
+<p>Fields that are not in the list above were not been tested or been replaced with our customized implementation
+(or it just doesn't make sense to use them in RESTful APIs).</p>
+<h2 id="booleanfield">BooleanField<a class="headerlink" href="#booleanfield" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Normalizes to: A Python <strong>True</strong> or <strong>False</strong> value (or <strong>None</strong> if it's not required)</li>
+</ul>
+<p><a href="https://docs.djangoproject.com/en/4.1/ref/forms/fields/#booleanfield">Django BooleanField</a>
+<a href="https://github.com/django/django/blob/master/django/forms/fields.py#L712">checks only for False</a> (<code>false</code>, <code>0</code>)
+values and everything else is suppose to be <strong>True</strong>.</p>
+<p>In my point of view this kind of behaviour it's little bit weird, so we decided to check explicitly for <strong>True</strong> and
+<strong>False</strong> values. If field is required
+<a href="https://docs.djangoproject.com/en/4.1/ref/exceptions/#django.core.exceptions.ValidationError">ValidationError</a> is
+raised or value is normalized as <strong>None</strong>.</p>
+<p>Checked values:</p>
+<ul>
+<li><strong>True</strong>: <code>True</code> <code>'True'</code> <code>'true'</code> <code>1</code> <code>'1'</code></li>
+<li><strong>False</strong>: <code>False</code> <code>'False'</code> <code>'false'</code> <code>0</code> <code>'0'</code></li>
+</ul>
+<p><strong>Note: We would like to change this behaviour to support only boolean values and rely on deserializers.</strong></p>
+<h2 id="fieldlist">FieldList<a class="headerlink" href="#fieldlist" title="Permanent link">&para;</a></h2>
+<p>This field is used to parse list of primitive values (like strings or numbers). If you want to parse list of object,
+check <code>FormFieldList</code>.</p>
+<ul>
+<li>Normalizes to: A Python list</li>
+<li>Error message keys: <code>not_field</code>, <code>not_list</code>, <code>min_length</code>, <code>max_length</code></li>
+<li>Required arguments:</li>
+<li><code>field</code>: Instance of a form field representing children</li>
+<li>Optional arguments:</li>
+<li><code>min_length</code>: Minimum length of field size as integer</li>
+<li><code>max_length</code>: Maximum length of field size as integer</li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;numbers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="mi">8</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="mi">13</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FieldList</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">class</span> <span class="nc">FibonacciForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">numbers</span> <span class="o">=</span> <span class="n">FieldList</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="formfield">FormField<a class="headerlink" href="#formfield" title="Permanent link">&para;</a></h2>
+<p>Field used for embedded objects represented as another API form.</p>
+<ul>
+<li>Normalizes to: A Python dictionary</li>
+<li>Required arguments:</li>
+<li><code>form</code>: Type of a nested form</li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unknown Pleasures&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;year&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1979</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">&quot;artist&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Joy Division&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="nt">&quot;genres&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">            </span><span class="s2">&quot;rock&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">            </span><span class="s2">&quot;punk&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="p">],</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nt">&quot;members&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FormField</span><span class="p">,</span> <span class="n">FieldList</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">class</span> <span class="nc">ArtistForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">genres</span> <span class="o">=</span> <span class="n">FieldList</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">members</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">class</span> <span class="nc">AlbumForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">title</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">year</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">artist</span> <span class="o">=</span> <span class="n">FormField</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">ArtistForm</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="formfieldlist">FormFieldList<a class="headerlink" href="#formfieldlist" title="Permanent link">&para;</a></h2>
+<p>Field used for embedded objects represented as another API form.</p>
+<ul>
+<li>Normalizes to: A Python list of dictionaries</li>
+<li>Error message keys: <code>not_list</code>, <code>min_length</code>, <code>max_length</code></li>
+<li>Required arguments:</li>
+<li><code>form</code>: Type of a nested form</li>
+<li>Optional arguments:</li>
+<li><code>min_length</code>: Minimum length of field size as integer</li>
+<li><code>max_length</code>: Maximum length of field size as integer</li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Rock For People&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;artists&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Joy Division&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">            </span><span class="nt">&quot;genres&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">                </span><span class="s2">&quot;rock&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">                </span><span class="s2">&quot;punk&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">            </span><span class="p">],</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">            </span><span class="nt">&quot;members&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FormFieldList</span><span class="p">,</span> <span class="n">FieldList</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">class</span> <span class="nc">ArtistForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">genres</span> <span class="o">=</span> <span class="n">FieldList</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">))</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">members</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">class</span> <span class="nc">FestivalForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="n">title</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">year</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">artists</span> <span class="o">=</span> <span class="n">FormFieldList</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">ArtistForm</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="enumfield">EnumField<a class="headerlink" href="#enumfield" title="Permanent link">&para;</a></h2>
+<p><strong>Tip</strong>: Django has pretty cool implementation of the
+<a href="https://docs.djangoproject.com/en/4.1/ref/models/fields/#enumeration-types">enumeration types</a>.</p>
+<ul>
+<li>Normalizes to: A Python <code>Enum</code> object</li>
+<li>Error message keys: <code>not_enum</code>, <code>invalid</code></li>
+<li>Required arguments:</li>
+<li><code>enum</code>: Enum class</li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Rock For People&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vinyl&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">EnumField</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">TextChoices</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">class</span> <span class="nc">AlbumType</span><span class="p">(</span><span class="n">TextChoices</span><span class="p">):</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">CD</span> <span class="o">=</span> <span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="s1">&#39;CD&#39;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">VINYL</span> <span class="o">=</span> <span class="s1">&#39;vinyl&#39;</span><span class="p">,</span> <span class="s1">&#39;Vinyl&#39;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">class</span> <span class="nc">AlbumForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="n">title</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="nb">type</span> <span class="o">=</span> <span class="n">EnumField</span><span class="p">(</span><span class="n">enum</span><span class="o">=</span><span class="n">AlbumType</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="dictionaryfield">DictionaryField<a class="headerlink" href="#dictionaryfield" title="Permanent link">&para;</a></h2>
+<p>Field created for containing typed value pairs.
+Due to inverted key, value parameters in <code>__init__</code> method, <code>value_field</code> is forced keyword arguments.</p>
+<ul>
+<li>Normalizes to: A Python dictionary</li>
+<li>Error message keys: <code>not_dict</code>, <code>not_field</code></li>
+<li>Required arguments:</li>
+<li><code>value_field</code>: Type of a nested form</li>
+<li>Optional arguments:</li>
+<li><code>key_field</code>: Type of a nested form</li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="nt">&quot;my_dict&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">        </span><span class="nt">&quot;b061bb03-1eaa-47d0-948f-3ce1f15bf3bb&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.718</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">        </span><span class="nt">&quot;0a8912f0-6c10-4505-bc27-bbb099d2e395&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">DictionaryField</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">class</span> <span class="nc">DictionaryForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">my_typed_dict</span> <span class="o">=</span> <span class="n">DictionaryField</span><span class="p">(</span><span class="n">value_field</span><span class="o">=</span><span class="n">fields</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(),</span> <span class="n">key_field</span><span class="o">=</span><span class="n">fields</span><span class="o">.</span><span class="n">UUIDField</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="anyfield">AnyField<a class="headerlink" href="#anyfield" title="Permanent link">&para;</a></h2>
+<p>Field without default validators.</p>
+<ul>
+<li>Normalizes to: Type according to the
+  <a href="https://github.com/Sibyx/django_api_forms/blob/master/django_api_forms/forms.py#L19">chosen request payload parser</a></li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="nt">&quot;singer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Johnny&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">        </span><span class="nt">&quot;surname&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Rotten&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">        </span><span class="nt">&quot;age&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">        </span><span class="nt">&quot;born_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1956-01-31&quot;</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">DictionaryField</span><span class="p">,</span> <span class="n">AnyField</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">class</span> <span class="nc">BandForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">singer</span> <span class="o">=</span> <span class="n">DictionaryField</span><span class="p">(</span><span class="n">value_field</span><span class="o">=</span><span class="n">AnyField</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="filefield">FileField<a class="headerlink" href="#filefield" title="Permanent link">&para;</a></h2>
+<p>This field contains <a href="https://tools.ietf.org/html/rfc4648">BASE64</a> encoded file.</p>
+<ul>
+<li>Normalizes to: A Django <a href="https://docs.djangoproject.com/en/4.1/ref/files/file/">File</a> object</li>
+<li>Error message keys: <code>max_length</code>, <code>invalid_uri</code>, <code>invalid_mime</code></li>
+<li>Arguments:</li>
+<li><code>max_length</code>: Maximum files size in bytes (optional)</li>
+<li><code>mime</code>: Tuple of allowed mime types (optional - if present, value must be in form of
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs">Data URI</a>)</li>
+<li>Extra normalised attributes:</li>
+<li><code>file_field.clean(payload).content_type</code>: Mime type (<code>str</code> - e.g. <code>audio/mpeg</code>) of containing file (<code>None</code> if
+    unable to detect - if payload is not in DATA URI format)</li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Disorder&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data:audio/mpeg;base64,SGVsbG8sIFdvcmxkIQ==&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FileField</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">class</span> <span class="nc">SongForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">title</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">audio</span> <span class="o">=</span> <span class="n">FileField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">DATA_UPLOAD_MAX_MEMORY_SIZE</span><span class="p">,</span> <span class="n">mime</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;audio/mpeg&#39;</span><span class="p">,))</span>
+</code></pre></div>
+<h2 id="imagefield">ImageField<a class="headerlink" href="#imagefield" title="Permanent link">&para;</a></h2>
+<p>This field contains <a href="https://tools.ietf.org/html/rfc4648">BASE64</a> encoded image. Depends on
+<a href="https://pypi.org/project/Pillow/">Pillow</a> because normalized value contains <code>Image</code> object. Pillow is also used for
+image validation <a href="https://pillow.readthedocs.io/en/stable/reference/Image.html#PIL.Image.Image.verify">Image.verify()</a>
+is called.</p>
+<ul>
+<li>Normalizes to: A Django <a href="https://docs.djangoproject.com/en/4.1/ref/files/file/">File</a> object</li>
+<li>Error message keys: <code>max_length</code>, <code>invalid_uri</code>, <code>invalid_mime</code>, <code>invalid_image</code> (if Image.verify() failed)</li>
+<li>Arguments:</li>
+<li><code>max_length</code>: Maximum files size in bytes (optional)</li>
+<li><code>mime</code>: Tuple of allowed mime types (optional, value must be in
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs">Data URI</a>)</li>
+<li>Extra normalised attributes:</li>
+<li><code>image_field.clean(payload).content_type</code>: Mime type (<code>str</code> - e.g. <code>audio/mpeg</code>) of containing file (<code>None</code> if
+    unable to detect - if payload is not in DATA URI format). Value is filled using Pillow
+    <code>Image.MIME.get(image.format)</code>)</li>
+<li><code>image_field.clean(payload).image</code>: A Pillow
+    <a href="https://pillow.readthedocs.io/en/stable/reference/Image.html">Image</a> object instance</li>
+</ul>
+<p><strong>JSON example</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unknown pleasures&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">&quot;cover&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data:image/png;base64,SGVsbG8sIFdvcmxkIQ==&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Python representation</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">ImageField</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">fields</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="k">class</span> <span class="nc">AlbumForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="n">title</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">cover</span> <span class="o">=</span> <span class="n">ImageField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">DATA_UPLOAD_MAX_MEMORY_SIZE</span><span class="p">,</span> <span class="n">mime</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;image/png&#39;</span><span class="p">,))</span>
+</code></pre></div>
+<h2 id="rrule-field">RRule Field<a class="headerlink" href="#rrule-field" title="Permanent link">&para;</a></h2>
+<p>This field contains <a href="https://dateutil.readthedocs.io/en/stable/rrule.html">RRule</a> object.</p>
+<ul>
+<li>Normalizes to a Dateutil <a href="https://dateutil.readthedocs.io/en/stable/rrule.html">RRule</a> object.</li>
+<li>Error message keys: <code>not_rrule</code></li>
+</ul>
+<p><strong>Python representation</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">RRuleField</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">class</span> <span class="nc">VacationForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">rrule</span> <span class="o">=</span> <span class="n">RRuleField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></p>
+<h2 id="geojson-field">GeoJSON Field<a class="headerlink" href="#geojson-field" title="Permanent link">&para;</a></h2>
+<p>This field contains <a href="https://docs.djangoproject.com/en/4.1/ref/contrib/gis/geos/#geosgeometry">GEOSGeometry</a>
+django GEOS object. Translates <a href="https://datatracker.ietf.org/doc/html/rfc7946.html">GeoJSON format</a> into
+<a href="https://docs.djangoproject.com/en/4.1/ref/contrib/gis/model-api/#spatial-field-types">geodjango</a> fields.
+Depends on <a href="https://pypi.org/project/GDAL/">gdal</a> because of spatial reference system (SRS) which is specified
+in this library.</p>
+<ul>
+<li>Error message keys: <code>not_dict</code>, <code>not_geojson</code>, <code>not_int</code>, <code>transform_error</code></li>
+<li>Arguments:</li>
+<li><code>srid</code>: spatial reference identifier (optional - default 4326)</li>
+<li><code>transform</code>: transform to different spatial reference identifier (optional)</li>
+</ul>
+<p><strong>GeoJSON example</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">{</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">    </span><span class="nt">&quot;geometry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">         </span><span class="nt">&quot;coordinates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">90.0</span><span class="p">,</span><span class="w"> </span><span class="mf">40.0</span><span class="p">]</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">     </span><span class="p">}</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Python representation</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span> <span class="nn">django_api_forms</span> <span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">GeoJSONField</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">class</span> <span class="nc">VacationForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">geometry</span> <span class="o">=</span> <span class="n">GeoJSONField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="mi">5514</span><span class="p">)</span>
+</code></pre></div></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["instant"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>
